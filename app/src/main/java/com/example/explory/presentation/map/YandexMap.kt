@@ -6,14 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.FrameLayout
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.explory.BuildConfig
 import com.example.explory.R
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.White
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
@@ -21,13 +18,16 @@ import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polygon
+import com.yandex.mapkit.images.DefaultImageUrlProvider
+import com.yandex.mapkit.layers.LayerOptions
+import com.yandex.mapkit.layers.TileFormat
+import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.CreateTileDataSource
 import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.MapType
 import com.yandex.mapkit.mapview.MapView
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.Json.Default.decodeFromString
+import com.yandex.mapkit.tiles.UrlProvider
 
 
 class MapYandex @JvmOverloads constructor(
@@ -50,8 +50,34 @@ class MapYandex @JvmOverloads constructor(
 
         MapKitFactory.initialize(context)
         mapView = findViewById(R.id.yandex_mapview)
-        myLocationButton = findViewById(R.id.my_location_button)
         MapKitFactory.getInstance().onStart()
+        val layerOptions = LayerOptions().apply {
+            versionSupport = false
+        }
+        val LOGO_URL = "https://maps-ios-pods-public.s3.yandex.net/mapkit_logo.png"
+        val urlProvider = UrlProvider { tileId, version, features ->
+            LOGO_URL
+        }
+        val imageUrlProvider = DefaultImageUrlProvider()
+//        map.addTileLayer(
+//            "map",
+//            layerOptions
+//        ) { tile ->
+//            tile.setTileFormat(TileFormat.PNG)
+//            tile.setTileUrlProvider(urlProvider)
+//            tile.setImageUrlProvider(imageUrlProvider)
+//        }
+        map.mapType = MapType.VECTOR_MAP
+        val cameraListener =
+            CameraListener { map, cameraPosition, cameraUpdateSource, finished ->
+                Log.d(
+                    "MapYandex",
+                    "onCameraPositionChanged: $cameraPosition"
+                )
+            }
+        map.addCameraListener(cameraListener)
+
+        myLocationButton = findViewById(R.id.my_location_button)
         mapView.onStart()
     }
 
@@ -85,18 +111,18 @@ class MapYandex @JvmOverloads constructor(
             Point(-85.1054596961173, 180.0),
             Point(-85.1054596961173, 0.0),
         )
-        val polygon = Polygon(LinearRing(mapPoints), emptyList())
+        val polygon = Polygon(LinearRing(mapPoints), listOf(LinearRing(userPoints)))
         map.mapObjects.addPolygon(polygon).apply {
             fillColor = Black.toArgb()
             strokeColor = White.toArgb()
             strokeWidth = 2f
         }
-        val circle = Circle(Point(latitude, longitude), 100.0f)
-        map.mapObjects.addCircle(circle).apply {
-            fillColor = White.toArgb()
-            strokeColor = White.toArgb()
-            strokeWidth = 0f
-        }
+//        val circle = Circle(Point(latitude, longitude), 100.0f)
+//        map.mapObjects.addCircle(circle).apply {
+//            fillColor = White.toArgb()
+//            strokeColor = White.toArgb()
+//            strokeWidth = 0f
+//        }
     }
 
 

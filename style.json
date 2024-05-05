@@ -1,0 +1,12 @@
+[
+  {
+    "elements": [
+      "label",
+      "geometry"
+    ],
+    "stylers": {
+      "visibility": "off",
+      "color": "FFF"
+    }
+  }
+]
