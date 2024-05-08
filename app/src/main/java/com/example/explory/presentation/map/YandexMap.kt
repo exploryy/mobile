@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.explory.R
 import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.White
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
@@ -23,6 +24,7 @@ import com.yandex.mapkit.layers.LayerOptions
 import com.yandex.mapkit.layers.TileFormat
 import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.CameraUpdateReason
 import com.yandex.mapkit.map.CreateTileDataSource
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.map.MapType
@@ -67,15 +69,35 @@ class MapYandex @JvmOverloads constructor(
 //            tile.setTileUrlProvider(urlProvider)
 //            tile.setImageUrlProvider(imageUrlProvider)
 //        }
-        map.mapType = MapType.VECTOR_MAP
-        val cameraListener =
-            CameraListener { map, cameraPosition, cameraUpdateSource, finished ->
-                Log.d(
-                    "MapYandex",
-                    "onCameraPositionChanged: $cameraPosition"
-                )
-            }
-        map.addCameraListener(cameraListener)
+//        map.mapType = MapType.VECTOR_MAP
+//        val cameraListener =
+//            CameraListener { map, cameraPosition, cameraUpdateSource, finished ->
+//                if (cameraPosition.zoom < 16 && cameraUpdateSource == CameraUpdateReason.GESTURES) {
+//                    map.move(
+//                        CameraPosition(
+//                            cameraPosition.target,
+//                            /* zoom = */ 16.2f,
+//                            /* azimuth = */ cameraPosition.azimuth,
+//                            /* tilt = */ cameraPosition.tilt
+//                        ),
+//                        Animation(Animation.Type.SMOOTH, 0.5f),
+//                        null
+//                    )
+//                }
+//                if (cameraPosition.zoom > 16.5 && cameraUpdateSource == CameraUpdateReason.GESTURES) {
+//                    map.move(
+//                        CameraPosition(
+//                            cameraPosition.target,
+//                            /* zoom = */ 16.499f,
+//                            /* azimuth = */ cameraPosition.azimuth,
+//                            /* tilt = */ cameraPosition.tilt
+//                        ),
+//                        Animation(Animation.Type.SMOOTH, 0.5f),
+//                        null
+//                    )
+//                }
+//            }
+//        map.addCameraListener(cameraListener)
 
         myLocationButton = findViewById(R.id.my_location_button)
         mapView.onStart()
@@ -91,39 +113,51 @@ class MapYandex @JvmOverloads constructor(
                 /* azimuth = */ 150.0f,
                 /* tilt = */ 0f
             ),
-            Animation(Animation.Type.SMOOTH, 2f),
-            null
+//            Animation(Animation.Type.SMOOTH, 2f),
+//            null
         )
     }
 
-    fun drawCircle(latitude: Double, longitude: Double) {
+    fun drawCircle(latitude: Double, longitude: Double, coordinates: List<List<List<List<Double>>>>) {
         Log.d("MapYandex", "drawCircle: $latitude, $longitude")
+
         val userPoints = listOf(
             Point(latitude - 0.01, longitude - 0.01),
             Point(latitude - 0.01, longitude + 0.01),
             Point(latitude + 0.01, longitude + 0.01),
             Point(latitude + 0.01, longitude - 0.01),
         )
-        val mapPoints = listOf(
-            Point(-85.1054596961173, -180.0),
-            Point(85.1054596961173, -180.0),
-            Point(85.1054596961173, 180.0),
-            Point(-85.1054596961173, 180.0),
-            Point(-85.1054596961173, 0.0),
-        )
-        val polygon = Polygon(LinearRing(mapPoints), listOf(LinearRing(userPoints)))
-        map.mapObjects.addPolygon(polygon).apply {
-            fillColor = Black.toArgb()
-            strokeColor = White.toArgb()
-            strokeWidth = 2f
+        for (coordinate in coordinates) {
+            val mapPoints = coordinate[0].map { Point(it[1], it[0]) }
+            val polygon = Polygon(LinearRing(mapPoints), listOf(LinearRing(userPoints)))
+            Log.d("MapYandex", "drawCircle polygon: $polygon")
+            map.mapObjects.addPolygon(polygon).apply {
+                fillColor = Black.toArgb()
+                strokeColor = Transparent.toArgb()
+                strokeWidth = 0f
+            }
         }
-//        val circle = Circle(Point(latitude, longitude), 100.0f)
-//        map.mapObjects.addCircle(circle).apply {
-//            fillColor = White.toArgb()
-//            strokeColor = White.toArgb()
+//        val polygon = Polygon(LinearRing(mapPoints), listOf(LinearRing(userPoints)))
+//        map.mapObjects.addPolygon(polygon).apply {
+//            fillColor = Black.toArgb()
+//            strokeColor = Transparent.toArgb()
 //            strokeWidth = 0f
 //        }
     }
+
+//    fun drawRussia(coordinates: List<List<List<List<Double>>>>) {
+//        Log.d("MapYandex", "drawRussia $coordinates")
+//        for (coordinate in coordinates) {
+//            val mapPoints = coordinate[0].map { Point(it[1], it[0]) }
+//            val polygon = Polygon(LinearRing(mapPoints), emptyList())
+//            Log.d("MapYandex", "drawRussia polygon: $polygon")
+//            map.mapObjects.addPolygon(polygon).apply {
+//                fillColor = Black.toArgb()
+//                strokeColor = Transparent.toArgb()
+//                strokeWidth = 0f
+//            }
+//        }
+//    }
 
 
 }

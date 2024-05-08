@@ -13,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -32,9 +34,13 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MapScreen() {
+fun MapScreen(
+    viewModel: MapViewModel = koinViewModel(),
+) {
+    val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     Surface(
@@ -114,9 +120,21 @@ fun MapScreen() {
                         latitude = userPosition.value.first,
                         longitude = userPosition.value.second
                     )
-                    view.drawCircle(
-                        latitude = userPosition.value.first, longitude = userPosition.value.second
-                    )
+                    if (mapState.polygons != null) {
+                        view.drawCircle(
+                            latitude = userPosition.value.first,
+                            longitude = userPosition.value.second,
+                            coordinates = mapState.polygons ?: emptyList()
+                        )
+                    }
+//                    view.drawCircle(
+//                        latitude = userPosition.value.first, longitude = userPosition.value.second
+//                    )
+//                    if (mapState.polygons != null) {
+//                        view.drawRussia(
+//                            coordinates = mapState.polygons ?: emptyList()
+//                        )
+//                    }
                 })
         }
     }

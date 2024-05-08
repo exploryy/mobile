@@ -66,7 +66,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.ru.sdk.map)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -79,6 +78,15 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.accompanist.permissions)
     implementation(libs.material)
+
+    implementation(libs.insert.koin.koin.android)
+    implementation(libs.koin.androidx.compose)
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.squareup.retrofit)
+    implementation(libs.converter.gson)
+
     implementation(libs.maps.mobile)
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)
