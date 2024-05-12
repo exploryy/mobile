@@ -1,40 +1,39 @@
 package com.example.explory.presentation.map
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.map.CameraPosition
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.location.FusedLocationProviderClient
 import org.koin.androidx.compose.koinViewModel
+import kotlin.reflect.KFunction5
 
 @Composable
 fun MapScreen(
@@ -92,9 +91,8 @@ fun MapScreen(
         })
 
         // Compose UI layout using a Column
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
             AndroidView(modifier = Modifier.fillMaxSize(), // Occupy the max size in the Compose UI tree
                 factory = { context ->
@@ -135,133 +133,89 @@ fun MapScreen(
 //                            coordinates = mapState.polygons ?: emptyList()
 //                        )
 //                    }
-                })
+                }
+            )
+            BottomButtonLayout(
+                fusedLocationProviderClient = fusedLocationProviderClient,
+                getCurrentLocation = ::getCurrentLocation,
+                context = context,
+                locationTextState = remember { mutableStateOf(locationText) },
+                showPermissionResultTextState = remember { mutableStateOf(showPermissionResultText) }
+            )
         }
     }
-
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RequestLocationPermission(
-    onPermissionGranted: () -> Unit,
-    onPermissionDenied: () -> Unit,
-    onPermissionsRevoked: () -> Unit
-) {
-    // Initialize the state for managing multiple location permissions.
-    val permissionState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
-    )
-
-    // Use LaunchedEffect to handle permissions logic when the composition is launched.
-    LaunchedEffect(key1 = permissionState) {
-        // Check if all previously granted permissions are revoked.
-        val allPermissionsRevoked =
-            permissionState.permissions.size == permissionState.revokedPermissions.size
-
-        // Filter permissions that need to be requested.
-        val permissionsToRequest = permissionState.permissions.filter {
-            !it.status.isGranted
-        }
-
-        // If there are permissions to request, launch the permission request.
-        if (permissionsToRequest.isNotEmpty()) permissionState.launchMultiplePermissionRequest()
-
-        // Execute callbacks based on permission status.
-        if (allPermissionsRevoked) {
-            onPermissionsRevoked()
-        } else {
-            if (permissionState.allPermissionsGranted) {
-                onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
-        }
-    }
-}
-
-
-@SuppressLint("MissingPermission")
-private fun getLastUserLocation(
+fun BottomButtonLayout(
+    fusedLocationProviderClient: FusedLocationProviderClient,
+    getCurrentLocation: KFunction5<Context, (Pair<Double, Double>) -> Unit, (Exception) -> Unit, Boolean, FusedLocationProviderClient, Unit>,
     context: Context,
-    onGetLastLocationSuccess: (Pair<Double, Double>) -> Unit,
-    onGetLastLocationFailed: (Exception) -> Unit,
-    onGetLastLocationIsNull: () -> Unit,
-    fusedLocationProviderClient: FusedLocationProviderClient
+    locationTextState: MutableState<String>,
+    showPermissionResultTextState: MutableState<Boolean>
 ) {
-    // Check if location permissions are granted
-    if (areLocationPermissionsGranted(context = context)) {
-        // Retrieve the last known location
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                // If location is not null, invoke the success callback with latitude and longitude
-                onGetLastLocationSuccess(Pair(it.latitude, it.longitude))
-            }?.run {
-                onGetLastLocationIsNull()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = {
+                getCurrentLocation(
+                    context = context,
+                    fusedLocationProviderClient = fusedLocationProviderClient,
+                    onGetCurrentLocationSuccess = { position ->
+                        locationTextState.value = "Location using CURRENT-LOCATION: LATITUDE: ${position.first}, LONGITUDE: ${position.second}"
+                    },
+                    onGetCurrentLocationFailed = { exception ->
+                        showPermissionResultTextState.value = true
+                        locationTextState.value = exception.localizedMessage ?: "Error Getting Current Location"
+                    }
+                )
+            },
+            modifier = Modifier.wrapContentSize(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xA6000000)),
+            shape = RoundedCornerShape(28.dp)
+        ) {
+            Text("MУ LOCATION", fontSize = 16.sp)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                onClick = { /* Handle click here */ },
+                modifier = Modifier.size(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xA6000000)),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+
             }
-        }.addOnFailureListener { exception ->
-            // If an error occurs, invoke the failure callback with the exception
-            onGetLastLocationFailed(exception)
+
+            Button(
+                onClick = { /* Handle click here */ },
+                modifier = Modifier.size(64.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xA6000000)),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+
+            }
+
+            Button(
+                onClick = { /* Handle click here */ },
+                modifier = Modifier.size(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xA6000000)),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+
+            }
         }
     }
 }
 
-
-/**
- * Retrieves the current user location asynchronously.
- *
- * @param onGetCurrentLocationSuccess Callback function invoked when the current location is successfully retrieved.
- *        It provides a Pair representing latitude and longitude.
- * @param onGetCurrentLocationFailed Callback function invoked when an error occurs while retrieving the current location.
- *        It provides the Exception that occurred.
- * @param priority Indicates the desired accuracy of the location retrieval. Default is high accuracy.
- *        If set to false, it uses balanced power accuracy.
- */
-@SuppressLint("MissingPermission")
-private fun getCurrentLocation(
-    context: Context,
-    onGetCurrentLocationSuccess: (Pair<Double, Double>) -> Unit,
-    onGetCurrentLocationFailed: (Exception) -> Unit,
-    priority: Boolean = true,
-    fusedLocationProviderClient: FusedLocationProviderClient
-) {
-    // Determine the accuracy priority based on the 'priority' parameter
-    val accuracy = if (priority) Priority.PRIORITY_HIGH_ACCURACY
-    else Priority.PRIORITY_BALANCED_POWER_ACCURACY
-
-    // Check if location permissions are granted
-    if (areLocationPermissionsGranted(context = context)) {
-        // Retrieve the current location asynchronously
-        fusedLocationProviderClient.getCurrentLocation(
-            accuracy, CancellationTokenSource().token,
-        ).addOnSuccessListener { location ->
-            location?.let {
-                // If location is not null, invoke the success callback with latitude and longitude
-                onGetCurrentLocationSuccess(Pair(it.latitude, it.longitude))
-            }?.run {
-                //Location null do something
-            }
-        }.addOnFailureListener { exception ->
-            // If an error occurs, invoke the failure callback with the exception
-            onGetCurrentLocationFailed(exception)
-        }
-    }
-}
-
-
-/**
- * Checks if location permissions are granted.
- *
- * @return true if both ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION permissions are granted; false otherwise.
- */
-private fun areLocationPermissionsGranted(context: Context): Boolean {
-    return (ActivityCompat.checkSelfPermission(
-        context, Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-        context, Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED)
-}
 

@@ -10,12 +10,53 @@
         android:layout_height="match_parent" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/my_location_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="My location"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:backgroundTint="#66000000"
+        app:cornerRadius="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp" />
 
+    <!--app:layout_constraintBottom_toTopOf="@+id/button_center"-->
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/button_left"-->
+<!--        android:layout_width="56dp"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:backgroundTint="#66000000"-->
+<!--        android:icon="@drawable/people"-->
+<!--        app:cornerRadius="24dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/button_center"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginBottom="16dp" />-->
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/button_center"-->
+<!--        android:layout_width="64dp"-->
+<!--        android:layout_height="64dp"-->
+<!--        android:backgroundTint="#66000000"-->
+<!--        android:icon="@drawable/task"-->
+<!--        app:cornerRadius="28dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/button_right"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/button_left"-->
+<!--        android:layout_marginBottom="16dp" />-->
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/button_right"-->
+<!--        android:layout_width="56dp"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:backgroundTint="#66000000"-->
+<!--        android:icon="@drawable/message"-->
+<!--        app:cornerRadius="24dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/button_center"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginBottom="16dp" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
