@@ -39,7 +39,6 @@ class MapYandex @JvmOverloads constructor(
     private val mapView: MapView
     private val map: Map
         get() = mapView.mapWindow.map
-    val myLocationButton: Button
 
 
     init {
@@ -99,7 +98,6 @@ class MapYandex @JvmOverloads constructor(
 //            }
 //        map.addCameraListener(cameraListener)
 
-        myLocationButton = findViewById(R.id.my_location_button)
         mapView.onStart()
     }
 
