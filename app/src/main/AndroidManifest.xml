@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Explory"
+        android:versionCode="1"
+        android:versionName="beta"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"

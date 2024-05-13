@@ -8,13 +8,14 @@ plugins {
 
 }
 
-fun getLocalMapkitApiKey(): String {
+
+fun getLocalMapboxApiKey(): String {
     val properties = Properties()
     FileInputStream("local.properties").use { properties.load(it) }
-    return properties.getProperty("MAPKIT_API_KEY", "")
+    return properties.getProperty("MAPBOX_API_KEY", "")
 }
 
-val mapkitApiKey = getLocalMapkitApiKey()
+val mapboxApiKey = getLocalMapboxApiKey()
 
 android {
     namespace = "com.example.explory"
@@ -34,7 +35,7 @@ android {
         buildFeatures {
             buildConfig = true
         }
-        buildConfigField("String", "MAPKIT_API_KEY", "\"${mapkitApiKey}\"")
+        buildConfigField("String", "MAPBOX_API_KEY", "\"${mapboxApiKey}\"")
     }
 
     buildTypes {
@@ -56,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
@@ -87,7 +88,12 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.converter.gson)
 
-    implementation(libs.maps.mobile)
+    implementation(libs.mapbox.android)
+    implementation(libs.maps.compose)
+    implementation(libs.mapbox.sdk.turf)
+
+    implementation(libs.androidx.foundation)
+
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.constraintlayout)

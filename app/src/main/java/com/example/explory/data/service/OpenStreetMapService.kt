@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface OpenStreetMapService {
-    @GET("/get_geojson.py?id=60189&params=0.000000-0.001000-0.001000")
+    @GET("/get_geojson.py?id=140295&params=0")
     suspend fun getWordContent(): Response<GeoJsonResponse>
 }
 

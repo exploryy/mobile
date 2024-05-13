@@ -1,12 +1,5 @@
-[
-  {
-    "elements": [
-      "label",
-      "geometry"
-    ],
-    "stylers": {
-      "visibility": "off",
-      "color": "FFF"
-    }
+[{
+  "stylers": {
+    "opacity": 0.0
   }
-]
+}]

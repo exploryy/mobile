@@ -3,7 +3,7 @@ package com.example.explory.data.repository
 import android.util.Log
 import com.example.explory.data.service.GeoJsonResponse
 import com.example.explory.data.service.OpenStreetMapService
-import com.example.explory.presentation.map.UiState
+import com.example.explory.presentation.utils.UiState
 
 class PolygonRepository(private val openStreetMapService: OpenStreetMapService) {
     suspend fun getPolygons(result: (UiState) -> Unit): GeoJsonResponse? {

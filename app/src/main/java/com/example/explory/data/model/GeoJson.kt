@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map
+package com.example.explory.data.model
 
 import kotlinx.serialization.Serializable
 
