@@ -5,9 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.SnackbarHost
@@ -22,9 +28,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.presentation.map.location.RequestLocationPermission
 import com.example.explory.presentation.utils.ExampleScaffold
@@ -81,26 +89,26 @@ fun MapScreen(
     }
 
 
-    val outerLineString = LineString.fromLngLats(
-        listOf(
-            Point.fromLngLat(180.0, 90.0),
-            Point.fromLngLat(180.0, -90.0),
-            Point.fromLngLat(-180.0, -90.0),
-            Point.fromLngLat(-180.0, 90.0),
-            Point.fromLngLat(180.0, 90.0)
-        )
-    )
+//    val outerLineString = LineString.fromLngLats(
+//        listOf(
+//            Point.fromLngLat(180.0, 90.0),
+//            Point.fromLngLat(180.0, -90.0),
+//            Point.fromLngLat(-180.0, -90.0),
+//            Point.fromLngLat(-180.0, 90.0),
+//            Point.fromLngLat(180.0, 90.0)
+//        )
+//    )
 
 
     val withHolesSourceState = remember {
         GeoJsonSourceState()
     }
 
-    withHolesSourceState.data = GeoJSONData(
-        Feature.fromGeometry(
-            Polygon.fromOuterInner(outerLineString, mapState.innerPoints)
-        )
-    )
+//    withHolesSourceState.data = GeoJSONData(
+//        Feature.fromGeometry(
+//            Polygon.fromOuterInner(outerLineString, mapState.innerPoints)
+//        )
+//    )
 
     ExploryTheme {
         ExampleScaffold(floatingActionButton = {
@@ -187,6 +195,49 @@ fun MapScreen(
                             }) {
                             Text("Show App Settings page")
                         }
+                    }
+                }
+            }
+        }
+
+        if (showRequestPermissionButton || showMap) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Button(
+                        onClick = {  },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(25))
+                    ) {
+                        Text("Left")
+                    }
+
+                    Button(
+                        onClick = {  },
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(25))
+                    ) {
+                        Text("Center")
+                    }
+
+                    Button(
+                        onClick = {  },
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(25))
+                    ) {
+                        Text("Right")
                     }
                 }
             }
