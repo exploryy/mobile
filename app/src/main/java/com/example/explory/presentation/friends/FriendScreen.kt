@@ -17,6 +17,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
@@ -31,6 +35,8 @@ fun FriendsSheet(
     onDismissRequest: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
+    var searchText by remember { mutableStateOf("") }
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = { onDismissRequest() }
@@ -58,8 +64,10 @@ fun FriendsSheet(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = searchText,
+                onValueChange = { newText ->
+                    searchText = newText
+                },
                 placeholder = { Text("Поиск") },
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
@@ -68,6 +76,10 @@ fun FriendsSheet(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            val filteredFriends = friends.filter {
+                it.name.contains(searchText, ignoreCase = true)
+            }
 
             LazyColumn {
                 item {
@@ -78,19 +90,19 @@ fun FriendsSheet(
                     )
                 }
 
-                items(friends.filter { it.isBestFriend }) { friend ->
+                items(filteredFriends.filter { it.isBestFriend }) { friend ->
                     FriendItem(friend)
                 }
 
                 item {
                     Text(
-                        text = "Все друзья (${friends.size})",
+                        text = "Все друзья (${filteredFriends.size})",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
 
-                items(friends) { friend ->
+                items(filteredFriends) { friend ->
                     FriendItem(friend)
                 }
             }
