@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         MapboxOptions.accessToken = BuildConfig.MAPBOX_API_KEY
         setContent {
-            ExploryTheme {
+            ExploryTheme (darkTheme = true) {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {

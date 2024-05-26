@@ -78,7 +78,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.location)
     implementation(libs.accompanist.permissions)
-    implementation(libs.material)
 
     implementation(libs.insert.koin.koin.android)
     implementation(libs.koin.androidx.compose)

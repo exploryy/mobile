@@ -19,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.explory.R
+import com.example.explory.data.model.Friend
 import com.example.explory.presentation.map.component.ButtonControlRow
-import com.example.explory.presentation.friends.FriendsScreen
 import com.example.explory.presentation.map.location.RequestLocationPermission
+import com.example.explory.presentation.profile.ProfileScreen
 import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapboxExperimental
@@ -32,6 +34,7 @@ import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
 import com.mapbox.maps.extension.compose.style.layers.generated.FillOpacity
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
+import com.mapbox.maps.extension.compose.style.standard.LightPreset
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
 import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
@@ -98,7 +101,8 @@ fun MapScreen(
                                     fillColor = FillColor(Color.DarkGray),
                                     fillOpacity = FillOpacity(1.0)
                                 )
-                            }
+                            },
+                            lightPreset = LightPreset.NIGHT
                         )
                     },
                     mapViewportState = mapViewportState
@@ -147,6 +151,34 @@ fun MapScreen(
     }
 
     if (mapUiState.showFriendsScreen){
-        FriendsScreen { viewModel.updateShowFriendScreen() }
+        ProfileScreen(
+            userName = "AlexLine",
+            userStatus = "Адыхает",
+            state = 1,
+            onBackClick = { viewModel.updateShowFriendScreen() },
+            onInviteFriends = {  },
+            onSettingsClick = {  },
+            friends = friends
+        )
     }
+
 }
+
+val friends = listOf(
+    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = true),
+    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = true),
+    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
+    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
+    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
+    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
+    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
+)

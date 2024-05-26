@@ -45,7 +45,10 @@ fun FriendItem(friend: Friend) {
             Text(text = friend.status, style = MaterialTheme.typography.bodyMedium)
         }
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = {  }) {
+        Button(
+            onClick = {  },
+            enabled = false
+        ) {
             Text("Чат")
         }
         IconButton(onClick = {  }) {
