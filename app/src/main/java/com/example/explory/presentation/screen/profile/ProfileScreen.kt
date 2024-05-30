@@ -1,4 +1,4 @@
-package com.example.explory.presentation.profile
+package com.example.explory.presentation.screen.profile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
 import com.example.explory.data.model.Friend
-import com.example.explory.presentation.friends.FriendsScreen
+import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.ui.theme.BlackButtonColor
 import com.example.explory.ui.theme.DisabledBlackButtonColor
 import com.example.explory.ui.theme.DisabledWhiteContentColor
@@ -114,8 +114,7 @@ fun ProfileScreen(
             {
                 1 -> FriendsScreen(
                     friends = friends,
-                    onInviteFriends = { /*TODO*/ },
-                    onDismissRequest = { onBackClick() }
+                    onInviteFriends = { /*TODO*/ }
                 )
             }
         }

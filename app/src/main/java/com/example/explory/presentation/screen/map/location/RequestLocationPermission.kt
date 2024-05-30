@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map.location
+package com.example.explory.presentation.screen.map.location
 
 import android.Manifest
 import androidx.compose.runtime.Composable

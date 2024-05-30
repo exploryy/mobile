@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map.component
+package com.example.explory.presentation.screen.map.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

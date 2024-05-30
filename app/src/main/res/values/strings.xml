@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">explory</string>
+    <string name="friends">Друзья</string>
+    <string name="statistic">Статистика</string>
+
+    <string name="registration">Регистрация</string>
+    <string name="to_register">Зарегистрироваться</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="name">Имя</string>
+    <string name="email">Электронная почта</string>
+    <string name="date_of_birthday">Дата рождения</string>
+    <string name="continue_">Продолжить</string>
+    <string name="gender">Пол</string>
+    <string name="man">Мужчина</string>
+    <string name="woman">Женщина</string>
+    <string name="login_to">Вход</string>
+    <string name="login_button">Войти</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="avatar_link">Ссылка на аватар</string>
+    <string name="favourite">Любимое</string>
+    <string name="catalog">Каталог</string>
+
+    <string name="need_register">Еще нет аккаунта?</string>
+    <string name="need_register_clickable">Зарегистрируйтесь</string>
+
+    <string name="need_login">Уже есть аккаунт?</string>
 </resources>

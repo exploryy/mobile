@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map
+package com.example.explory.presentation.screen.map
 
 import android.content.Intent
 import android.net.Uri
@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.Friend
-import com.example.explory.presentation.map.component.ButtonControlRow
-import com.example.explory.presentation.map.location.RequestLocationPermission
-import com.example.explory.presentation.profile.ProfileScreen
+import com.example.explory.presentation.screen.map.component.ButtonControlRow
+import com.example.explory.presentation.screen.map.location.RequestLocationPermission
+import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapboxExperimental

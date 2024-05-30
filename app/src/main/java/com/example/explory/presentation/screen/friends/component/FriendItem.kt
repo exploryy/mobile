@@ -1,4 +1,4 @@
-package com.example.explory.presentation.friends.component
+package com.example.explory.presentation.screen.friends.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,7 +54,10 @@ fun FriendItem(friend: Friend) {
             Text("Чат")
         }
         IconButton(onClick = {  }) {
-            Icon(imageVector = Icons.Default.Notifications, contentDescription = "Notification icon")
+            Icon(
+                imageVector = Icons.Default.StarBorder,
+                contentDescription = "Notification icon"
+            )
         }
     }
 }

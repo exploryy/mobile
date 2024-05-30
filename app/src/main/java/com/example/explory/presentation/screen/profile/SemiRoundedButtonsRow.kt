@@ -1,4 +1,4 @@
-package com.example.explory.presentation.profile
+package com.example.explory.presentation.screen.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

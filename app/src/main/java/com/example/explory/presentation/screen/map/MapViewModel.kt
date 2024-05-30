@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map
+package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

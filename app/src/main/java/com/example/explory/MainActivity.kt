@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.explory.presentation.map.MapScreen
+import com.example.explory.presentation.screen.map.MapScreen
 import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.common.MapboxOptions
 

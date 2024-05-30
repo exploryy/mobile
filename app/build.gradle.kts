@@ -90,12 +90,14 @@ dependencies {
     implementation(libs.mapbox.android)
     implementation(libs.maps.compose)
     implementation(libs.mapbox.sdk.turf)
+    implementation(libs.material.icons)
 
     implementation(libs.androidx.foundation)
 
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.security.crypto.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,4 +1,4 @@
-package com.example.explory.presentation.map
+package com.example.explory.presentation.screen.map
 
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
