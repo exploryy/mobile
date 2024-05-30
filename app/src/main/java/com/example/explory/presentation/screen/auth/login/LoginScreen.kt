@@ -145,7 +145,7 @@ fun LoginScreen(
                             errorBorderColor = Color.Red,
                             errorContainerColor = Color.Red.copy(alpha = 0.1f)
                         ),
-                        modifier = Modifier.padding(top = SpaceBetweenObjects)
+                        modifier = Modifier
                     )
                     Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))
                     Button(

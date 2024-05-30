@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.explory.presentation.screen.auth.login.LoginScreen
+import com.example.explory.presentation.screen.auth.register.RegistrationScreen
 import com.example.explory.presentation.screen.map.MapScreen
 
 @Composable
@@ -13,13 +14,16 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Map.route,
     ) {
         composable(Screen.Map.route) {
             MapScreen()
         }
         composable(Screen.Login.route) {
             LoginScreen()
+        }
+        composable(Screen.Registration.route){
+            RegistrationScreen()
         }
     }
 }

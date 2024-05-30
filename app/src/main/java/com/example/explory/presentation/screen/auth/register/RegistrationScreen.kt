@@ -46,16 +46,15 @@ import com.example.explory.presentation.screen.auth.components.LoadingItem
 import com.example.explory.presentation.screen.auth.components.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.components.PasswordTextField
 import com.example.explory.presentation.screen.auth.login.LoginIntent
-import com.example.explory.presentation.screen.auth.login.LoginViewModel
 import com.example.explory.ui.theme.Value
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: RegistrationViewModel = koinViewModel()
 ) {
-    val loginState by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -100,17 +99,34 @@ fun RegistrationScreen(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(R.string.login_to),
-                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.W700),
+                        text = stringResource(R.string.to_register),
+                        style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Left,
                         modifier = Modifier.padding(top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects)
                     )
 
                     OutlinedTextFieldWithLabel(
-                        label = stringResource(R.string.login),
-                        value = loginState.login,
-                        onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
-                        error = loginState.isErrorText,
+                        label = stringResource(R.string.email),
+                        value = state.email,
+                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateEmail(it)) },
+                        error = state.isErrorEmailText,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = Color.Gray,
+                            cursorColor = Color.White,
+                            focusedLabelColor = Color.White,
+                            unfocusedLabelColor = Color.Gray,
+                            errorBorderColor = Color.Red,
+                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                        ),
+                        modifier = Modifier
+                    )
+
+                    OutlinedTextFieldWithLabel(
+                        label = stringResource(R.string.name),
+                        value = state.name,
+                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateName(it)) },
+                        error = state.isErrorNameText,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
@@ -125,11 +141,11 @@ fun RegistrationScreen(
 
                     PasswordTextField(
                         label = stringResource(R.string.password),
-                        value = loginState.password,
-                        onValueChange = { viewModel.processIntent(LoginIntent.UpdatePassword(it)) },
-                        transformationState = loginState.isPasswordHide,
-                        onButtonClick = { viewModel.processIntent(LoginIntent.UpdatePasswordVisibility) },
-                        errorText = loginState.isErrorText,
+                        value = state.password,
+                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdatePassword(it)) },
+                        transformationState = state.isPasswordHide,
+                        onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
+                        errorText = state.isErrorPasswordText,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
@@ -139,18 +155,20 @@ fun RegistrationScreen(
                             errorBorderColor = Color.Red,
                             errorContainerColor = Color.Red.copy(alpha = 0.1f)
                         ),
-                        modifier = Modifier.padding(top = Value.SpaceBetweenObjects)
+                        modifier = Modifier
                     )
+
                     Spacer(modifier = Modifier.height(Value.MoreSpaceBetweenObjects))
+
                     Button(
                         onClick = {
-                            viewModel.processIntent(LoginIntent.Login)
+                            viewModel.processIntent(RegistrationIntent.Registration(state))
                         },
                         shape = RoundedCornerShape(Value.BigRound),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(IntrinsicSize.Min),
-                        enabled = !loginState.isLoading && viewModel.isLoginButtonAvailable(),
+                        enabled = !state.isLoading && viewModel.isContinueButtonAvailable(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White
                         )
@@ -165,7 +183,7 @@ fun RegistrationScreen(
                         )
                     }
 
-                    if (loginState.isLoading) {
+                    if (state.isLoading) {
                         Spacer(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -175,9 +193,9 @@ fun RegistrationScreen(
                     }
 
                     AdviceText(
-                        baseText = stringResource(R.string.need_register),
-                        clickableText = stringResource(R.string.need_register_clickable),
-                        onClick = { viewModel.processIntent(LoginIntent.GoToRegistration) },
+                        baseText = stringResource(R.string.need_login),
+                        clickableText = stringResource(R.string.need_login),
+                        onClick = { viewModel.processIntent(RegistrationIntent.GoToLogin) },
                         modifier = Modifier.weight(1f)
                     )
                 }
