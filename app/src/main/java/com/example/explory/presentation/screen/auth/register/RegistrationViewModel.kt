@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
-import com.example.explory.data.model.Registation
+import com.example.explory.data.model.Registration
 import com.example.explory.data.network.NetworkService
 import com.example.explory.data.repository.LocalStorage
 import com.example.explory.domain.state.RegistrationState
@@ -96,7 +96,7 @@ class RegistrationViewModel (
     }
 
     private fun performRegistration(registrationState: RegistrationState, afterRegistration: () -> Unit) {
-        val registration = Registation("fdsfd", "dfsd", "fdsffsd")
+        val registration = Registration("fdsfd", "dfsd", "fdsffsd")
         processIntent(RegistrationIntent.UpdateLoading)
         viewModelScope.launch(Dispatchers.IO) {
             try {
