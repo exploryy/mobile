@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.explory.R
 import com.example.explory.common.Constants
 import com.example.explory.data.model.Login
 import com.example.explory.data.network.NetworkService
@@ -22,7 +21,7 @@ import java.net.SocketTimeoutException
 
 class LoginViewModel(
     private val context: Context,
-    private val router: AppRouter
+    private val postLoginUseCase: PostLoginUseCase
 ) : ViewModel() {
     private val emptyState = LoginState(
         Constants.EMPTY_STRING,
@@ -36,21 +35,17 @@ class LoginViewModel(
     private val _state = MutableStateFlow(emptyState)
     val state: StateFlow<LoginState> get() = _state
 
-    private val postLoginUseCase = PostLoginUseCase()
-
     fun processIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.Login -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
                 performLogin(_state.value.login, _state.value.password) {
-                    router.toMain()
                     clearData()
                 }
             }
 
             LoginIntent.GoBack -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
-                router.toAuth()
             }
 
             is LoginIntent.UpdateLogin -> {
@@ -80,7 +75,7 @@ class LoginViewModel(
             }
 
             LoginIntent.GoToRegistration -> {
-                router.toRegistration()
+
             }
         }
     }

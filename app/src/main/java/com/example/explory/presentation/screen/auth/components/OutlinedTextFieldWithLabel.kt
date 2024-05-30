@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ fun OutlinedTextFieldWithLabel(
     value: String,
     onValueChange: ((String) -> Unit)? = null,
     error: String? = null,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     modifier: Modifier
 ) {
     Box(
@@ -33,11 +36,6 @@ fun OutlinedTextFieldWithLabel(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = label,
-                style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W500)
-            )
-
             OutlinedTextField(
                 value = value,
                 onValueChange = {
@@ -46,15 +44,13 @@ fun OutlinedTextFieldWithLabel(
                     }
                 },
                 singleLine = true,
+                label = { Text(text = label) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = MiddlePadding),
                 shape = RoundedCornerShape(BigRound),
                 isError = error != null,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    errorBorderColor = Color.Red,
-                    errorContainerColor = Color.Red.copy(alpha = 0.1f)
-                ),
+                colors = colors,
                 textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400)
             )
 

@@ -10,7 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 fun dataModule() = module {
     singleOf(::PolygonRepository)
-
     single<OpenStreetMapService> {
         Retrofit.Builder().baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()

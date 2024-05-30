@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.auth.login
+package com.example.explory.presentation.screen.auth.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -10,15 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,17 +45,14 @@ import com.example.explory.presentation.screen.auth.components.AdviceText
 import com.example.explory.presentation.screen.auth.components.LoadingItem
 import com.example.explory.presentation.screen.auth.components.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.components.PasswordTextField
-import com.example.explory.ui.theme.ExploryTheme
-import com.example.explory.ui.theme.Value.BasePadding
-import com.example.explory.ui.theme.Value.BigRound
-import com.example.explory.ui.theme.Value.ButtonHeight
-import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
-import com.example.explory.ui.theme.Value.SpaceBetweenObjects
+import com.example.explory.presentation.screen.auth.login.LoginIntent
+import com.example.explory.presentation.screen.auth.login.LoginViewModel
+import com.example.explory.ui.theme.Value
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun RegistrationScreen(
     viewModel: LoginViewModel = koinViewModel()
 ) {
     val loginState by viewModel.state.collectAsState()
@@ -75,16 +69,16 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TopAppBar(
-           title = { Text(text = "") },
-           navigationIcon = {
-               IconButton(onClick = {  }) {
-                   Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-               }
-           },
-           colors = TopAppBarDefaults.topAppBarColors(
+            title = { Text(text = "") },
+            navigationIcon = {
+                IconButton(onClick = {  }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background
-           )
-       )
+            )
+        )
 
         Spacer(modifier = Modifier.height(64.dp))
 
@@ -107,9 +101,9 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.login_to),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.W700),
                         textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(top = MoreSpaceBetweenObjects, bottom = SpaceBetweenObjects)
+                        modifier = Modifier.padding(top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects)
                     )
 
                     OutlinedTextFieldWithLabel(
@@ -145,14 +139,14 @@ fun LoginScreen(
                             errorBorderColor = Color.Red,
                             errorContainerColor = Color.Red.copy(alpha = 0.1f)
                         ),
-                        modifier = Modifier.padding(top = SpaceBetweenObjects)
+                        modifier = Modifier.padding(top = Value.SpaceBetweenObjects)
                     )
-                    Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))
+                    Spacer(modifier = Modifier.height(Value.MoreSpaceBetweenObjects))
                     Button(
                         onClick = {
                             viewModel.processIntent(LoginIntent.Login)
                         },
-                        shape = RoundedCornerShape(BigRound),
+                        shape = RoundedCornerShape(Value.BigRound),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(IntrinsicSize.Min),
@@ -175,7 +169,7 @@ fun LoginScreen(
                         Spacer(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = BasePadding)
+                                .padding(top = Value.BasePadding)
                         )
                         LoadingItem()
                     }

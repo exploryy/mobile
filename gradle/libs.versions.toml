@@ -21,6 +21,7 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 squareupRetrofit = "2.11.0"
 securityCryptoKtx = "1.1.0-alpha06"
+navigationRuntimeKtx = "2.7.7"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -54,6 +55,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 squareup-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareupRetrofit" }
 material-icons = {group = "androidx.compose.material", name = "material-icons-extended"}
 androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

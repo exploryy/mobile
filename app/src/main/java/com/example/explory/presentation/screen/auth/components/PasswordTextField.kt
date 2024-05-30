@@ -14,7 +14,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,6 +38,7 @@ fun PasswordTextField(
     transformationState: Boolean,
     onButtonClick: () -> Unit,
     errorText: String? = null,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     modifier: Modifier
 ){
     Box(
@@ -45,10 +48,6 @@ fun PasswordTextField(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = label,
-                style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W500)
-            )
             OutlinedTextField(
                 value = value,
                 onValueChange = {
@@ -62,6 +61,7 @@ fun PasswordTextField(
                 shape = RoundedCornerShape(BigRound),
                 visualTransformation = if (transformationState)
                     VisualTransformation.None else PasswordVisualTransformation(),
+                label = { Text(text = label) },
                 trailingIcon = {
                     IconButton(
                         onClick = {
@@ -76,10 +76,7 @@ fun PasswordTextField(
                     }
                 },
                 isError = errorText != null,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    errorBorderColor = Color.Red,
-                    errorContainerColor = Color.Red.copy(alpha = 0.1f)
-                ),
+                colors = colors,
                 textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400)
             )
             errorText?.let {
