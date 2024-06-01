@@ -12,12 +12,12 @@ class AuthRepository(
         val response = authService.login(login, password)
         localStorage.saveToken(
             response.access_token,
-            response.expires_in.toString(),
+            response.expires_in,
             TokenType.ACCESS
         )
         localStorage.saveToken(
             response.refresh_token,
-            response.refresh_expires_in.toString(),
+            response.refresh_expires_in,
             TokenType.REFRESH
         )
     }
@@ -26,13 +26,17 @@ class AuthRepository(
         val response = authService.refreshToken(refreshToken)
         localStorage.saveToken(
             response.access_token,
-            response.expires_in.toString(),
+            response.expires_in,
             TokenType.ACCESS
         )
         localStorage.saveToken(
             response.refresh_token,
-            response.refresh_expires_in.toString(),
+            response.refresh_expires_in,
             TokenType.REFRESH
         )
+    }
+
+    suspend fun hasToken(): Boolean {
+        return localStorage.hasToken()
     }
 }

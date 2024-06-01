@@ -10,6 +10,7 @@ import com.example.explory.presentation.screen.auth.login.LoginScreen
 import com.example.explory.presentation.screen.auth.onboarding.OnBoardingScreen
 import com.example.explory.presentation.screen.auth.register.RegistrationScreen
 import com.example.explory.presentation.screen.map.MapScreen
+import com.example.explory.presentation.screen.splash.SplashScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -19,8 +20,22 @@ fun AppNavigation() {
     SharedTransitionLayout {
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route,
+            startDestination = Screen.Splash.route,
         ) {
+            composable(Screen.Splash.route) {
+                SplashScreen(
+                    onNavigateToMap = {
+                        navController.navigate(Screen.Map.route) {
+                            popUpTo(Screen.Splash.route)
+                        }
+                    },
+                    onNavigateToWelcome = {
+                        navController.navigate(Screen.Welcome.route) {
+                            popUpTo(Screen.Splash.route)
+                        }
+                    }
+                )
+            }
             composable(Screen.Welcome.route) {
                 OnBoardingScreen(
                     animatedVisibilityScope = this,

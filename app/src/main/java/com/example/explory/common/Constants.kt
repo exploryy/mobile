@@ -3,6 +3,7 @@ package com.example.explory.common
 class Constants {
     companion object {
         const val EMPTY = ""
+        const val AUTHORIZATION_HEADER = "Authorization"
         const val DEFAULT_LOGIN = "ghubman1"
         const val DEFAULT_PASSWORD = "12345"
         const val POLYGON_URL = "https://polygons.openstreetmap.fr"

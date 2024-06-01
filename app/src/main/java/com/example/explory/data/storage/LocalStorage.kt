@@ -27,17 +27,17 @@ class LocalStorage(context: Context) {
     )
 
     fun saveToken(
-        token: String, expiresIn: String, tokenType: TokenType
+        token: String, expiresIn: Int, tokenType: TokenType
     ) {
         when (tokenType) {
             TokenType.ACCESS -> {
                 sharedPreferences.edit().putString(ACCESS_KEY, token)
-                    .putString(USER_ACCESS_TOKEN_EXPIRES, expiresIn).apply()
+                    .putString(USER_ACCESS_TOKEN_EXPIRES, expiresIn.toString()).apply()
             }
 
             TokenType.REFRESH -> {
                 sharedPreferences.edit().putString(REFRESH_KEY, token)
-                    .putString(USER_REFRESH_TOKEN_EXPIRES, expiresIn).apply()
+                    .putString(USER_REFRESH_TOKEN_EXPIRES, expiresIn.toString()).apply()
             }
         }
     }

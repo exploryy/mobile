@@ -1,6 +1,5 @@
 package com.example.explory.ui.theme
 
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -25,4 +24,5 @@ val OffWhite = Color(0xFFF8F8F8)
 val OffBlack = Color(0xFF343434)
 
 val AccentColor = Color(0xFF4894FE).copy(alpha = 0.9f)
+val AccentGradient = listOf(Color(0xFF4894FE), Color(0xFF7F7FD5))
 val GrayColor = Color(0xFFC4C8CC)
