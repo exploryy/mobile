@@ -24,6 +24,7 @@ securityCryptoKtx = "1.1.0-alpha06"
 navigationRuntimeKtx = "2.7.7"
 composeAnimation = "1.7.0-alpha07"
 kotlinSerialization = "1.6.3"
+coilVersion = "2.4.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -61,7 +62,7 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationRuntimeKtx" }
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimation" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization"}
-
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
