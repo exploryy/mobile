@@ -32,7 +32,7 @@ class MapViewModel(
     )
 
     init {
-        getStartPolygons()
+//        getStartPolygons()
         webSocketClient.connect()
         startLocationUpdates()
         observeWebSocketMessages()

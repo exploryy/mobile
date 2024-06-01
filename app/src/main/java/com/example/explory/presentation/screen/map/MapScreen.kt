@@ -1,8 +1,14 @@
 package com.example.explory.presentation.screen.map
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,11 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.Friend
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
+import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
@@ -89,6 +97,9 @@ fun MapScreen(
                 viewModel.updateShowMap(true)
             }
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            RequestNotificationPermission()
+        }
 
         if (mapState.showMap) {
             MapboxMap(
@@ -182,3 +193,23 @@ val friends = listOf(
     Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
     Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
 )
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private fun Context.checkAndRequestNotificationPermission(
+    launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
+) {
+    val notificationPermission = arrayOf(
+        Manifest.permission.ACCESS_NOTIFICATION_POLICY,
+        Manifest.permission.POST_NOTIFICATIONS,
+    )
+    if (notificationPermission.all {
+            ContextCompat.checkSelfPermission(
+                this,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    ) {
+        return
+    }
+    launcher.launch(notificationPermission)
+}
