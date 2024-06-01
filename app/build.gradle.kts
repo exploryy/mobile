@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.mapbox.sdk.turf)
     implementation(libs.material.icons)
     implementation(libs.androidx.compose.animation)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.foundation)
 
