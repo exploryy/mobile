@@ -24,7 +24,6 @@ import com.example.explory.data.model.Friend
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
-import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.extension.compose.MapEffect
@@ -52,7 +51,6 @@ fun MapScreen(
     viewModel: MapViewModel = koinViewModel()
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
-    val mapUiState by viewModel.mapUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -68,96 +66,95 @@ fun MapScreen(
         GeoJsonSourceState()
     }
 
-    ExploryTheme {
-        Box(Modifier.fillMaxSize()) {
-            RequestLocationPermission(
-                onPermissionDenied = {
-                    scope.launch {
-                        snackBarHostState.showSnackbar("You need to accept location permissions.")
-                    }
-                    viewModel.updateShowRequestPermissionButton(true)
-                },
-                onPermissionGranted = {
-                    viewModel.updateShowRequestPermissionButton(false)
-                    viewModel.updateShowMap(true)
-                },
-                onPermissionsRevoked = {
-                    scope.launch {
-                        snackBarHostState.showSnackbar("You need to accept location permissions in settings.")
-                    }
-                    viewModel.updateShowRequestPermissionButton(true)
-                },
-            )
+//    withHolesSourceState.data = GeoJSONData(
+//        Feature.fromGeometry(
+//            Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints)
+//        )
+//    )
 
-            if (mapUiState.showMap) {
-                MapboxMap(
-                    Modifier.fillMaxSize(),
-                    style = {
-                        MapboxStandardStyle(
-                            topSlot = {
-                                FillLayer(
-                                    sourceState = withHolesSourceState,
-                                    layerId = OPENED_WORLD_LAYER,
-                                    fillColor = FillColor(Color.DarkGray),
-                                    fillOpacity = FillOpacity(1.0)
-                                )
-                            },
-                            lightPreset = LightPreset.NIGHT
-                        )
-                    },
-                    mapViewportState = mapViewportState
-                ) {
-                    MapEffect(Unit) { mapView ->
-                        mapView.location.updateSettings {
-                            locationPuck = createDefault2DPuck(withBearing = true)
-                            puckBearingEnabled = true
-                            puckBearing = PuckBearing.HEADING
-                            enabled = true
-                        }
-                        mapViewportState.transitionToFollowPuckState()
-                    }
+    Box(Modifier.fillMaxSize()) {
+        RequestLocationPermission(
+            requestCount = mapState.permissionRequestCount,
+            onPermissionDenied = {
+                scope.launch {
+                    snackBarHostState.showSnackbar("You need to accept location permissions.")
                 }
+                viewModel.updateShowRequestPermissionButton(true)
+            },
+            onPermissionReady = {
+                viewModel.updateShowRequestPermissionButton(false)
+                viewModel.updateShowMap(true)
             }
+        )
 
-            if (mapUiState.showRequestPermissionButton) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.align(Alignment.Center)) {
-                        Button(modifier = Modifier.align(Alignment.CenterHorizontally),
-                            onClick = {
-                                viewModel.incrementPermissionRequestCount()
-                            }) {
-                            Text("Request permission again (${mapUiState.permissionRequestCount})")
-                        }
-                        Button(modifier = Modifier.align(Alignment.CenterHorizontally),
-                            onClick = {
-                                context.startActivity(
-                                    Intent(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.fromParts("package", context.packageName, null)
-                                    )
-                                )
-                            }) {
-                            Text("Show App Settings page")
-                        }
-                    }
-                }
-            }
-
-            SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-            ButtonControlRow(
+        if (mapState.showMap) {
+            MapboxMap(
+                Modifier.fillMaxSize(),
+                style = {
+                    MapboxStandardStyle(
+                        topSlot = {
+                            FillLayer(
+                                sourceState = withHolesSourceState,
+                                layerId = OPENED_WORLD_LAYER,
+                                fillColor = FillColor(Color.DarkGray),
+                                fillOpacity = FillOpacity(1.0)
+                            )
+                        },
+                        lightPreset = LightPreset.NIGHT
+                    )
+                },
                 mapViewportState = mapViewportState
-            ) { viewModel.updateShowFriendScreen() }
+            ) {
+                MapEffect(Unit) { mapView ->
+                    mapView.location.updateSettings {
+                        locationPuck = createDefault2DPuck(withBearing = true)
+                        puckBearingEnabled = true
+                        puckBearing = PuckBearing.HEADING
+                        enabled = true
+                    }
+                    mapViewportState.transitionToFollowPuckState()
+                }
+            }
         }
+
+        if (mapState.showRequestPermissionButton) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.align(Alignment.Center)) {
+                    Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            viewModel.incrementPermissionRequestCount()
+                        }) {
+                        Text("Request permission again (${mapState.permissionRequestCount})")
+                    }
+                    Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            context.startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.fromParts("package", context.packageName, null)
+                                )
+                            )
+                        }) {
+                        Text("Show App Settings page")
+                    }
+                }
+            }
+        }
+
+        SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
+        ButtonControlRow(
+            mapViewportState = mapViewportState
+        ) { viewModel.updateShowFriendScreen() }
     }
 
-    if (mapUiState.showFriendsScreen){
+    if (mapState.showFriendsScreen) {
         ProfileScreen(
             userName = "AlexLine",
             userStatus = "Адыхает",
             state = 1,
             onBackClick = { viewModel.updateShowFriendScreen() },
-            onInviteFriends = {  },
-            onSettingsClick = {  },
+            onInviteFriends = { },
+            onSettingsClick = { },
             friends = friends
         )
     }

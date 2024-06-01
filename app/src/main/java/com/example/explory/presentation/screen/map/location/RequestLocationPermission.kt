@@ -1,50 +1,60 @@
 package com.example.explory.presentation.screen.map.location
 
-import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RequestLocationPermission(
-    onPermissionGranted: () -> Unit,
+public fun RequestLocationPermission(
+    requestCount: Int = 0,
     onPermissionDenied: () -> Unit,
-    onPermissionsRevoked: () -> Unit
+    onPermissionReady: () -> Unit
 ) {
-    // Initialize the state for managing multiple location permissions.
-    val permissionState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
-    )
-
-    // Use LaunchedEffect to handle permissions logic when the composition is launched.
-    LaunchedEffect(key1 = permissionState) {
-        // Check if all previously granted permissions are revoked.
-        val allPermissionsRevoked =
-            permissionState.permissions.size == permissionState.revokedPermissions.size
-
-        // Filter permissions that need to be requested.
-        val permissionsToRequest = permissionState.permissions.filter {
-            !it.status.isGranted
-        }
-
-        // If there are permissions to request, launch the permission request.
-        if (permissionsToRequest.isNotEmpty()) permissionState.launchMultiplePermissionRequest()
-
-        // Execute callbacks based on permission status.
-        if (allPermissionsRevoked) {
-            onPermissionsRevoked()
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+    ) { permissionsMap ->
+        val granted = permissionsMap.values.all { it }
+        if (granted) {
+            onPermissionReady()
         } else {
-            if (permissionState.allPermissionsGranted) {
-                onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
+            onPermissionDenied()
         }
     }
+    LaunchedEffect(requestCount) {
+        context.checkAndRequestLocationPermission(
+            locationPermissions,
+            launcher,
+            onPermissionReady
+        )
+    }
 }
+
+private fun Context.checkAndRequestLocationPermission(
+    permissions: Array<String>,
+    launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
+    onPermissionReady: () -> Unit
+) {
+    if (permissions.all {
+            ContextCompat.checkSelfPermission(
+                this,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    ) {
+        onPermissionReady()
+    } else {
+        launcher.launch(permissions)
+    }
+}
+
+private val locationPermissions = arrayOf(
+    android.Manifest.permission.ACCESS_FINE_LOCATION,
+    android.Manifest.permission.ACCESS_COARSE_LOCATION
+)

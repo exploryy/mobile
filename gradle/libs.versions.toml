@@ -1,5 +1,5 @@
 [versions]
-accompanistPermissions = "0.35.0-alpha"
+accompanistPermissions = "0.35.1-alpha"
 agp = "8.3.2"
 converterGson = "2.11.0"
 foundation = "1.7.0-alpha08"
