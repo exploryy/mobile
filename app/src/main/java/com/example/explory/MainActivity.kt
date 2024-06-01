@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.explory.presentation.navigation.AppNavigation
-import com.example.explory.presentation.screen.map.MapScreen
 import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.common.MapboxOptions
 
@@ -29,5 +26,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-// отправить lat lng и jwt

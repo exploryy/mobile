@@ -10,7 +10,7 @@ import org.koin.dsl.module
 fun appModule() = module {
     viewModelOf(::MapViewModel)
     viewModel {
-        LoginViewModel(get(), get())
+        LoginViewModel(get())
     }
     viewModel {
         RegistrationViewModel(get(), get())

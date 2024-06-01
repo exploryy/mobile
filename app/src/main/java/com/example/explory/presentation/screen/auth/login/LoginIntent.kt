@@ -7,8 +7,7 @@ sealed class LoginIntent {
     data class UpdateLogin(val login: String) : LoginIntent()
     data class UpdatePassword(val password: String) : LoginIntent()
     data object UpdatePasswordVisibility : LoginIntent()
-
     data class UpdateErrorText(val errorText: String?) : LoginIntent()
-
     data object UpdateLoading : LoginIntent()
+    data object SuccessLogin : LoginIntent()
 }

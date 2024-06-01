@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
 import com.example.explory.data.model.AuthRequest
-import com.example.explory.domain.state.LoginState
 import com.example.explory.domain.usecase.PostLoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -17,10 +17,9 @@ import java.net.SocketTimeoutException
 class LoginViewModel(
     private val postLoginUseCase: PostLoginUseCase
 ) : ViewModel() {
-    private val emptyState = LoginState()
 
-    private val _state = MutableStateFlow(emptyState)
-    val state: StateFlow<LoginState> get() = _state
+    private val _state = MutableStateFlow(LoginState())
+    val state: StateFlow<LoginState> = _state.asStateFlow()
 
     fun processIntent(intent: LoginIntent) {
         when (intent) {
@@ -59,7 +58,15 @@ class LoginViewModel(
             }
 
             LoginIntent.GoToRegistration -> {
+                _state.value =
+                    state.value.copy(navigationEvent = LoginNavigationEvent.NavigateToRegistration)
+            }
 
+            LoginIntent.SuccessLogin -> {
+                _state.value =
+                    state.value.copy(
+                        navigationEvent = LoginNavigationEvent.NavigateToMap,
+                    )
             }
         }
     }
@@ -88,6 +95,7 @@ class LoginViewModel(
                 processIntent(LoginIntent.UpdateErrorText("Ошибка авторизации"))
             } finally {
                 processIntent(LoginIntent.UpdateLoading)
+                processIntent(LoginIntent.SuccessLogin)
             }
         }
     }

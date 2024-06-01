@@ -2,7 +2,6 @@ package com.example.explory.presentation.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,6 +41,13 @@ fun AppNavigation() {
                     onRegistrationClick = {
                         navController.navigate(Screen.Registration.route) {
                             popUpTo(Screen.Welcome.route)
+                        }
+                    },
+                    onSuccessNavigation = {
+                        navController.navigate(Screen.Map.route) {
+                            popUpTo(Screen.Login.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 )

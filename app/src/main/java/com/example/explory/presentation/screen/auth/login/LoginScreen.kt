@@ -1,5 +1,9 @@
 package com.example.explory.presentation.screen.auth.login
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,23 +46,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.explory.R
-import com.example.explory.presentation.screen.auth.components.AdviceText
-import com.example.explory.presentation.screen.auth.components.LoadingItem
-import com.example.explory.presentation.screen.auth.components.OutlinedTextFieldWithLabel
-import com.example.explory.presentation.screen.auth.components.PasswordTextField
+import com.example.explory.presentation.screen.auth.component.AdviceText
+import com.example.explory.presentation.screen.auth.component.LoadingItem
+import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
+import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
 import com.example.explory.ui.theme.Value.SpaceBetweenObjects
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel()
+fun SharedTransitionScope.LoginScreen(
+    viewModel: LoginViewModel = koinViewModel(),
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onBackClick: () -> Unit,
+    onRegistrationClick: () -> Unit,
+    onSuccessNavigation: () -> Unit
 ) {
     val loginState by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(loginState.navigationEvent) {
+        loginState.navigationEvent?.let { event ->
+            when (event) {
+                LoginNavigationEvent.NavigateToMap -> onSuccessNavigation()
+                LoginNavigationEvent.NavigateToRegistration -> onRegistrationClick()
+            }
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -69,24 +88,25 @@ fun LoginScreen(
             },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopAppBar(
-            title = { Text(text = "") },
-            navigationIcon = {
-                IconButton(onClick = { }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
-            )
+        TopAppBar(title = { Text(text = "") }, navigationIcon = {
+            IconButton(onClick = { onBackClick() }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
         )
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(128.dp))
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
+                .fillMaxSize()
+                .sharedElement(state = rememberSharedContentState(key = "column"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ ->
+                        tween(durationMillis = 500)
+                    }), verticalArrangement = Arrangement.Bottom
         ) {
             Box(
                 modifier = Modifier
@@ -105,8 +125,7 @@ fun LoginScreen(
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Left,
                         modifier = Modifier.padding(
-                            top = MoreSpaceBetweenObjects,
-                            bottom = SpaceBetweenObjects
+                            top = MoreSpaceBetweenObjects, bottom = SpaceBetweenObjects
                         )
                     )
 
@@ -160,11 +179,8 @@ fun LoginScreen(
                         )
                     ) {
                         Text(
-                            text = stringResource(R.string.login_button),
-                            style = TextStyle(
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.W600,
-                                color = Color.Black
+                            text = stringResource(R.string.login_button), style = TextStyle(
+                                fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
                             )
                         )
                     }

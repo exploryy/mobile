@@ -1,4 +1,4 @@
-package com.example.explory.domain.state
+package com.example.explory.presentation.screen.auth.register
 
 data class RegistrationState (
     val name: String,
