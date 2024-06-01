@@ -7,6 +7,7 @@ import com.example.explory.domain.usecase.GetUserTokenUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -15,6 +16,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
 class LocationWebSocketClient(
+    private val client: OkHttpClient,
     private val url: String,
     private val getUserTokenUseCase: GetUserTokenUseCase,
 ) {
@@ -22,7 +24,6 @@ class LocationWebSocketClient(
     private val _messages = MutableStateFlow<LocationResponse?>(null)
     val messages: StateFlow<LocationResponse?> get() = _messages
 
-    private val client = OkHttpClient()
     private lateinit var webSocket: WebSocket
 
     fun connect() {
@@ -30,7 +31,7 @@ class LocationWebSocketClient(
         Log.d("dfsdf", token.toString())
         val request = Request.Builder()
             .url(url)
-            .addHeader("Authorization", "Bearer $token")
+//            .addHeader("Authorization", "Bearer $token")
             .build()
 
         webSocket = client.newWebSocket(request, createWebSocketListener())

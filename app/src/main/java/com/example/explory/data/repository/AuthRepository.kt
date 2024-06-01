@@ -2,6 +2,7 @@ package com.example.explory.data.repository
 
 import com.example.explory.data.model.TokenType
 import com.example.explory.data.service.AuthService
+import com.example.explory.data.service.AuthTokenResponse
 import com.example.explory.data.storage.LocalStorage
 
 class AuthRepository(
@@ -22,18 +23,8 @@ class AuthRepository(
         )
     }
 
-    suspend fun refreshToken(refreshToken: String) {
-        val response = authService.refreshToken(refreshToken)
-        localStorage.saveToken(
-            response.access_token,
-            response.expires_in,
-            TokenType.ACCESS
-        )
-        localStorage.saveToken(
-            response.refresh_token,
-            response.refresh_expires_in,
-            TokenType.REFRESH
-        )
+    suspend fun refreshToken(refreshToken: String): AuthTokenResponse {
+        return authService.refreshToken(refreshToken)
     }
 
     fun getToken() : String? {

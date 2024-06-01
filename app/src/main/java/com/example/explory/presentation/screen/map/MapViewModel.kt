@@ -2,9 +2,7 @@ package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.explory.data.model.GeoJson
 import com.example.explory.data.model.location.LocationRequest
-import com.example.explory.data.model.location.LocationResponse
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
@@ -14,13 +12,10 @@ import com.mapbox.geojson.Point
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import java.util.Random
 
 class MapViewModel(
@@ -33,15 +28,15 @@ class MapViewModel(
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-//    val outerLineString: LineString = LineString.fromLngLats(
-//        listOf(
-//            Point.fromLngLat(180.0, 90.0),
-//            Point.fromLngLat(180.0, -90.0),
-//            Point.fromLngLat(-180.0, -90.0),
-//            Point.fromLngLat(-180.0, 90.0),
-//            Point.fromLngLat(180.0, 90.0)
-//        )
-//    )
+    val outerLineString: LineString = LineString.fromLngLats(
+        listOf(
+            Point.fromLngLat(180.0, 90.0),
+            Point.fromLngLat(180.0, -90.0),
+            Point.fromLngLat(-180.0, -90.0),
+            Point.fromLngLat(-180.0, 90.0),
+            Point.fromLngLat(180.0, 90.0)
+        )
+    )
 
     init {
         webSocketClient.connect()
