@@ -1,5 +1,10 @@
 package com.example.explory.presentation.screen.auth.login
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -21,13 +26,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,23 +49,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.explory.R
-import com.example.explory.presentation.screen.auth.components.AdviceText
-import com.example.explory.presentation.screen.auth.components.LoadingItem
-import com.example.explory.presentation.screen.auth.components.OutlinedTextFieldWithLabel
-import com.example.explory.presentation.screen.auth.components.PasswordTextField
+import com.example.explory.presentation.screen.auth.component.AdviceText
+import com.example.explory.presentation.screen.auth.component.LoadingItem
+import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
+import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
 import com.example.explory.ui.theme.Value.SpaceBetweenObjects
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel()
+fun SharedTransitionScope.LoginScreen(
+    viewModel: LoginViewModel = koinViewModel(),
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onBackClick: () -> Unit,
+    onRegistrationClick: () -> Unit
 ) {
     val loginState by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
+    val spacerHeight = 128.dp
 
     Column(
         modifier = Modifier
@@ -72,7 +84,9 @@ fun LoginScreen(
         TopAppBar(
             title = { Text(text = "") },
             navigationIcon = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    onBackClick()
+                }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },
@@ -81,11 +95,20 @@ fun LoginScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier
+            .height(spacerHeight)
+        )
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .sharedElement(
+                    state = rememberSharedContentState(key = "column"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ ->
+                        tween(durationMillis = 500)
+                    }
+                ),
             verticalArrangement = Arrangement.Bottom
         ) {
             Box(
@@ -115,14 +138,14 @@ fun LoginScreen(
                         value = loginState.login,
                         onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
                         error = loginState.isErrorText,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            errorContainerColor = Color.Red.copy(alpha = 0.1f),
-                            cursorColor = Color.White,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
-                            errorBorderColor = Color.Red,
+                            cursorColor = Color.White,
                             focusedLabelColor = Color.White,
                             unfocusedLabelColor = Color.Gray,
+                            errorBorderColor = Color.Red,
+                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
                         ),
                         modifier = Modifier
                     )
@@ -134,14 +157,14 @@ fun LoginScreen(
                         transformationState = loginState.isPasswordHide,
                         onButtonClick = { viewModel.processIntent(LoginIntent.UpdatePasswordVisibility) },
                         errorText = loginState.isErrorText,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            errorContainerColor = Color.Red.copy(alpha = 0.1f),
-                            cursorColor = Color.White,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
-                            errorBorderColor = Color.Red,
+                            cursorColor = Color.White,
                             focusedLabelColor = Color.White,
                             unfocusedLabelColor = Color.Gray,
+                            errorBorderColor = Color.Red,
+                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
                         ),
                         modifier = Modifier
                     )
@@ -181,7 +204,7 @@ fun LoginScreen(
                     AdviceText(
                         baseText = stringResource(R.string.need_register),
                         clickableText = stringResource(R.string.need_register_clickable),
-                        onClick = { viewModel.processIntent(LoginIntent.GoToRegistration) },
+                        onClick = { onRegistrationClick() },
                         modifier = Modifier.weight(1f)
                     )
                 }

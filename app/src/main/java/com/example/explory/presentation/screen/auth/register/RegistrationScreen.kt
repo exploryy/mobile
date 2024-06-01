@@ -1,5 +1,9 @@
 package com.example.explory.presentation.screen.auth.register
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -41,21 +45,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.explory.R
-import com.example.explory.presentation.screen.auth.components.AdviceText
-import com.example.explory.presentation.screen.auth.components.LoadingItem
-import com.example.explory.presentation.screen.auth.components.OutlinedTextFieldWithLabel
-import com.example.explory.presentation.screen.auth.components.PasswordTextField
-import com.example.explory.presentation.screen.auth.login.LoginIntent
+import com.example.explory.presentation.screen.auth.component.AdviceText
+import com.example.explory.presentation.screen.auth.component.LoadingItem
+import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
+import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Value
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun RegistrationScreen(
-    viewModel: RegistrationViewModel = koinViewModel()
+fun SharedTransitionScope.RegistrationScreen(
+    viewModel: RegistrationViewModel = koinViewModel(),
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onBackClick: () -> Unit,
+    onLoginClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
+    val spacerHeight = 64.dp
 
     Column(
         modifier = Modifier
@@ -70,7 +77,9 @@ fun RegistrationScreen(
         TopAppBar(
             title = { Text(text = "") },
             navigationIcon = {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = {
+                    onBackClick()
+                }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },
@@ -79,11 +88,18 @@ fun RegistrationScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(spacerHeight))
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .sharedElement(
+                    state = rememberSharedContentState(key = "column"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ ->
+                        tween(durationMillis = 500)
+                    }
+                ),
             verticalArrangement = Arrangement.Bottom
         ) {
             Box(
@@ -194,8 +210,8 @@ fun RegistrationScreen(
 
                     AdviceText(
                         baseText = stringResource(R.string.need_login),
-                        clickableText = stringResource(R.string.need_login),
-                        onClick = { viewModel.processIntent(RegistrationIntent.GoToLogin) },
+                        clickableText = stringResource(R.string.need_login_clickable),
+                        onClick = { onLoginClick() },
                         modifier = Modifier.weight(1f)
                     )
                 }

@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.auth.components
+package com.example.explory.presentation.screen.auth.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
