@@ -8,7 +8,9 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 fun appModule() = module {
-    viewModelOf(::MapViewModel)
+    viewModel {
+        MapViewModel(get(), get(), get())
+    }
     viewModel {
         LoginViewModel(get(), get())
     }

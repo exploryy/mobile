@@ -1,95 +1,68 @@
 package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.explory.domain.state.MapUiState
 import com.example.explory.domain.usecase.GetPolygonsUseCase
-import com.example.explory.presentation.utils.UiState
-import com.mapbox.geojson.LineString
-import com.mapbox.geojson.Point
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import java.util.Random
+import com.example.explory.data.model.GeoJson
+import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.model.location.LocationResponse
+import com.example.explory.domain.websocket.LocationTracker
+import com.example.explory.domain.websocket.LocationWebSocketClient
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
-class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewModel() {
+class MapViewModel(
+    private val getPolygonsUseCase: GetPolygonsUseCase,
+    private val webSocketClient: LocationWebSocketClient,
+    private val locationTracker: LocationTracker
+) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
 
     private val _mapUiState = MutableStateFlow(MapUiState())
     val mapUiState = _mapUiState.asStateFlow()
 
-    private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     init {
-        launchPositionUpdates()
-//        getTestPolygons()
+        webSocketClient.connect()
+        startLocationUpdates()
     }
 
-    private fun launchPositionUpdates() {
-        uiScope.launch {
-            while (true) {
-                onInnerListUpdate(createRandomPointsList().map { LineString.fromLngLats(it) })
-                delay(5000L)
-            }
+    private fun startLocationUpdates() {
+        locationTracker.setLocationListener { location ->
+            sendLocationToServer(location.latitude, location.longitude)
         }
+        locationTracker.startTracking()
     }
 
-    private fun createRandomPointsList(): List<List<Point>> {
-        val random = Random()
-        val points = mutableListOf<Point>()
-        val firstLast = Point.fromLngLat(
-            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
+    private fun sendLocationToServer(latitude: Double, longitude: Double) {
+        val locationRequest = LocationRequest(
+            longitude = longitude.toString(),
+            latitude = latitude.toString(),
+            figureType = "CIRCLE"
         )
-        points.add(firstLast)
-        for (i in 0 until random.nextInt(322) + 4) {
-            points.add(
-                Point.fromLngLat(
-                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-                )
+        webSocketClient.sendLocationRequest(locationRequest)
+    }
+
+    private fun onWebSocketResponse(response: LocationResponse) {
+        val polygons = parseGeoJson(response.geo)
+        _mapState.update { state ->
+            state.copy(
+                polygons = polygons
             )
         }
-        points.add(firstLast)
-        return listOf(points)
+    }
+
+    private fun parseGeoJson(geoJson: String): List<List<List<Double>>> {
+        val geoJsonObject = Json.decodeFromString<GeoJson>(geoJson)
+        return geoJsonObject.coordinates
     }
 
     override fun onCleared() {
         super.onCleared()
-        viewModelJob.cancel()
-    }
-
-    private fun updateUiState(state: UiState) {
-        _mapState.update { mapState ->
-            mapState.copy(uiState = state)
-        }
-    }
-
-    private fun onInnerListUpdate(newInnerPoints: List<LineString>) {
-        _mapState.update { state ->
-            state.copy(
-                innerPoints = newInnerPoints
-            )
-        }
-    }
-
-    private fun getTestPolygons() {
-        updateUiState(UiState.Loading)
-        try {
-            viewModelScope.launch {
-                val response = getPolygonsUseCase.execute {
-                    updateUiState(it)
-                }
-                _mapState.value = MapState(polygons = response?.coordinates)
-            }
-        } finally {
-            updateUiState(UiState.Default)
-        }
+        webSocketClient.close()
     }
 
     fun updateShowMap(show: Boolean) {
@@ -108,6 +81,7 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
         _mapUiState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
     }
 }
+
 
 
 

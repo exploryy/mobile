@@ -20,7 +20,7 @@ fun AppNavigation() {
     SharedTransitionLayout {
         NavHost(
             navController = navController,
-            startDestination = Screen.Welcome.route,
+            startDestination = Screen.Map.route,
         ) {
             composable(Screen.Welcome.route) {
                 OnBoardingScreen(
