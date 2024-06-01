@@ -1,10 +1,12 @@
 package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.GeoJson
-import com.example.explory.domain.state.MapUiState
+import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.model.location.LocationResponse
 import com.example.explory.domain.usecase.GetPolygonsUseCase
+import com.example.explory.domain.websocket.LocationTracker
+import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
@@ -20,9 +22,15 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.Random
 
-class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewModel() {
+class MapViewModel(
+    private val getPolygonsUseCase: GetPolygonsUseCase,
+    private val webSocketClient: LocationWebSocketClient,
+    private val locationTracker: LocationTracker
+) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
+    private val viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
@@ -39,12 +47,12 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
         startLocationUpdates()
     }
 
-    private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    init {
-        launchPositionUpdates()
-//        getTestPolygons()
+    private fun startLocationUpdates() {
+        locationTracker.setLocationListener { location ->
+            sendLocationToServer(location.latitude, location.longitude)
+        }
+        locationTracker.startTracking()
     }
 
     private fun sendLocationToServer(latitude: Double, longitude: Double) {
@@ -55,6 +63,7 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
         )
         webSocketClient.sendLocationRequest(locationRequest)
     }
+
     private fun launchPositionUpdates() {
         uiScope.launch {
             while (true) {
@@ -81,6 +90,7 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
         points.add(firstLast)
         return listOf(points)
     }
+
     private fun onWebSocketResponse(response: LocationResponse) {
         val polygons = parseGeoJson(response.geo)
         _mapState.update { state ->
@@ -115,19 +125,19 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
     }
 
     fun updateShowMap(show: Boolean) {
-        _mapUiState.update { it.copy(showMap = show) }
+        _mapState.update { it.copy(showMap = show) }
     }
 
     fun updateShowRequestPermissionButton(show: Boolean) {
-        _mapUiState.update { it.copy(showRequestPermissionButton = show) }
+        _mapState.update { it.copy(showRequestPermissionButton = show) }
     }
 
     fun incrementPermissionRequestCount() {
-        _mapUiState.update { it.copy(permissionRequestCount = it.permissionRequestCount + 1) }
+        _mapState.update { it.copy(permissionRequestCount = it.permissionRequestCount + 1) }
     }
 
-    fun updateShowFriendScreen(){
-        _mapUiState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
+    fun updateShowFriendScreen() {
+        _mapState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
     }
 }
 
