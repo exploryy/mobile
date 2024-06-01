@@ -1,6 +1,5 @@
 package com.example.explory.data.network.interceptor
 
-import android.util.Log
 import com.example.explory.common.Constants.Companion.AUTHORIZATION_HEADER
 import com.example.explory.data.model.TokenType
 import com.example.explory.data.service.AuthService
@@ -15,7 +14,6 @@ class AuthInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val builder = request.newBuilder()
-        Log.d("AuthInterceptor", "Sending request")
         if (request.header(AUTHORIZATION_HEADER) == null) {
             var accessToken = localStorage.fetchToken(TokenType.ACCESS)
             if (accessToken != null) {

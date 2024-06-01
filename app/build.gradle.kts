@@ -5,9 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("plugin.serialization") version "1.5.31"
-
 }
-
 
 fun getLocalMapboxApiKey(): String {
     val properties = Properties()
