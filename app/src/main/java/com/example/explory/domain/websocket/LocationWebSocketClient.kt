@@ -3,6 +3,9 @@ package com.example.explory.domain.websocket
 import android.util.Log
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.location.LocationResponse
+import com.example.explory.domain.usecase.GetUserTokenUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -13,24 +16,30 @@ import okhttp3.WebSocketListener
 
 class LocationWebSocketClient(
     private val url: String,
-    private val token: String,
+    private val getUserTokenUseCase: GetUserTokenUseCase,
 ) {
+
+    private val _messages = MutableStateFlow<LocationResponse?>(null)
+    val messages: StateFlow<LocationResponse?> get() = _messages
+
     private val client = OkHttpClient()
     private lateinit var webSocket: WebSocket
 
     fun connect() {
+        val token = getUserTokenUseCase.execute()
+        Log.d("dfsdf", token.toString())
         val request = Request.Builder()
             .url(url)
             .addHeader("Authorization", "Bearer $token")
             .build()
 
         webSocket = client.newWebSocket(request, createWebSocketListener())
-        Log.d("Подключено", "Я тут")
     }
 
     fun sendLocationRequest(locationRequest: LocationRequest) {
-        //val jsonRequest = Json.encodeToString(locationRequest)
-        //webSocket.send(jsonRequest)
+        val jsonRequest = Json.encodeToString(locationRequest)
+        Log.d("Отправляю координаты", jsonRequest)
+        webSocket.send(jsonRequest)
     }
 
     fun close() {
@@ -40,12 +49,17 @@ class LocationWebSocketClient(
 
     private fun createWebSocketListener() = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
-            println("WebSocket Connected")
+            Log.d("Подключено", "Я тут")
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            val response = Json.decodeFromString<LocationResponse>(text)
-            Log.d("fdsfd", response.geo)
+            Log.d("Получил полигоны", text)
+            try {
+                val response = Json.decodeFromString<LocationResponse>(text)
+                _messages.value = response
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {

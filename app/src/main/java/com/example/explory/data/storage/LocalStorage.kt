@@ -50,6 +50,9 @@ class LocalStorage(context: Context) {
         }
     }
 
+    fun getAccessToken(): String? {
+        return fetchToken(TokenType.ACCESS)
+    }
 
     fun isAccessTokenExpired(): Boolean {
         val expiresIn = sharedPreferences.getString(USER_ACCESS_TOKEN_EXPIRES, null)

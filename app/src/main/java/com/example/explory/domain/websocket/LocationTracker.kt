@@ -5,16 +5,16 @@ import android.location.Location
 class LocationTracker(
     private val locationProvider: LocationProvider
 ) {
-
     private var locationListener: ((Location) -> Unit)? = null
 
     fun startTracking() {
-        locationProvider.getLocation { location ->
+        locationProvider.startLocationUpdates { location ->
             locationListener?.invoke(location)
         }
     }
 
     fun stopTracking() {
+        locationProvider.stopLocationUpdates()
         locationListener = null
     }
 

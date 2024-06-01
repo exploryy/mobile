@@ -36,6 +36,10 @@ class AuthRepository(
         )
     }
 
+    fun getToken() : String? {
+        return localStorage.getAccessToken()
+    }
+
     suspend fun hasToken(): Boolean {
         return localStorage.hasToken()
     }

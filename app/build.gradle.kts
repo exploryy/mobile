@@ -4,8 +4,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("plugin.serialization") version "2.0.0"
+
 }
+
 
 fun getLocalMapboxApiKey(): String {
     val properties = Properties()

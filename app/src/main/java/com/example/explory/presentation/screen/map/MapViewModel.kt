@@ -1,6 +1,7 @@
 package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.GeoJson
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.location.LocationResponse
@@ -32,21 +33,21 @@ class MapViewModel(
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    val outerLineString: LineString = LineString.fromLngLats(
-        listOf(
-            Point.fromLngLat(180.0, 90.0),
-            Point.fromLngLat(180.0, -90.0),
-            Point.fromLngLat(-180.0, -90.0),
-            Point.fromLngLat(-180.0, 90.0),
-            Point.fromLngLat(180.0, 90.0)
-        )
-    )
+//    val outerLineString: LineString = LineString.fromLngLats(
+//        listOf(
+//            Point.fromLngLat(180.0, 90.0),
+//            Point.fromLngLat(180.0, -90.0),
+//            Point.fromLngLat(-180.0, -90.0),
+//            Point.fromLngLat(-180.0, 90.0),
+//            Point.fromLngLat(180.0, 90.0)
+//        )
+//    )
 
     init {
         webSocketClient.connect()
         startLocationUpdates()
+        observeWebSocketMessages()
     }
-
 
     private fun startLocationUpdates() {
         locationTracker.setLocationListener { location ->
@@ -64,14 +65,14 @@ class MapViewModel(
         webSocketClient.sendLocationRequest(locationRequest)
     }
 
-    private fun launchPositionUpdates() {
-        uiScope.launch {
-            while (true) {
-                onInnerListUpdate(createRandomPointsList().map { LineString.fromLngLats(it) })
-                delay(5000L)
-            }
-        }
-    }
+//    private fun launchPositionUpdates() {
+//        uiScope.launch {
+//            while (true) {
+//                onInnerListUpdate(createRandomPointsList().map { LineString.fromLngLats(it) })
+//                delay(5000L)
+//            }
+//        }
+//    }
 
     private fun createRandomPointsList(): List<List<Point>> {
         val random = Random()
@@ -91,15 +92,6 @@ class MapViewModel(
         return listOf(points)
     }
 
-    private fun onWebSocketResponse(response: LocationResponse) {
-        val polygons = parseGeoJson(response.geo)
-        _mapState.update { state ->
-            state.copy(
-                polygons = polygons
-            )
-        }
-    }
-
     private fun updateUiState(state: UiState) {
         _mapState.update { mapState ->
             mapState.copy(uiState = state)
@@ -114,14 +106,29 @@ class MapViewModel(
         }
     }
 
-    private fun parseGeoJson(geoJson: String): List<List<List<Double>>> {
-        val geoJsonObject = Json.decodeFromString<GeoJson>(geoJson)
-        return geoJsonObject.coordinates
+    private fun observeWebSocketMessages() {
+        viewModelScope.launch {
+            webSocketClient.messages.collect { response ->
+                response?.let {
+                    val newInnerPoints = it.geo.features.flatMap { feature ->
+                        feature.geometry.coordinates.map { coordinateList ->
+                            LineString.fromLngLats(
+                                coordinateList.map { coordinates ->
+                                    Point.fromLngLat(coordinates[0], coordinates[1])
+                                }
+                            )
+                        }
+                    }
+                    onInnerListUpdate(newInnerPoints)
+                }
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
+        viewModelJob.cancel()
     }
 
     fun updateShowMap(show: Boolean) {
