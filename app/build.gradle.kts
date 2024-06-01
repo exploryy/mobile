@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.material.icons)
     implementation(libs.androidx.compose.animation)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil)
 
     implementation(libs.androidx.foundation)
 

@@ -100,23 +100,23 @@ class MapViewModel(
 //        }
 //    }
 
-    private fun createRandomPointsList(): List<List<Point>> {
-        val random = Random()
-        val points = mutableListOf<Point>()
-        val firstLast = Point.fromLngLat(
-            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-        )
-        points.add(firstLast)
-        for (i in 0 until random.nextInt(322) + 4) {
-            points.add(
-                Point.fromLngLat(
-                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-                )
-            )
-        }
-        points.add(firstLast)
-        return listOf(points)
-    }
+//    private fun createRandomPointsList(): List<List<Point>> {
+//        val random = Random()
+//        val points = mutableListOf<Point>()
+//        val firstLast = Point.fromLngLat(
+//            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
+//        )
+//        points.add(firstLast)
+//        for (i in 0 until random.nextInt(322) + 4) {
+//            points.add(
+//                Point.fromLngLat(
+//                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
+//                )
+//            )
+//        }
+//        points.add(firstLast)
+//        return listOf(points)
+//    }
 
 
     private fun onInnerListUpdate(newInnerPoints: List<LineString>) {

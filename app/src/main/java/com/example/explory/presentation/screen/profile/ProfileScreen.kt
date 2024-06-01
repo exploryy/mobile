@@ -1,6 +1,7 @@
 package com.example.explory.presentation.screen.profile
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,23 +22,30 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.explory.R
 import com.example.explory.data.model.Friend
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.ui.theme.BlackButtonColor
 import com.example.explory.ui.theme.DisabledBlackButtonColor
 import com.example.explory.ui.theme.DisabledWhiteContentColor
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    userName: String,
-    userStatus: String,
+    viewModel: ProfileViewModel = koinViewModel(),
     state: Int,
     onBackClick: () -> Unit,
     onInviteFriends: () -> Unit,
@@ -45,6 +53,7 @@ fun ProfileScreen(
     friends: List<Friend>
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 
 //    TopAppBar(
 //        title = { Text(text = "") },
@@ -69,19 +78,33 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                //val imageUrl = profileState.profile?.avatarUri
+                val imageUrl = "https://news.store.rambler.ru/img/e5af3f463d7644045782f62b91f61d56?img-format=auto&img-1-resize=height:400,fit:max&img-2-filter=sharpen"
                 Box(
                     modifier = Modifier
                         .size(100.dp)
                         .background(Color.DarkGray, shape = CircleShape)
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.picture),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .align(Alignment.Center),
-                        tint = Color.White
-                    )
+                    if (imageUrl != null) {
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .align(Alignment.Center)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.picture),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .align(Alignment.Center),
+                            tint = Color.White
+                        )
+                    }
                 }
                 Button(
                     colors = ButtonDefaults.buttonColors(
@@ -98,15 +121,15 @@ fun ProfileScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = userName, color = Color.White, style = MaterialTheme.typography.headlineLarge)
+            profileState.profile?.let { Text(text = it.name, color = Color.White, style = MaterialTheme.typography.headlineLarge) }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = userStatus, color = Color.Gray, style = MaterialTheme.typography.bodyLarge)
+            Text(text = "Адыхает", color = Color.Gray, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
 
             SemiRoundedButtonsRow(
-                onFirstButtonClick = { /*TODO*/ },
-                onSecondButtonClick = { /*TODO*/ },
+                onFirstButtonClick = {  },
+                onSecondButtonClick = {  },
                 onThirdButtonClick = { }
             )
 
@@ -114,7 +137,7 @@ fun ProfileScreen(
             {
                 1 -> FriendsScreen(
                     friends = friends,
-                    onInviteFriends = { /*TODO*/ }
+                    onInviteFriends = {  }
                 )
             }
         }
