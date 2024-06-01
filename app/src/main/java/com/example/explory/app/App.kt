@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.example.explory.di.appModule
 import com.example.explory.di.dataModule
 import com.example.explory.di.domainModule
@@ -27,7 +28,11 @@ class App : Application() {
         notificationManager.createNotificationChannel(channel)
         Intent(applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_START
-            startService(this)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(this)
+            } else {
+                startService(this)
+            }
         }
         startKoin {
             androidLogger(Level.DEBUG)

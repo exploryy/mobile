@@ -102,12 +102,14 @@ class MapViewModel(
             webSocketClient.messages.collect { response ->
                 response?.let {
                     val newInnerPoints = it.geo.features.flatMap { feature ->
-                        feature.geometry.coordinates.map { coordinateList ->
-                            LineString.fromLngLats(
-                                coordinateList.map { coordinates ->
-                                    Point.fromLngLat(coordinates[0], coordinates[1])
-                                }
-                            )
+                        feature.geometry.coordinates.flatMap { coordinateList ->
+                            coordinateList.map { innerList ->
+                                LineString.fromLngLats(
+                                    innerList.map { coordinates ->
+                                        Point.fromLngLat(coordinates[0], coordinates[1])
+                                    }
+                                )
+                            }
                         }
                     }
 
