@@ -1,11 +1,12 @@
 package com.example.explory.domain.usecase
 
-import com.example.explory.data.model.Login
-import com.example.explory.data.model.TokenResponse
-import retrofit2.HttpException
+import com.example.explory.data.model.AuthRequest
+import com.example.explory.data.repository.AuthRepository
 
-class PostLoginUseCase {
-    suspend fun invoke(login: Login): Result<TokenResponse> {
-        return Result.success(TokenResponse("dfssdas", "sdfsd"));
+class PostLoginUseCase(
+    private val authRepository: AuthRepository
+) {
+    suspend fun execute(authRequest: AuthRequest) {
+        authRepository.login(authRequest.login, authRequest.password)
     }
 }

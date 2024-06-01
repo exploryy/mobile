@@ -1,12 +1,11 @@
 package com.example.explory.domain.state
 
-data class LoginState (
-    val login: String,
-    val password: String,
-    val isPasswordHide: Boolean,
+import com.example.explory.common.Constants
 
-    val isError: Boolean,
-    val isErrorText: String?,
-
-    val isLoading: Boolean
+data class LoginState(
+    val login: String = Constants.DEFAULT_LOGIN,
+    val password: String = Constants.DEFAULT_PASSWORD,
+    val isPasswordHide: Boolean = true,
+    val errorMessage: String? = null,
+    val isLoading: Boolean = false
 )

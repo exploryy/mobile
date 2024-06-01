@@ -114,7 +114,7 @@ fun LoginScreen(
                         label = stringResource(R.string.login),
                         value = loginState.login,
                         onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
-                        error = loginState.isErrorText,
+                        error = loginState.errorMessage,
                         colors = OutlinedTextFieldDefaults.colors(
                             errorContainerColor = Color.Red.copy(alpha = 0.1f),
                             cursorColor = Color.White,
@@ -133,7 +133,7 @@ fun LoginScreen(
                         onValueChange = { viewModel.processIntent(LoginIntent.UpdatePassword(it)) },
                         transformationState = loginState.isPasswordHide,
                         onButtonClick = { viewModel.processIntent(LoginIntent.UpdatePasswordVisibility) },
-                        errorText = loginState.isErrorText,
+                        errorText = loginState.errorMessage,
                         colors = OutlinedTextFieldDefaults.colors(
                             errorContainerColor = Color.Red.copy(alpha = 0.1f),
                             cursorColor = Color.White,
