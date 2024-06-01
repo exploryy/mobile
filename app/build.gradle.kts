@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.maps.compose)
     implementation(libs.mapbox.sdk.turf)
     implementation(libs.material.icons)
+    implementation(libs.androidx.compose.animation)
 
     implementation(libs.androidx.foundation)
 
