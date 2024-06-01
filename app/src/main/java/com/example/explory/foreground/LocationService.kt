@@ -79,7 +79,7 @@ class LocationService : Service() {
     }
 
     private fun stop() {
-        stopForeground(STOP_FOREGROUND_DETACH)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
