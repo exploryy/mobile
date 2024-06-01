@@ -1,7 +1,8 @@
-package com.example.explory.presentation.map
+package com.example.explory.presentation.screen.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.explory.domain.state.MapUiState
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
@@ -19,6 +20,10 @@ import java.util.Random
 class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
+
+    private val _mapUiState = MutableStateFlow(MapUiState())
+    val mapUiState = _mapUiState.asStateFlow()
+
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -86,6 +91,23 @@ class MapViewModel(private val getPolygonsUseCase: GetPolygonsUseCase) : ViewMod
             updateUiState(UiState.Default)
         }
     }
+
+    fun updateShowMap(show: Boolean) {
+        _mapUiState.update { it.copy(showMap = show) }
+    }
+
+    fun updateShowRequestPermissionButton(show: Boolean) {
+        _mapUiState.update { it.copy(showRequestPermissionButton = show) }
+    }
+
+    fun incrementPermissionRequestCount() {
+        _mapUiState.update { it.copy(permissionRequestCount = it.permissionRequestCount + 1) }
+    }
+
+    fun updateShowFriendScreen(){
+        _mapUiState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
+    }
 }
+
 
 

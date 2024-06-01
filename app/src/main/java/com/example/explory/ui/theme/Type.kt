@@ -1,6 +1,8 @@
 package com.example.explory.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -31,4 +33,20 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+)
+
+val spanStyleGray = SpanStyle (
+    color = GrayColor,
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.W500,
+    fontSize = 14.sp,
+    letterSpacing = 0.5.sp
+)
+
+val spanStyleAccent = SpanStyle (
+    color = Color.White,
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.W500,
+    fontSize = 14.sp,
+    letterSpacing = 0.5.sp
 )

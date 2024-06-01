@@ -16,31 +16,30 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = OffBlack,
+    secondary = MediumGray,
+    background = DarkGray,
+    surface = BlackButtonColor,
+    onPrimary = WhiteContentColor,
+    onSecondary = OffWhite,
+    onBackground = LightGray,
+    onSurface = OffWhite
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = OffWhite,
+    secondary = LightGray,
+    background = WhiteContentColor,
+    surface = OffWhite,
+    onPrimary = BlackButtonColor,
+    onSecondary = MediumGray,
+    onBackground = DarkGray,
+    onSurface = BlackButtonColor
 )
 
 @Composable
 fun ExploryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -49,7 +48,6 @@ fun ExploryTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
