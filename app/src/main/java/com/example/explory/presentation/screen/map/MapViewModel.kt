@@ -1,6 +1,5 @@
 package com.example.explory.presentation.screen.map
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
@@ -9,14 +8,10 @@ import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Random
 
 class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
@@ -25,8 +20,6 @@ class MapViewModel(
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
-    private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
@@ -48,18 +41,6 @@ class MapViewModel(
     private fun getStartPolygons() {
         viewModelScope.launch {
             val polygons = getPolygonsUseCase.execute()
-            Log.d(
-                "MapViewModel",
-                "Polygons: ${
-                    polygons.features.joinToString { feature ->
-                        feature.geometry.coordinates.joinToString { innerList ->
-                            innerList.joinToString(", ") { coordinates ->
-                                coordinates.joinToString(", ")
-                            }
-                        }
-                    }
-                }"
-            )
             val newInnerPoints = polygons.features.flatMap { feature ->
                 feature.geometry.coordinates.flatMap { coordinateList ->
                     coordinateList.map { innerList ->
@@ -91,44 +72,32 @@ class MapViewModel(
         webSocketClient.sendLocationRequest(locationRequest)
     }
 
-//    private fun launchPositionUpdates() {
-//        uiScope.launch {
-//            while (true) {
-//                onInnerListUpdate(createRandomPointsList().map { LineString.fromLngLats(it) })
-//                delay(5000L)
-//            }
-//        }
-//    }
 
-    private fun createRandomPointsList(): List<List<Point>> {
-        val random = Random()
-        val points = mutableListOf<Point>()
-        val firstLast = Point.fromLngLat(
-            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-        )
-        points.add(firstLast)
-        for (i in 0 until random.nextInt(322) + 4) {
-            points.add(
-                Point.fromLngLat(
-                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-                )
-            )
-        }
-        points.add(firstLast)
-        return listOf(points)
-    }
+//    private fun createRandomPointsList(): List<List<Point>> {
+//        val random = Random()
+//        val points = mutableListOf<Point>()
+//        val firstLast = Point.fromLngLat(
+//            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
+//        )
+//        points.add(firstLast)
+//        for (i in 0 until random.nextInt(322) + 4) {
+//            points.add(
+//                Point.fromLngLat(
+//                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
+//                )
+//            )
+//        }
+//        points.add(firstLast)
+//        return listOf(points)
+//    }
 
 
     private fun onInnerListUpdate(newInnerPoints: List<LineString>) {
-        val oldInnerPoints = _mapState.value.innerPoints
-        _mapState.update { state ->
-            state.copy(
-                innerPoints = oldInnerPoints + newInnerPoints
-            )
-        }
+        _mapState.update { it.copy(innerPoints = newInnerPoints) }
     }
 
     private fun observeWebSocketMessages() {
+
         viewModelScope.launch {
             webSocketClient.messages.collect { response ->
                 response?.let {
@@ -141,6 +110,7 @@ class MapViewModel(
                             )
                         }
                     }
+
                     onInnerListUpdate(newInnerPoints)
                 }
             }
@@ -150,7 +120,6 @@ class MapViewModel(
     override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
-        viewModelJob.cancel()
     }
 
     fun updateShowMap(show: Boolean) {

@@ -71,7 +71,7 @@ fun MapScreen(
 
     withHolesSourceState.data = GeoJSONData(
         Feature.fromGeometry(
-            Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints)
+            Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints.toList())
         )
     )
 
