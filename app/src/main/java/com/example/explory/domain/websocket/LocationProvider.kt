@@ -4,5 +4,6 @@ import android.location.Location
 
 
 interface LocationProvider {
-    fun getLocation(callback: (Location) -> Unit)
+    fun startLocationUpdates(callback: (Location) -> Unit)
+    fun stopLocationUpdates()
 }
