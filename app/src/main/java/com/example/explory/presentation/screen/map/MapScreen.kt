@@ -24,7 +24,9 @@ import com.example.explory.data.model.Friend
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
+import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
+import com.mapbox.geojson.Polygon
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
@@ -32,6 +34,7 @@ import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportS
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
 import com.mapbox.maps.extension.compose.style.layers.generated.FillOpacity
+import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.LightPreset
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
@@ -66,11 +69,11 @@ fun MapScreen(
         GeoJsonSourceState()
     }
 
-//    withHolesSourceState.data = GeoJSONData(
-//        Feature.fromGeometry(
-//            Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints)
-//        )
-//    )
+    withHolesSourceState.data = GeoJSONData(
+        Feature.fromGeometry(
+            Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints)
+        )
+    )
 
     Box(Modifier.fillMaxSize()) {
         RequestLocationPermission(

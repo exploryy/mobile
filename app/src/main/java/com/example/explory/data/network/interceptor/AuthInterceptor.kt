@@ -26,9 +26,7 @@ class AuthInterceptor(
                 ) {
                     val refreshToken = localStorage.fetchToken(TokenType.REFRESH)
                     if (refreshToken != null) {
-                        Log.d("AuthInterceptor", "Refreshing token")
                         try {
-                            Log.d("AuthInterceptor", "Sending refresh token $refreshToken")
                             val newTokens = runBlocking {
                                 refreshTokenUseCase.execute(refreshToken)
                             }

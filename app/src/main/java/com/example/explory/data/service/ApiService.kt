@@ -1,6 +1,5 @@
 package com.example.explory.data.service
 
-import com.mapbox.geojson.Feature
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -129,7 +128,7 @@ interface ApiService {
     // Polygons
 
     @GET("/multipolygon")
-    suspend fun getPolygons(): List<PolygonDto>
+    suspend fun getPolygons(): PolygonDto
 
     @GET("/multipolygon/area")
     suspend fun getPolygonArea(): AreaDto
@@ -138,8 +137,17 @@ interface ApiService {
 }
 
 class PolygonDto(
-    val type: String, val features: List<Feature>
+    val type: String, val features: List<FeatureResponse>
 )
+
+class FeatureResponse(
+    val type: String, val properties: Map<String, String>, val geometry: GeometryResponse
+)
+
+class GeometryResponse(
+    val type: String, val coordinates: List<List<List<List<Double>>>>
+)
+
 
 class AreaDto(
     val area: Double

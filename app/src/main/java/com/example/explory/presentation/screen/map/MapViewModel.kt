@@ -1,12 +1,12 @@
 package com.example.explory.presentation.screen.map
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
-import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.CoroutineScope
@@ -39,9 +39,40 @@ class MapViewModel(
     )
 
     init {
+        getStartPolygons()
         webSocketClient.connect()
         startLocationUpdates()
         observeWebSocketMessages()
+    }
+
+    private fun getStartPolygons() {
+        viewModelScope.launch {
+            val polygons = getPolygonsUseCase.execute()
+            Log.d(
+                "MapViewModel",
+                "Polygons: ${
+                    polygons.features.joinToString { feature ->
+                        feature.geometry.coordinates.joinToString { innerList ->
+                            innerList.joinToString(", ") { coordinates ->
+                                coordinates.joinToString(", ")
+                            }
+                        }
+                    }
+                }"
+            )
+            val newInnerPoints = polygons.features.flatMap { feature ->
+                feature.geometry.coordinates.flatMap { coordinateList ->
+                    coordinateList.map { innerList ->
+                        LineString.fromLngLats(
+                            innerList.map { coordinates ->
+                                Point.fromLngLat(coordinates[0], coordinates[1])
+                            }
+                        )
+                    }
+                }
+            }
+            onInnerListUpdate(newInnerPoints)
+        }
     }
 
     private fun startLocationUpdates() {
@@ -87,16 +118,12 @@ class MapViewModel(
         return listOf(points)
     }
 
-    private fun updateUiState(state: UiState) {
-        _mapState.update { mapState ->
-            mapState.copy(uiState = state)
-        }
-    }
 
     private fun onInnerListUpdate(newInnerPoints: List<LineString>) {
+        val oldInnerPoints = _mapState.value.innerPoints
         _mapState.update { state ->
             state.copy(
-                innerPoints = newInnerPoints
+                innerPoints = oldInnerPoints + newInnerPoints
             )
         }
     }
