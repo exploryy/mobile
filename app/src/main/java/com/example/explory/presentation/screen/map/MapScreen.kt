@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
-import com.example.explory.data.model.Friend
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
@@ -179,30 +178,10 @@ fun MapScreen(
             onBackClick = { viewModel.updateShowFriendScreen() },
             onInviteFriends = { },
             onSettingsClick = { },
-            friends = friends
         )
     }
 
 }
-
-val friends = listOf(
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = true),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = true),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-)
 
 
 fun Painter.drawToBitmap(): ImageBitmap {
