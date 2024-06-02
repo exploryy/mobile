@@ -118,7 +118,7 @@ interface ApiService {
         @Query("friend_id") userId: String
     )
 
-    @DELETE("/friend/accept")
+    @POST("/friend/accept")
     suspend fun acceptFriend(
         @Query("friend_id") userId: String
     )
