@@ -4,8 +4,8 @@ class Constants {
     companion object {
         const val EMPTY = ""
         const val AUTHORIZATION_HEADER = "Authorization"
-        const val DEFAULT_LOGIN = "ghubman1"
-        const val DEFAULT_PASSWORD = "12345"
+        const val DEFAULT_LOGIN = "clown"
+        const val DEFAULT_PASSWORD = "123456"
         const val POLYGON_URL = "https://polygons.openstreetmap.fr"
         const val BASE_URL = "http://158.160.69.160:8080"
         const val AUTH_URL = "http://158.160.69.160:8082"
