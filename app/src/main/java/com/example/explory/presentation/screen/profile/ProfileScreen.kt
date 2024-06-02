@@ -23,6 +23,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
+import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
 import com.example.explory.ui.theme.BlackButtonColor
 import com.example.explory.ui.theme.DisabledBlackButtonColor
 import com.example.explory.ui.theme.DisabledWhiteContentColor
@@ -55,6 +57,10 @@ fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        viewModel.getNotificationCount()
+    }
 
     ModalBottomSheet(
         onDismissRequest = { onBackClick() },
@@ -164,13 +170,14 @@ fun ProfileScreen(
                 onFirstButtonClick = { viewModel.changeCurrentPage(1) },
                 onSecondButtonClick = { viewModel.changeCurrentPage(2)},
                 onThirdButtonClick = { viewModel.changeCurrentPage(3)},
-                selectedButton = profileState.profileScreenState
+                selectedButton = profileState.profileScreenState,
+                notificationCount = profileState.notificationCount
             )
 
             when (profileState.profileScreenState)
             {
                 1 -> FriendsScreen()
-                2 -> FriendsScreen()
+                2 -> UserStatisticScreen()
                 3 -> FriendRequestsScreen()
             }
         }

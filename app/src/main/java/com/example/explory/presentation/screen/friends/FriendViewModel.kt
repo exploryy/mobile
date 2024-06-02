@@ -26,6 +26,8 @@ class FriendViewModel(private val getFriendsUseCase: GetFriendsUseCase) : ViewMo
                 _friendsState.value = FriendsState(friends = friends)
             } catch (e: Exception) {
                 _friendsState.value = FriendsState(error = e.message)
+            } finally {
+                _friendsState.value = FriendsState(isLoading = false)
             }
         }
     }

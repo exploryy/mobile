@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
+import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.friends.component.FriendItem
 import org.koin.androidx.compose.koinViewModel
 
@@ -74,8 +75,9 @@ fun FriendsScreen(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        if (friends.isEmpty()){
+        if (friendsState.isLoading){
+            LoadingItem()
+        } else if (friends.isEmpty()){
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

@@ -11,6 +11,7 @@ import com.example.explory.data.model.profile.ProfileMultipart
 import com.example.explory.data.model.profile.ProfileRequest
 import com.example.explory.data.model.profile.toProfile
 import com.example.explory.domain.usecase.EditProfileUseCase
+import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ import java.io.File
 class ProfileViewModel(
     private val getProfileUseCase: GetProfileUseCase,
     private val editProfileUseCase: EditProfileUseCase,
+    private val getFriendRequestsUseCase: GetFriendRequestsUseCase,
     private val context: Context
 ) : ViewModel() {
     private val _profileState = MutableStateFlow(ProfileState())
@@ -29,6 +31,7 @@ class ProfileViewModel(
 
     init {
         fetchProfile()
+        getNotificationCount()
     }
 
     private fun fetchProfile() {
@@ -50,6 +53,20 @@ class ProfileViewModel(
 
     fun changeOpenEditDialogState(){
         _profileState.update { it.copy(isEditDialogOpen = !it.isEditDialogOpen ) }
+    }
+
+    fun getNotificationCount(){
+        viewModelScope.launch {
+            _profileState.value = _profileState.value.copy(isLoading = true)
+            try {
+                val response = getFriendRequestsUseCase.execute()
+                _profileState.value = _profileState.value.copy(notificationCount = response.other.size)
+            } catch (e: Exception) {
+                _profileState.value = _profileState.value.copy(error = e.message)
+            } finally {
+                _profileState.value = _profileState.value.copy(isLoading = false)
+            }
+        }
     }
 
     fun editProfile(profile: ProfileRequest) {
