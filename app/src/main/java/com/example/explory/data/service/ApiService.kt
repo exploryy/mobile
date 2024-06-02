@@ -166,6 +166,10 @@ interface ApiService {
         @Query("coin_id") coinId: Long
     )
 
+    @GET("/user")
+    suspend fun getUserList(
+        @Query("username") username: String
+    ): List<ProfileDto>
 }
 
 data class CoinDto(

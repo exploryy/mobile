@@ -40,9 +40,10 @@ fun FriendItem(friend: Friend) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         val imageUrl = friend.avatar
+
         Box(
             modifier = Modifier
-                .size(100.dp)
+                .size(64.dp)
                 .background(Color.DarkGray, shape = CircleShape)
         ) {
             if (imageUrl != null) {
@@ -67,17 +68,21 @@ fun FriendItem(friend: Friend) {
             }
         }
         Spacer(modifier = Modifier.width(8.dp))
+
         Column {
             Text(text = friend.name, style = MaterialTheme.typography.bodyMedium)
             Text(text = friend.email, style = MaterialTheme.typography.bodyMedium)
         }
+
         Spacer(modifier = Modifier.weight(1f))
+
         Button(
             onClick = {  },
             enabled = false
         ) {
             Text("Чат")
         }
+
         IconButton(onClick = {  }) {
             Icon(
                 imageVector = if (friend.isBestFriend) Icons.Default.Star else Icons.Default.StarBorder,
@@ -85,5 +90,6 @@ fun FriendItem(friend: Friend) {
                 tint = if (friend.isBestFriend) Color.Yellow else Color.White
             )
         }
+
     }
 }

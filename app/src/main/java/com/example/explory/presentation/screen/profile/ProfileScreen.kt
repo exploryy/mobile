@@ -23,6 +23,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,8 @@ import coil.compose.AsyncImage
 import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.FriendsScreen
+import com.example.explory.presentation.screen.requests.FriendRequestsScreen
+import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
 import com.example.explory.ui.theme.BlackButtonColor
 import com.example.explory.ui.theme.DisabledBlackButtonColor
 import com.example.explory.ui.theme.DisabledWhiteContentColor
@@ -47,7 +50,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
-    state: Int,
     onBackClick: () -> Unit,
     onInviteFriends: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -55,6 +57,10 @@ fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        viewModel.getNotificationCount()
+    }
 
     ModalBottomSheet(
         onDismissRequest = { onBackClick() },
@@ -161,14 +167,18 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             SemiRoundedButtonsRow(
-                onFirstButtonClick = { },
-                onSecondButtonClick = { },
-                onThirdButtonClick = { }
+                onFirstButtonClick = { viewModel.changeCurrentPage(1) },
+                onSecondButtonClick = { viewModel.changeCurrentPage(2)},
+                onThirdButtonClick = { viewModel.changeCurrentPage(3)},
+                selectedButton = profileState.profileScreenState,
+                notificationCount = profileState.notificationCount
             )
 
-            when (state)
+            when (profileState.profileScreenState)
             {
                 1 -> FriendsScreen()
+                2 -> UserStatisticScreen()
+                3 -> FriendRequestsScreen()
             }
         }
     }
