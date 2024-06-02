@@ -17,7 +17,7 @@ class FriendViewModel(private val getFriendsUseCase: GetFriendsUseCase) : ViewMo
         fetchFriends()
     }
 
-    private fun fetchFriends() {
+    fun fetchFriends() {
         viewModelScope.launch {
             _friendsState.value = FriendsState(isLoading = true)
             try {

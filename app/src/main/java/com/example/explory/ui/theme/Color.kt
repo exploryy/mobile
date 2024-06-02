@@ -22,6 +22,7 @@ val LightGray = Color(0xFFD3D3D3)
 val MediumGray = Color(0xFF7D7D7D)
 val OffWhite = Color(0xFFF8F8F8)
 val OffBlack = Color(0xFF343434)
+val DarkGreen = Color(0xFF2A7E2E)
 
 val AccentColor = Color(0xFF4894FE).copy(alpha = 0.9f)
 val AccentGradient = listOf(Color(0xFF4894FE), Color(0xFF7F7FD5))

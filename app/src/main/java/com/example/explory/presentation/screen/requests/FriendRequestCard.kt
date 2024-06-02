@@ -1,6 +1,7 @@
 package com.example.explory.presentation.screen.requests
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +12,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.explory.R
 import com.example.explory.data.model.profile.ProfileDto
+import com.example.explory.ui.theme.DarkGreen
 
 @Composable
 fun FriendRequestCard(
@@ -36,67 +44,82 @@ fun FriendRequestCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            if (request.avatarUrl.isNullOrEmpty()) {
-                AsyncImage(
-                    model = request.avatarUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-            } else {
-                Icon(
-                    painter = painterResource(R.drawable.picture),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = request.username, style = MaterialTheme.typography.titleMedium)
-                Text(text = request.email, style = MaterialTheme.typography.bodyMedium)
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
             Column {
-                Button(
-                    onClick = onAccept,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Green,
-                        contentColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Принять")
+                if (!request.avatarUrl.isNullOrEmpty()) {
+                    AsyncImage(
+                        model = request.avatarUrl,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.picture),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
-                Button(
-                    onClick = onReject,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red,
-                        contentColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                Text (
+                    text = request.username,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text (
+                    text = request.email,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+            }
+
+            Row {
+                IconButton(
+                    onClick = onAccept,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(DarkGreen)
                 ) {
-                    Text("Отклонить")
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = "Accept",
+                        tint = Color.White
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                IconButton(
+                    onClick = onReject,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color.Red)
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Reject",
+                        tint = Color.White
+                    )
                 }
             }
         }

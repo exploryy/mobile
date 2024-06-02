@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,11 +22,15 @@ import org.koin.androidx.compose.koinViewModel
 fun FriendRequestsScreen(viewModel: FriendRequestsViewModel = koinViewModel()) {
     val friendRequests by viewModel.friendRequests.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchFriendRequests()
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "Заявки в друзья",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
         )
 
         if (friendRequests.other.isEmpty()) {
@@ -52,3 +57,5 @@ fun FriendRequestsScreen(viewModel: FriendRequestsViewModel = koinViewModel()) {
         }
     }
 }
+
+//31d37216-9caf-4526-9080-f2f55c7a3380
