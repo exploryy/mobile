@@ -20,6 +20,11 @@ interface ApiService {
         @Query("password") password: String
     ): String
 
+    @GET("/user")
+    suspend fun getUserList(
+        @Query("username") username: String
+    ): List<ProfileDto>
+
     @GET("/user/profile")
     suspend fun getProfile(): ProfileDto
 
@@ -135,8 +140,6 @@ interface ApiService {
 
     @GET("/multipolygon/area")
     suspend fun getPolygonArea(): AreaDto
-
-
 }
 
 class PolygonDto(

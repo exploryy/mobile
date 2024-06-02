@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,9 @@ fun FriendsScreen(
     viewModel: FriendViewModel = koinViewModel()
 ) {
     val friendsState by viewModel.friendsState.collectAsStateWithLifecycle()
+    val userListState by viewModel.userListState.collectAsStateWithLifecycle()
+    val addFriendStatus by viewModel.addFriendStatus.collectAsStateWithLifecycle()
+
     val friends = friendsState.friends
 
     var searchText by remember { mutableStateOf("") }
@@ -48,6 +52,16 @@ fun FriendsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.fetchFriends()
+    }
+
+    if (friendsState.isFriendRequestDialogOpen){
+        AddFriendDialog(
+            onDismiss = { viewModel.changeFriendRequestDialogState() },
+            addFriendStatus = addFriendStatus,
+            userListState = userListState,
+            searchUsers = { viewModel.searchUsers(it) },
+            addFriend = { viewModel.addFriend(it) }
+        )
     }
 
     Column(
@@ -66,7 +80,7 @@ fun FriendsScreen(
         )
 
         Button(
-            onClick = {  },
+            onClick = { viewModel.changeFriendRequestDialogState() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
