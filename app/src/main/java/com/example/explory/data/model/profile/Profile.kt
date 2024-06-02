@@ -1,4 +1,4 @@
-package com.example.explory.data.model
+package com.example.explory.data.model.profile
 
 import com.example.explory.data.service.ProfileDto
 

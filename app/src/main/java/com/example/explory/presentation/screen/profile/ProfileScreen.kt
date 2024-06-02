@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,15 +56,6 @@ fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 
-//    TopAppBar(
-//        title = { Text(text = "") },
-//        navigationIcon = {
-//            IconButton(onClick = onBackClick) {
-//                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-//            }
-//        }
-//    )
-
     ModalBottomSheet(
         onDismissRequest = { onBackClick() },
         sheetState = sheetState
@@ -78,8 +70,7 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                //val imageUrl = profileState.profile?.avatarUri
-                val imageUrl = "https://news.store.rambler.ru/img/e5af3f463d7644045782f62b91f61d56?img-format=auto&img-1-resize=height:400,fit:max&img-2-filter=sharpen"
+                val imageUrl = profileState.profile?.avatarUri
                 Box(
                     modifier = Modifier
                         .size(100.dp)
@@ -106,30 +97,67 @@ fun ProfileScreen(
                         )
                     }
                 }
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = Color.White,
-                        containerColor = BlackButtonColor,
-                        disabledContentColor = DisabledWhiteContentColor,
-                        disabledContainerColor = DisabledBlackButtonColor
-                    ),
-                    border = BorderStroke(1.dp, Color.White),
-                    onClick = { /* TODO: Добавить действие */ }
+
+                Column(
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Text(text = "Редактировать")
+                    val buttonWidth = 175.dp
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Color.White,
+                            containerColor = BlackButtonColor,
+                            disabledContentColor = DisabledWhiteContentColor,
+                            disabledContainerColor = DisabledBlackButtonColor
+                        ),
+                        border = BorderStroke(1.dp, Color.White),
+                        onClick = { viewModel.changeOpenEditDialogState() },
+                        modifier = Modifier.width(buttonWidth)
+                    ) {
+                        Text(text = "Редактировать")
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Color.Red.copy(alpha = 0.7f),
+                            containerColor = BlackButtonColor,
+                            disabledContentColor = DisabledWhiteContentColor,
+                            disabledContainerColor = DisabledBlackButtonColor
+                        ),
+                        border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f)),
+                        onClick = {  },
+                        modifier = Modifier.width(buttonWidth)
+                    ) {
+                        Text(text = "Выйти из аккаунта")
+                    }
                 }
+
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            profileState.profile?.let { Text(text = it.name, color = Color.White, style = MaterialTheme.typography.headlineLarge) }
+            profileState.profile?.let {
+                Text(
+                    text = it.name,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineLarge
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "Адыхает", color = Color.Gray, style = MaterialTheme.typography.bodyLarge)
+            profileState.profile?.let {
+                Text(
+                    text = it.email,
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             SemiRoundedButtonsRow(
-                onFirstButtonClick = {  },
-                onSecondButtonClick = {  },
+                onFirstButtonClick = { },
+                onSecondButtonClick = { },
                 onThirdButtonClick = { }
             )
 
@@ -141,5 +169,13 @@ fun ProfileScreen(
                 )
             }
         }
+    }
+
+    if (profileState.isEditDialogOpen){
+        EditProfileDialog(
+            profile = profileState.profile,
+            onDismiss = { viewModel.changeOpenEditDialogState() },
+            onSave = { viewModel.editProfile(it) }
+        )
     }
 }

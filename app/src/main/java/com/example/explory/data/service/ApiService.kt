@@ -3,6 +3,7 @@ package com.example.explory.data.service
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -20,6 +21,7 @@ interface ApiService {
     @GET("/user/profile")
     suspend fun getProfile(): ProfileDto
 
+    @Multipart
     @POST("/user/profile")
     suspend fun updateProfile(
         @Query("username") username: String?,
