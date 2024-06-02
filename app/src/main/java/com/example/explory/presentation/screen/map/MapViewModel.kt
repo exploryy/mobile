@@ -3,7 +3,9 @@ package com.example.explory.presentation.screen.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
+import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.mapbox.geojson.LineString
@@ -15,6 +17,8 @@ import kotlinx.coroutines.launch
 
 class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
+    private val getQuestsUseCase: GetQuestsUseCase,
+    private val getCoinsUseCase: GetCoinsUseCase,
     private val webSocketClient: LocationWebSocketClient,
     private val locationTracker: LocationTracker
 ) : ViewModel() {
@@ -32,6 +36,7 @@ class MapViewModel(
     )
 
     init {
+        getStartData()
 //        getStartPolygons()
         webSocketClient.connect()
         startLocationUpdates()
@@ -70,6 +75,37 @@ class MapViewModel(
             figureType = "CIRCLE"
         )
         webSocketClient.sendLocationRequest(locationRequest)
+    }
+
+    private fun getStartData() {
+        viewModelScope.launch {
+//            getQuests()
+            getCoins()
+        }
+    }
+
+//    private suspend fun getQuests() {
+//        try {
+//            val quests = getQuestsUseCase.execute()
+//            _mapState.update { it.copy(questPoints = quests.map {
+//                Point.fromLngLat(it.longitude, it.latitude)
+//            }) }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
+
+    private suspend fun getCoins() {
+        try {
+            val coins = getCoinsUseCase.execute()
+            _mapState.update { it ->
+                it.copy(coinPoints = coins.map {
+                    Point.fromLngLat(it.latitude.toDouble(), it.longitude.toDouble())
+                })
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 

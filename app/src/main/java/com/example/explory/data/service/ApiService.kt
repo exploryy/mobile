@@ -7,6 +7,7 @@ import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -41,6 +42,7 @@ interface ApiService {
         @Path("route_id") routeId: String
     ): RouteDto
 
+    // Quests
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
         @Path("quest_id") questId: String
@@ -53,6 +55,26 @@ interface ApiService {
         @Query("comment") comment: String,
         @Part images: List<MultipartBody.Part>
     )
+
+    @GET("/quest/point_to_point/{quest_id}")
+    suspend fun getPointToPointQuest(
+        @Path("quest_id") questId: String
+    ): PointToPointQuestDto
+
+    @GET("/quest/my/completed")
+    suspend fun getCompletedQuests(): List<QuestDto>
+
+    @GET("/quest/my/active")
+    suspend fun getActiveQuests(): List<QuestDto?>
+
+    @GET("/quest/list")
+    suspend fun getQuests(): List<QuestDto>
+
+    @GET("/quest/distance/{quest_id}")
+    suspend fun getDistanceQuest(
+        @Path("quest_id") questId: String
+    ): DistanceQuestDto
+
 
     @DELETE("/quest/{quest_id}/review")
     suspend fun deleteReview(
@@ -134,8 +156,45 @@ interface ApiService {
     @GET("/multipolygon/area")
     suspend fun getPolygonArea(): AreaDto
 
+    // Coin
+
+    @GET("/coin/list")
+    suspend fun getCoins(): List<CoinDto>
+
+    @PATCH("/coin/consume")
+    suspend fun consumeCoin(
+        @Query("coin_id") coinId: Long
+    )
 
 }
+
+class CoinDto(
+    val coin_id: Long,
+    val client_id: Long,
+    val latitude: String,
+    val longitude: String,
+    val taken: Boolean,
+    val value: Long
+)
+
+class PointToPointQuestDto(
+    val commonQuestDto: QuestDto,
+    val route: RouteDto
+)
+
+class DistanceQuestDto(
+    val commonQuestDto: QuestDto,
+    val distance: Long
+)
+
+class QuestDto(
+    val questId: Long,
+    val name: String,
+    val description: String,
+    val difficultyType: String,
+    val questType: String,
+    val transportType: String
+)
 
 class PolygonDto(
     val type: String, val features: List<FeatureResponse>

@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Canvas
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.graphics.painter.Painter
@@ -47,11 +46,6 @@ import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationGroup
-import com.mapbox.maps.extension.compose.style.StyleImage
-import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
-import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
-import com.mapbox.maps.extension.compose.style.layers.generated.FillOpacity
-import com.mapbox.maps.extension.compose.style.layers.generated.FillPattern
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.LightPreset
@@ -131,13 +125,13 @@ fun MapScreen(
                 style = {
                     MapboxStandardStyle(
                         topSlot = {
-                            FillLayer(
-                                sourceState = withHolesSourceState,
-                                layerId = OPENED_WORLD_LAYER,
-                                fillColor = FillColor(Color.DarkGray),
-                                fillOpacity = FillOpacity(1.0),
-                                fillPattern = FillPattern(StyleImage("fog", imageBitmap))
-                            )
+//                            FillLayer(
+//                                sourceState = withHolesSourceState,
+//                                layerId = OPENED_WORLD_LAYER,
+//                                fillColor = FillColor(Color.DarkGray),
+//                                fillOpacity = FillOpacity(1.0),
+//                                fillPattern = FillPattern(StyleImage("fog", imageBitmap))
+//                            )
                         },
                         lightPreset = LightPreset.NIGHT
                     )
@@ -154,7 +148,7 @@ fun MapScreen(
                     mapViewportState.transitionToFollowPuckState()
                 }
                 PointAnnotationGroup(
-                    annotations = mapState.questPoints.map {
+                    annotations = mapState.coinPoints.map {
                         PointAnnotationOptions()
                             .withPoint(it)
                             .withIconImage("fog")
@@ -163,7 +157,7 @@ fun MapScreen(
                         annotationSourceOptions = AnnotationSourceOptions(
                             clusterOptions = ClusterOptions(
                                 textColorExpression = Expression.color(AccentColor.toArgb()),
-                                textColor = Black.toArgb(), // Will not be applied as textColorExpression has been set
+                                textColor = Black.toArgb(),
                                 textSize = 20.0,
                                 circleRadiusExpression = literal(25.0),
                                 colorLevels = listOf(

@@ -3,9 +3,11 @@ package com.example.explory.di
 import com.example.explory.common.Constants
 import com.example.explory.data.network.interceptor.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
+import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.FriendRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.ProfileRepository
+import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.service.ApiService
 import com.example.explory.data.service.AuthService
 import com.example.explory.data.service.OpenStreetMapService
@@ -26,6 +28,8 @@ fun dataModule() = module {
     singleOf(::ProfileRepository)
     singleOf(::FriendRepository)
     singleOf(::AuthRepository)
+    singleOf(::CoinsRepository)
+    singleOf(::QuestRepository)
     singleOf(::LocalStorage)
     single<OpenStreetMapService> {
         Retrofit.Builder().baseUrl(Constants.BASE_URL)
