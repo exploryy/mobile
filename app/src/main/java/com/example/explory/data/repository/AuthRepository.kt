@@ -1,6 +1,6 @@
 package com.example.explory.data.repository
 
-import com.example.explory.data.model.TokenType
+import com.example.explory.data.model.token.TokenType
 import com.example.explory.data.service.AuthService
 import com.example.explory.data.service.AuthTokenResponse
 import com.example.explory.data.storage.LocalStorage

@@ -3,7 +3,7 @@ package com.example.explory.data.storage
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.example.explory.data.model.TokenType
+import com.example.explory.data.model.token.TokenType
 
 
 const val SHARED_PREF = "shared_pref"

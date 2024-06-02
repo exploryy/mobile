@@ -1,4 +1,4 @@
-package com.example.explory.data.model
+package com.example.explory.data.model.auth
 
 data class Registration (
     val name: String,

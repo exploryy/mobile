@@ -1,6 +1,6 @@
 package com.example.explory.domain.usecase
 
-import com.example.explory.data.model.AuthRequest
+import com.example.explory.data.model.auth.AuthRequest
 import com.example.explory.data.repository.AuthRepository
 
 class PostLoginUseCase(

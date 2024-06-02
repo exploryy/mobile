@@ -3,6 +3,7 @@ package com.example.explory.di
 import com.example.explory.common.Constants
 import com.example.explory.data.network.interceptor.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
+import com.example.explory.data.repository.FriendRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.ProfileRepository
 import com.example.explory.data.service.ApiService
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit
 fun dataModule() = module {
     singleOf(::PolygonRepository)
     singleOf(::ProfileRepository)
+    singleOf(::FriendRepository)
     singleOf(::AuthRepository)
     singleOf(::LocalStorage)
     single<OpenStreetMapService> {

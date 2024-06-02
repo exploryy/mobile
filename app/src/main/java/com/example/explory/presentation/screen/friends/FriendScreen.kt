@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.friends
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,20 +21,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.explory.data.model.Friend
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.explory.R
+import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.component.FriendItem
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FriendsScreen(
-    friends: List<Friend>,
-    onInviteFriends: () -> Unit
+    viewModel: FriendViewModel = koinViewModel()
 ) {
+    val friendsState by viewModel.friendsState.collectAsStateWithLifecycle()
+    val friends = friendsState.friends
+
     var searchText by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            },
     ) {
         Text(
             text = "Друзья",
@@ -42,7 +56,7 @@ fun FriendsScreen(
         )
 
         Button(
-            onClick = onInviteFriends,
+            onClick = {  },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
