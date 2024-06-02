@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.example.explory.data.model.profile.Profile
 import com.example.explory.data.model.profile.ProfileRequest
@@ -148,7 +149,7 @@ fun EditProfileDialog(
                                     name.value,
                                     email.value,
                                     password.value,
-                                    avatarUri.value
+                                    avatarUri.value.toUri()
                                 )
                             )
                         },

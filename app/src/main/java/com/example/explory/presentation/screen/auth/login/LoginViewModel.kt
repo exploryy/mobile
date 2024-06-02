@@ -88,6 +88,7 @@ class LoginViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 postLoginUseCase.execute(authRequest = request)
+                processIntent(LoginIntent.SuccessLogin)
             } catch (e: SocketTimeoutException) {
                 processIntent(LoginIntent.UpdateErrorText("Превышено время ожидания"))
             } catch (e: HttpException) {
@@ -95,7 +96,6 @@ class LoginViewModel(
                 processIntent(LoginIntent.UpdateErrorText("Ошибка авторизации"))
             } finally {
                 processIntent(LoginIntent.UpdateLoading)
-                processIntent(LoginIntent.SuccessLogin)
             }
         }
     }

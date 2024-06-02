@@ -24,6 +24,7 @@ class AuthInterceptor(
                 if (localStorage.isAccessTokenExpired() && !request.url.encodedPath
                         .contains("openid-connect/token")
                 ) {
+                    Log.d("AuthInterceptor", "Access token expired, refreshing token")
                     val refreshToken = localStorage.fetchToken(TokenType.REFRESH)
                     if (refreshToken != null) {
                         try {
@@ -31,6 +32,7 @@ class AuthInterceptor(
                                 refreshTokenUseCase.execute(refreshToken)
                             }
                             accessToken = newTokens.access_token
+                            Log.d("AuthInterceptor", "Access token refreshed")
                             localStorage.saveToken(
                                 accessToken, newTokens.expires_in, TokenType.ACCESS
                             )

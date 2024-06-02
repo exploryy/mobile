@@ -3,6 +3,8 @@ package com.example.explory.data.service
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.profile.ProfileDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -24,10 +26,7 @@ interface ApiService {
 
     @POST("/user/profile")
     suspend fun updateProfile(
-        @Query("username") username: String?,
-        @Query("email") email: String?,
-        @Query("password") password: String?,
-        @Part avatar: MultipartBody.Part?
+        @Body body: RequestBody
     )
 
     @POST("/route")

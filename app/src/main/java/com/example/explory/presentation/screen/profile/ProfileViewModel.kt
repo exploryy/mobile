@@ -1,12 +1,9 @@
 package com.example.explory.presentation.screen.profile
 
-import android.content.ContentResolver
-import android.content.Context
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.explory.data.model.profile.Profile
 import com.example.explory.data.model.profile.ProfileMultipart
 import com.example.explory.data.model.profile.ProfileRequest
 import com.example.explory.data.model.profile.toProfile
@@ -17,12 +14,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
 
 class ProfileViewModel(
     private val getProfileUseCase: GetProfileUseCase,
     private val editProfileUseCase: EditProfileUseCase,
-    private val context: Context
 ) : ViewModel() {
     private val _profileState = MutableStateFlow(ProfileState())
     val profileState: StateFlow<ProfileState> = _profileState.asStateFlow()
@@ -44,30 +39,23 @@ class ProfileViewModel(
         }
     }
 
-    fun changeOpenEditDialogState(){
-        _profileState.update { it.copy(isEditDialogOpen = !it.isEditDialogOpen ) }
+    fun changeOpenEditDialogState() {
+        _profileState.update { it.copy(isEditDialogOpen = !it.isEditDialogOpen) }
     }
 
     fun editProfile(profile: ProfileRequest) {
-        val newUsername = if (!profile.username.equals(_profileState.value.profile?.name)) profile.username else null
-        val newEmail = if (!profile.email.equals(_profileState.value.profile?.email)) profile.email else null
+        val newUsername =
+            if (!profile.username.equals(_profileState.value.profile?.name)) profile.username else null
+        val newEmail =
+            if (!profile.email.equals(_profileState.value.profile?.email)) profile.email else null
 
-        val newAvatarFile = profile.avatar?.let { uri ->
-            val fileName = "${profile.username?.replace(" ", "_")}_avatar.png"
-            context.contentResolver.openInputStream(uri.toUri())?.use { inputStream ->
-                val file = File(context.cacheDir, fileName)
-                file.outputStream().use { outputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-                file
-            }
-        }
+        val newUri =
+            if (!profile.avatar?.equals(_profileState.value.profile?.avatarUri?.toUri())!!) {
+                profile.avatar
+            } else null
 
         val profileRequest = ProfileMultipart(
-            username = newUsername,
-            email = newEmail,
-            password = profile.password,
-            avatar = newAvatarFile
+            username = newUsername, email = newEmail, password = profile.password, avatar = newUri
         )
 
         viewModelScope.launch {

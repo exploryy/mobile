@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
@@ -32,6 +34,11 @@ import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
+import com.example.explory.ui.theme.AccentColor
+import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.DarkGray
+import com.example.explory.ui.theme.LightGray
+import com.example.explory.ui.theme.MediumGray
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
@@ -39,6 +46,7 @@ import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationGroup
 import com.mapbox.maps.extension.compose.style.StyleImage
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
@@ -48,7 +56,13 @@ import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.LightPreset
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
+import com.mapbox.maps.extension.style.expressions.dsl.generated.literal
+import com.mapbox.maps.extension.style.expressions.generated.Expression
 import com.mapbox.maps.plugin.PuckBearing
+import com.mapbox.maps.plugin.annotation.AnnotationConfig
+import com.mapbox.maps.plugin.annotation.AnnotationSourceOptions
+import com.mapbox.maps.plugin.annotation.ClusterOptions
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import kotlinx.coroutines.launch
@@ -139,6 +153,36 @@ fun MapScreen(
                     }
                     mapViewportState.transitionToFollowPuckState()
                 }
+                PointAnnotationGroup(
+                    annotations = mapState.questPoints.map {
+                        PointAnnotationOptions()
+                            .withPoint(it)
+                            .withIconImage("fog")
+                    },
+                    annotationConfig = AnnotationConfig(
+                        annotationSourceOptions = AnnotationSourceOptions(
+                            clusterOptions = ClusterOptions(
+                                textColorExpression = Expression.color(AccentColor.toArgb()),
+                                textColor = Black.toArgb(), // Will not be applied as textColorExpression has been set
+                                textSize = 20.0,
+                                circleRadiusExpression = literal(25.0),
+                                colorLevels = listOf(
+                                    Pair(100, MediumGray.toArgb()),
+                                    Pair(50, DarkGray.toArgb()),
+                                    Pair(0, LightGray.toArgb())
+                                )
+                            )
+                        )
+                    ),
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "Clicked on Point Annotation Cluster: $it",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        true
+                    }
+                )
             }
         }
 

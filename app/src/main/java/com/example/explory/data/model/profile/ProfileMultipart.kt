@@ -1,10 +1,10 @@
 package com.example.explory.data.model.profile
 
-import java.io.File
+import android.net.Uri
 
 data class ProfileMultipart(
     val username: String?,
     val email: String?,
     val password: String?,
-    val avatar: File?
+    val avatar: Uri?
 )

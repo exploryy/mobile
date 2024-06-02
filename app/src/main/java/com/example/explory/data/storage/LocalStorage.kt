@@ -29,15 +29,17 @@ class LocalStorage(context: Context) {
     fun saveToken(
         token: String, expiresIn: Int, tokenType: TokenType
     ) {
+        val expiresAt = System.currentTimeMillis() + expiresIn * 1000L
+
         when (tokenType) {
             TokenType.ACCESS -> {
                 sharedPreferences.edit().putString(ACCESS_KEY, token)
-                    .putString(USER_ACCESS_TOKEN_EXPIRES, expiresIn.toString()).apply()
+                    .putLong(USER_ACCESS_TOKEN_EXPIRES, expiresAt).apply()
             }
 
             TokenType.REFRESH -> {
                 sharedPreferences.edit().putString(REFRESH_KEY, token)
-                    .putString(USER_REFRESH_TOKEN_EXPIRES, expiresIn.toString()).apply()
+                    .putLong(USER_REFRESH_TOKEN_EXPIRES, expiresAt).apply()
             }
         }
     }
@@ -55,8 +57,8 @@ class LocalStorage(context: Context) {
     }
 
     fun isAccessTokenExpired(): Boolean {
-        val expiresIn = sharedPreferences.getString(USER_ACCESS_TOKEN_EXPIRES, null)
-        return expiresIn != null && expiresIn.toLong() < System.currentTimeMillis()
+        val expiresAt = sharedPreferences.getLong(USER_ACCESS_TOKEN_EXPIRES, 0L)
+        return expiresAt < System.currentTimeMillis()
     }
 
     fun hasToken(): Boolean {
