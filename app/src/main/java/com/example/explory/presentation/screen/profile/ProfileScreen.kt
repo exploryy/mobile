@@ -60,6 +60,7 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getNotificationCount()
+        viewModel.fetchProfile()
     }
 
     LaunchedEffect(profileState.loggedOut) {

@@ -31,7 +31,7 @@ class ProfileViewModel(
         getNotificationCount()
     }
 
-    private fun fetchProfile() {
+    fun fetchProfile() {
         viewModelScope.launch {
             _profileState.value = ProfileState(isLoading = true)
             try {
