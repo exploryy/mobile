@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.friends
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,20 +21,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.explory.data.model.Friend
+import com.example.explory.R
+import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.component.FriendItem
 
 @Composable
-fun FriendsScreen(
-    friends: List<Friend>,
-    onInviteFriends: () -> Unit
-) {
+fun FriendsScreen() {
     var searchText by remember { mutableStateOf("") }
-
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            },
     ) {
         Text(
             text = "Друзья",
@@ -42,7 +48,7 @@ fun FriendsScreen(
         )
 
         Button(
-            onClick = onInviteFriends,
+            onClick = {  },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -97,3 +103,11 @@ fun FriendsScreen(
         }
     }
 }
+
+val friends = listOf(
+    Friend(name = "Alice", status = "Online", avatarRes = R.drawable.picture, isBestFriend = true),
+    Friend(name = "Bob", status = "Offline", avatarRes = R.drawable.picture, isBestFriend = false),
+    Friend(name = "Charlie", status = "Away", avatarRes = R.drawable.picture, isBestFriend = false),
+    Friend(name = "David", status = "Busy", avatarRes = R.drawable.picture, isBestFriend = false),
+    Friend(name = "Eve", status = "Online", avatarRes = R.drawable.picture, isBestFriend = true)
+)

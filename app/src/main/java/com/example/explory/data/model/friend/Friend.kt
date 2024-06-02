@@ -1,4 +1,4 @@
-package com.example.explory.data.model
+package com.example.explory.data.model.friend
 
 data class Friend(
     val name: String,

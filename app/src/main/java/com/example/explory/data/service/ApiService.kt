@@ -1,5 +1,7 @@
 package com.example.explory.data.service
 
+import com.example.explory.data.model.friend.FriendsResponse
+import com.example.explory.data.model.profile.ProfileDto
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -164,10 +166,6 @@ class AchievementDto(
     val completionDate: OffsetDateTime
 )
 
-class FriendsResponse(
-    val friends: List<ProfileDto>, val favoriteFriends: List<ProfileDto>
-)
-
 class RequestsResponse(
     val my: List<ProfileDto>, val other: List<ProfileDto>
 )
@@ -178,10 +176,6 @@ class RouteDto(
 
 class PointDto(
     val longitude: String, val latitude: String, val nextLongitude: String, val nextLatitude: String
-)
-
-data class ProfileDto(
-    val userId: String, val username: String, val email: String, val avatarUrl: String
 )
 
 

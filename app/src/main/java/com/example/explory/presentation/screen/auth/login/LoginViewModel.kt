@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
-import com.example.explory.data.model.AuthRequest
+import com.example.explory.data.model.auth.AuthRequest
 import com.example.explory.domain.usecase.PostLoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

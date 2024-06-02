@@ -2,7 +2,7 @@ package com.example.explory.data.network.interceptor
 
 import android.util.Log
 import com.example.explory.common.Constants.Companion.AUTHORIZATION_HEADER
-import com.example.explory.data.model.TokenType
+import com.example.explory.data.model.token.TokenType
 import com.example.explory.data.storage.LocalStorage
 import com.example.explory.domain.usecase.RefreshTokenUseCase
 import kotlinx.coroutines.runBlocking

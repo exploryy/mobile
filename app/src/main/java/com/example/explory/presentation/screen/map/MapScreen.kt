@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
-import com.example.explory.data.model.Friend
+import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission

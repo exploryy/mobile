@@ -1,8 +1,8 @@
 package com.example.explory.presentation.screen.profile
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,15 +28,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 import com.example.explory.R
-import com.example.explory.data.model.Friend
+import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.ui.theme.BlackButtonColor
 import com.example.explory.ui.theme.DisabledBlackButtonColor
@@ -55,6 +55,7 @@ fun ProfileScreen(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
 
     ModalBottomSheet(
         onDismissRequest = { onBackClick() },
@@ -64,6 +65,11 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                },
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -163,10 +169,7 @@ fun ProfileScreen(
 
             when (state)
             {
-                1 -> FriendsScreen(
-                    friends = friends,
-                    onInviteFriends = {  }
-                )
+                1 -> FriendsScreen()
             }
         }
     }

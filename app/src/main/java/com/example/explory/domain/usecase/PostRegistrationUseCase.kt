@@ -1,7 +1,7 @@
 package com.example.explory.domain.usecase
 
-import com.example.explory.data.model.Registration
-import com.example.explory.data.model.TokenResponse
+import com.example.explory.data.model.auth.Registration
+import com.example.explory.data.model.token.TokenResponse
 
 class PostRegistrationUseCase {
     suspend fun invoke(register: Registration): Result<TokenResponse> {

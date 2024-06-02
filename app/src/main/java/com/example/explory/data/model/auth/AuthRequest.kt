@@ -1,4 +1,4 @@
-package com.example.explory.data.model
+package com.example.explory.data.model.auth
 
 data class AuthRequest(
     val login: String,
