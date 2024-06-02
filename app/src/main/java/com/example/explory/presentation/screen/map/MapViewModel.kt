@@ -1,5 +1,8 @@
 package com.example.explory.presentation.screen.map
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
@@ -14,13 +17,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
     private val getQuestsUseCase: GetQuestsUseCase,
     private val getCoinsUseCase: GetCoinsUseCase,
     private val webSocketClient: LocationWebSocketClient,
-    private val locationTracker: LocationTracker
+    private val locationTracker: LocationTracker,
+    private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
@@ -49,11 +54,9 @@ class MapViewModel(
             val newInnerPoints = polygons.features.flatMap { feature ->
                 feature.geometry.coordinates.flatMap { coordinateList ->
                     coordinateList.map { innerList ->
-                        LineString.fromLngLats(
-                            innerList.map { coordinates ->
-                                Point.fromLngLat(coordinates[0], coordinates[1])
-                            }
-                        )
+                        LineString.fromLngLats(innerList.map { coordinates ->
+                            Point.fromLngLat(coordinates[0], coordinates[1])
+                        })
                     }
                 }
             }
@@ -63,6 +66,14 @@ class MapViewModel(
 
     private fun startLocationUpdates() {
         locationTracker.setLocationListener { location ->
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses: List<Address>? =
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            if (!addresses.isNullOrEmpty())
+                if (addresses[0].locality != _mapState.value.currentLocationName) {
+                    onCurrentLocationCityChanged(addresses[0].locality)
+                }
+
             sendLocationToServer(location.latitude, location.longitude)
         }
         locationTracker.startTracking()
@@ -70,30 +81,30 @@ class MapViewModel(
 
     private fun sendLocationToServer(latitude: Double, longitude: Double) {
         val locationRequest = LocationRequest(
-            longitude = longitude.toString(),
-            latitude = latitude.toString(),
-            figureType = "CIRCLE"
+            longitude = longitude.toString(), latitude = latitude.toString(), figureType = "CIRCLE"
         )
         webSocketClient.sendLocationRequest(locationRequest)
     }
 
     private fun getStartData() {
         viewModelScope.launch {
-//            getQuests()
+            getQuests()
             getCoins()
         }
     }
 
-//    private suspend fun getQuests() {
-//        try {
-//            val quests = getQuestsUseCase.execute()
-//            _mapState.update { it.copy(questPoints = quests.map {
-//                Point.fromLngLat(it.longitude, it.latitude)
-//            }) }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
+    private suspend fun getQuests() {
+        try {
+            val quests = getQuestsUseCase.execute()
+            _mapState.update { it ->
+                it.copy(questPoints = quests.map {
+                    Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble())
+                })
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     private suspend fun getCoins() {
         try {
@@ -140,16 +151,14 @@ class MapViewModel(
                     val newInnerPoints = it.geo.features.flatMap { feature ->
                         feature.geometry.coordinates.flatMap { coordinateList ->
                             coordinateList.map { innerList ->
-                                LineString.fromLngLats(
-                                    innerList.map { coordinates ->
-                                        Point.fromLngLat(coordinates[0], coordinates[1])
-                                    }
-                                )
+                                LineString.fromLngLats(innerList.map { coordinates ->
+                                    Point.fromLngLat(coordinates[0], coordinates[1])
+                                })
                             }
                         }
                     }
-
                     onInnerListUpdate(newInnerPoints)
+                    onAreaUpdate(it.areaPercent)
                 }
             }
         }
@@ -158,6 +167,10 @@ class MapViewModel(
     override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
+    }
+
+    private fun onAreaUpdate(areaPercent: Double) {
+        _mapState.update { it.copy(currentLocationPercent = areaPercent) }
     }
 
     fun updateShowMap(show: Boolean) {
@@ -174,6 +187,10 @@ class MapViewModel(
 
     fun updateShowFriendScreen() {
         _mapState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
+    }
+
+    fun onCurrentLocationCityChanged(locality: String?) {
+        _mapState.update { it.copy(currentLocationName = locality ?: "") }
     }
 }
 

@@ -168,7 +168,7 @@ interface ApiService {
 
 }
 
-class CoinDto(
+data class CoinDto(
     val coin_id: Long,
     val client_id: Long,
     val latitude: String,
@@ -177,43 +177,46 @@ class CoinDto(
     val value: Long
 )
 
-class PointToPointQuestDto(
+data class PointToPointQuestDto(
     val commonQuestDto: QuestDto,
     val route: RouteDto
 )
 
-class DistanceQuestDto(
+data class DistanceQuestDto(
     val commonQuestDto: QuestDto,
     val distance: Long
 )
 
-class QuestDto(
+data class QuestDto(
     val questId: Long,
     val name: String,
     val description: String,
     val difficultyType: String,
     val questType: String,
-    val transportType: String
+    val transportType: String,
+    val latitude: String,
+    val longitude: String,
+    val images: List<String>
 )
 
-class PolygonDto(
+data class PolygonDto(
     val type: String, val features: List<FeatureResponse>
 )
 
-class FeatureResponse(
+data class FeatureResponse(
     val type: String, val properties: Map<String, String>, val geometry: GeometryResponse
 )
 
-class GeometryResponse(
+data class GeometryResponse(
     val type: String, val coordinates: List<List<List<List<Double>>>>
 )
 
 
-class AreaDto(
+data class AreaDto(
     val area: Double
 )
 
-class AchievementDto(
+data class AchievementDto(
     val achievementId: Long,
     val name: String,
     val description: String,
@@ -222,15 +225,15 @@ class AchievementDto(
     val completionDate: OffsetDateTime
 )
 
-class RequestsResponse(
+data class RequestsResponse(
     val my: List<ProfileDto>, val other: List<ProfileDto>
 )
 
-class RouteDto(
+data class RouteDto(
     val points: List<PointDto>, val distance: Long, val routeId: Long
 )
 
-class PointDto(
+data class PointDto(
     val longitude: String, val latitude: String, val nextLongitude: String, val nextLatitude: String
 )
 

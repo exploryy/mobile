@@ -14,5 +14,7 @@ data class MapState(
     val showMap: Boolean = false,
     val showRequestPermissionButton: Boolean = false,
     val permissionRequestCount: Int = 1,
-    val showFriendsScreen: Boolean = false
+    val showFriendsScreen: Boolean = false,
+    val currentLocationPercent: Double = 0.0,
+    val currentLocationName: String = "",
 )
