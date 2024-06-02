@@ -105,7 +105,7 @@ fun MapScreen(
 
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
-    val painter = painterResource(id = R.drawable.cloud3)
+    val painter = painterResource(id = R.drawable.snow2)
     val imageBitmap: ImageBitmap = remember(painter) {
         painter.drawToImageBitmap()
     }
@@ -116,7 +116,7 @@ fun MapScreen(
     }
 
     val coin = painterResource(id = R.drawable.money)
-    val coinBitmap: Bitmap = remember(task) {
+    val coinBitmap: Bitmap = remember(coin) {
         task.drawToImageBitmap().asAndroidBitmap()
     }
 
