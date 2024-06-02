@@ -86,7 +86,9 @@ fun MapScreen(
         )
     )
 
-    val painter = painterResource(id = R.drawable.smoke)
+    // https://3djungle.ru/textures/ https://txtrs.ru/
+
+    val painter = painterResource(id = R.drawable.cloud3)
     val imageBitmap: ImageBitmap = remember(painter) {
         painter.drawToBitmap()
     }
