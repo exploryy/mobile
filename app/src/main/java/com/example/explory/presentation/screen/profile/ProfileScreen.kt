@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.explory.R
-import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
@@ -50,6 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
+    onLogout: () -> Unit,
     onBackClick: () -> Unit,
     onInviteFriends: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -60,6 +60,12 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getNotificationCount()
+    }
+
+    LaunchedEffect(profileState.loggedOut) {
+        if (profileState.loggedOut) {
+            onLogout()
+        }
     }
 
     ModalBottomSheet(
@@ -129,7 +135,7 @@ fun ProfileScreen(
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    
+
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             contentColor = Color.Red.copy(alpha = 0.7f),
@@ -138,7 +144,9 @@ fun ProfileScreen(
                             disabledContainerColor = DisabledBlackButtonColor
                         ),
                         border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f)),
-                        onClick = {  },
+                        onClick = {
+                            viewModel.logout()
+                        },
                         modifier = Modifier.width(buttonWidth)
                     ) {
                         Text(text = "Выйти из аккаунта")
@@ -168,14 +176,13 @@ fun ProfileScreen(
 
             SemiRoundedButtonsRow(
                 onFirstButtonClick = { viewModel.changeCurrentPage(1) },
-                onSecondButtonClick = { viewModel.changeCurrentPage(2)},
-                onThirdButtonClick = { viewModel.changeCurrentPage(3)},
+                onSecondButtonClick = { viewModel.changeCurrentPage(2) },
+                onThirdButtonClick = { viewModel.changeCurrentPage(3) },
                 selectedButton = profileState.profileScreenState,
                 notificationCount = profileState.notificationCount
             )
 
-            when (profileState.profileScreenState)
-            {
+            when (profileState.profileScreenState) {
                 1 -> FriendsScreen()
                 2 -> UserStatisticScreen()
                 3 -> FriendRequestsScreen()
@@ -183,7 +190,7 @@ fun ProfileScreen(
         }
     }
 
-    if (profileState.isEditDialogOpen){
+    if (profileState.isEditDialogOpen) {
         EditProfileDialog(
             profile = profileState.profile,
             onDismiss = { viewModel.changeOpenEditDialogState() },

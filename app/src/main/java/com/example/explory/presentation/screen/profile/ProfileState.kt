@@ -8,5 +8,6 @@ data class ProfileState(
     val error: String? = null,
     val isEditDialogOpen: Boolean = false,
     val profileScreenState: Int = 1,
-    val notificationCount: Int = 0
+    val notificationCount: Int = 0,
+    val loggedOut: Boolean = false
 )

@@ -1,11 +1,19 @@
 package com.example.explory.di
 
+import com.example.explory.domain.usecase.AcceptFriendUseCase
+import com.example.explory.domain.usecase.AddFriendUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
+import com.example.explory.domain.usecase.DeclineFriendUseCase
+import com.example.explory.domain.usecase.EditProfileUseCase
+import com.example.explory.domain.usecase.GetCoinsUseCase
+import com.example.explory.domain.usecase.GetFriendRequestsUseCase
+import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
-import com.example.explory.domain.usecase.EditProfileUseCase
-import com.example.explory.domain.usecase.GetFriendsUseCase
+import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.domain.usecase.GetUserListUseCase
 import com.example.explory.domain.usecase.GetUserTokenUseCase
+import com.example.explory.domain.usecase.LogoutUseCase
 import com.example.explory.domain.usecase.PostLoginUseCase
 import com.example.explory.domain.usecase.PostRegistrationUseCase
 import com.example.explory.domain.usecase.RefreshTokenUseCase
@@ -29,6 +37,7 @@ fun domainModule() = module {
     factoryOf(::GetFriendRequestsUseCase)
     factoryOf(::AddFriendUseCase)
     factoryOf(::GetUserListUseCase)
-    factoryOf(com.example.explory.domain.usecase::GetQuestsUseCase)
-    factoryOf(com.example.explory.domain.usecase::GetCoinsUseCase)
+    factoryOf(::GetQuestsUseCase)
+    factoryOf(::GetCoinsUseCase)
+    factoryOf(::LogoutUseCase)
 }

@@ -2,6 +2,7 @@ package com.example.explory.data.service
 
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.profile.ProfileDto
+import com.example.explory.data.model.requests.FriendRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -123,7 +124,7 @@ interface ApiService {
     )
 
     @GET("/friend/requests")
-    suspend fun getFriendRequests(): RequestsResponse
+    suspend fun getFriendRequests(): FriendRequest
 
     @GET("/friend/list")
     suspend fun getFriends(): FriendsResponse

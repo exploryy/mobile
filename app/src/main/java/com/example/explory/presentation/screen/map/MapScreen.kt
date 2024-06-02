@@ -74,7 +74,8 @@ const val OPENED_WORLD_LAYER = "layer-parking"
 @OptIn(MapboxExperimental::class)
 @Composable
 fun MapScreen(
-    viewModel: MapViewModel = koinViewModel()
+    viewModel: MapViewModel = koinViewModel(),
+    onLogout: () -> Unit,
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -266,6 +267,7 @@ fun MapScreen(
     if (mapState.showFriendsScreen) {
         ProfileScreen(
             onBackClick = { viewModel.updateShowFriendScreen() },
+            onLogout = { onLogout() },
             onInviteFriends = { },
             onSettingsClick = { },
         )

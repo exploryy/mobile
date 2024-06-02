@@ -32,7 +32,8 @@ interface AuthService {
     @POST("realms/hits-project/protocol/openid-connect/logout")
     suspend fun logout(
         @Field("refresh_token") refreshToken: String,
-        @Field("client_id") clientId: String = CLIENT_ID
+        @Field("client_id") clientId: String = CLIENT_ID,
+        @Field("client_secret") clientSecret: String = CLIENT_SECRET
     )
 }
 

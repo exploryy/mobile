@@ -1,5 +1,6 @@
 package com.example.explory.data.repository
 
+import android.util.Log
 import com.example.explory.data.model.token.AuthTokenResponse
 import com.example.explory.data.model.token.TokenType
 import com.example.explory.data.service.AuthService
@@ -30,7 +31,9 @@ class AuthRepository(
     suspend fun logout() {
         val refreshToken = localStorage.fetchToken(TokenType.REFRESH)
         if (refreshToken != null) {
+            Log.d("AuthRepository", "logout: $refreshToken")
             authService.logout(refreshToken)
+            Log.d("AuthRepository", "logout: after logout")
         }
         localStorage.removeTokens()
     }
