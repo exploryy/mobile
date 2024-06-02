@@ -1,8 +1,8 @@
 package com.example.explory.data.repository
 
+import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.profile.ProfileMultipart
 import com.example.explory.data.service.ApiService
-import com.example.explory.data.service.ProfileDto
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -10,7 +10,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 class ProfileRepository(
     private val apiService: ApiService
 ) {
-    suspend fun getProfile() : ProfileDto{
+    suspend fun getProfile() : ProfileDto {
         return apiService.getProfile()
     }
 

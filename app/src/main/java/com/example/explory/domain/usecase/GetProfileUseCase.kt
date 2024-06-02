@@ -1,7 +1,7 @@
 package com.example.explory.domain.usecase
 
+import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.repository.ProfileRepository
-import com.example.explory.data.service.ProfileDto
 
 class GetProfileUseCase(
     private val profileRepository: ProfileRepository

@@ -24,14 +24,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.friends.component.FriendItem
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FriendsScreen() {
+fun FriendsScreen(
+    viewModel: FriendViewModel = koinViewModel()
+) {
+    val friendsState by viewModel.friendsState.collectAsStateWithLifecycle()
+    val friends = friendsState.friends
+
     var searchText by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,11 +111,3 @@ fun FriendsScreen() {
         }
     }
 }
-
-val friends = listOf(
-    Friend(name = "Alice", status = "Online", avatarRes = R.drawable.picture, isBestFriend = true),
-    Friend(name = "Bob", status = "Offline", avatarRes = R.drawable.picture, isBestFriend = false),
-    Friend(name = "Charlie", status = "Away", avatarRes = R.drawable.picture, isBestFriend = false),
-    Friend(name = "David", status = "Busy", avatarRes = R.drawable.picture, isBestFriend = false),
-    Friend(name = "Eve", status = "Online", avatarRes = R.drawable.picture, isBestFriend = true)
-)

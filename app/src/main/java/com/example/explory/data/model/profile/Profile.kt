@@ -1,7 +1,5 @@
 package com.example.explory.data.model.profile
 
-import com.example.explory.data.service.ProfileDto
-
 data class Profile(
     val id: String,
     val name: String,

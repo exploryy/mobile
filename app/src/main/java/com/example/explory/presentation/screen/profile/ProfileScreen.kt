@@ -51,7 +51,6 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onInviteFriends: () -> Unit,
     onSettingsClick: () -> Unit,
-    friends: List<Friend>
 ) {
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()

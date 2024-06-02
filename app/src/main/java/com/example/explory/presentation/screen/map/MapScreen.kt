@@ -166,32 +166,11 @@ fun MapScreen(
             state = 1,
             onBackClick = { viewModel.updateShowFriendScreen() },
             onInviteFriends = { },
-            onSettingsClick = { },
-            friends = friends
+            onSettingsClick = { }
         )
     }
 
 }
-
-val friends = listOf(
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = true),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = true),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-    Friend("fedosssssss", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("vag55", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("сахарок", "3 км", R.drawable.picture, isBestFriend = false),
-    Friend("liiid", "давно не видели", R.drawable.picture, isBestFriend = false),
-)
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 private fun Context.checkAndRequestNotificationPermission(
     launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
