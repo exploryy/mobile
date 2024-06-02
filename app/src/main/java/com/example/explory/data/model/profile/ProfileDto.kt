@@ -4,5 +4,5 @@ data class ProfileDto(
     val userId: String,
     val username: String,
     val email: String,
-    val avatarUrl: String
+    val avatarUrl: String?
 )

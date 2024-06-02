@@ -1,8 +1,10 @@
 package com.example.explory.presentation.screen.friends
 
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,7 +22,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
@@ -42,7 +46,7 @@ fun FriendsScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -66,47 +70,60 @@ fun FriendsScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { newText ->
-                searchText = newText
-            },
-            placeholder = { Text("Поиск") },
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        val filteredFriends = friends.filter {
-            it.name.contains(searchText, ignoreCase = true)
-        }
-
-        LazyColumn {
-            item {
+        if (friends.isEmpty()){
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = "Лучшие друзья",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    text = "У вас нет друзей :(",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
                 )
             }
+        } else {
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { newText ->
+                    searchText = newText
+                },
+                placeholder = { Text("Поиск") },
+                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
+                }
+            )
 
-            items(filteredFriends.filter { it.isBestFriend }) { friend ->
-                FriendItem(friend)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val filteredFriends = friends.filter {
+                it.name.contains(searchText, ignoreCase = true)
             }
 
-            item {
-                Text(
-                    text = "Все друзья (${filteredFriends.size})",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-            }
+            LazyColumn {
+                item {
+                    Text(
+                        text = "Лучшие друзья",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
 
-            items(filteredFriends) { friend ->
-                FriendItem(friend)
+                items(filteredFriends.filter { it.isBestFriend }) { friend ->
+                    FriendItem(friend)
+                }
+
+                item {
+                    Text(
+                        text = "Все друзья (${filteredFriends.size})",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                items(filteredFriends) { friend ->
+                    FriendItem(friend)
+                }
             }
         }
     }

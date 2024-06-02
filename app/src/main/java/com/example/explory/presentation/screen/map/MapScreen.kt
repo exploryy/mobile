@@ -174,7 +174,6 @@ fun MapScreen(
 
     if (mapState.showFriendsScreen) {
         ProfileScreen(
-            state = 1,
             onBackClick = { viewModel.updateShowFriendScreen() },
             onInviteFriends = { },
             onSettingsClick = { },

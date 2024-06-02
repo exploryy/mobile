@@ -2,6 +2,7 @@ package com.example.explory.data.service
 
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.profile.ProfileDto
+import com.example.explory.data.model.requests.FriendRequest
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -102,7 +103,7 @@ interface ApiService {
     )
 
     @GET("/friend/requests")
-    suspend fun getFriendRequests(): RequestsResponse
+    suspend fun getFriendRequests(): FriendRequest
 
     @GET("/friend/list")
     suspend fun getFriends(): FriendsResponse
@@ -162,10 +163,6 @@ class AchievementDto(
     val imageUrl: String,
     val isCompleted: Boolean,
     val completionDate: OffsetDateTime
-)
-
-class RequestsResponse(
-    val my: List<ProfileDto>, val other: List<ProfileDto>
 )
 
 class RouteDto(

@@ -13,13 +13,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SemiRoundedButtonsRow(
     onFirstButtonClick: () -> Unit,
     onSecondButtonClick: () -> Unit,
-    onThirdButtonClick: () -> Unit
+    onThirdButtonClick: () -> Unit,
+    selectedButton: Int
 ) {
     val buttonBaseColor = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
@@ -28,13 +30,20 @@ fun SemiRoundedButtonsRow(
         disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f)
     )
 
+    val selectedButtonColor = ButtonDefaults.buttonColors(
+        containerColor = Color.White,
+        contentColor = MaterialTheme.colorScheme.primary,
+        disabledContainerColor = Color.White.copy(alpha = 0.4f),
+        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+    )
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Button(
             onClick = onFirstButtonClick,
-            colors = buttonBaseColor,
+            colors = if (selectedButton == 1) selectedButtonColor else buttonBaseColor,
             shape = RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp),
             modifier = Modifier
                 .weight(1f)
@@ -47,7 +56,7 @@ fun SemiRoundedButtonsRow(
 
         Button(
             onClick = onSecondButtonClick,
-            colors = buttonBaseColor,
+            colors = if (selectedButton == 2) selectedButtonColor else buttonBaseColor,
             shape = RoundedCornerShape(0.dp),
             modifier = Modifier
                 .weight(1f)
@@ -60,13 +69,13 @@ fun SemiRoundedButtonsRow(
 
         Button(
             onClick = onThirdButtonClick,
-            colors = buttonBaseColor,
+            colors = if (selectedButton == 3) selectedButtonColor else buttonBaseColor,
             shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
             modifier = Modifier
                 .weight(1f)
                 .height(50.dp)
         ) {
-            Text("Что-то еще")
+            Text("Заявки")
         }
     }
 }
