@@ -3,6 +3,7 @@ package com.example.explory.presentation.screen.map
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
@@ -11,6 +12,10 @@ import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
+import com.example.explory.ui.theme.AccentColor
+import com.example.explory.ui.theme.Green
+import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -96,10 +101,8 @@ class MapViewModel(
     private suspend fun getQuests() {
         try {
             val quests = getQuestsUseCase.execute()
-            _mapState.update { it ->
-                it.copy(questPoints = quests.map {
-                    Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble())
-                })
+            _mapState.update {
+                it.copy(quests = quests)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -109,13 +112,20 @@ class MapViewModel(
     private suspend fun getCoins() {
         try {
             val coins = getCoinsUseCase.execute()
-            _mapState.update { it ->
-                it.copy(coinPoints = coins.map {
-                    Point.fromLngLat(it.latitude.toDouble(), it.longitude.toDouble())
-                })
+            _mapState.update {
+                it.copy(coins = coins)
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun getColorByDifficulty(difficulty: String): Color {
+        return when (difficulty) {
+            "EASY" -> Green
+            "MEDIUM" -> Yellow
+            "HARD" -> Red
+            else -> AccentColor
         }
     }
 
@@ -171,6 +181,10 @@ class MapViewModel(
 
     private fun onAreaUpdate(areaPercent: Double) {
         _mapState.update { it.copy(currentLocationPercent = areaPercent) }
+    }
+
+    fun updateShowViewAnnotationIndex(index: Int?) {
+        _mapState.update { it.copy(showViewAnnotationIndex = index) }
     }
 
     fun updateShowMap(show: Boolean) {

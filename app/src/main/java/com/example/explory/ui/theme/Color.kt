@@ -27,3 +27,7 @@ val DarkGreen = Color(0xFF2A7E2E)
 val AccentColor = Color(0xFF4894FE).copy(alpha = 0.9f)
 val AccentGradient = listOf(Color(0xFF4894FE), Color(0xFF7F7FD5))
 val GrayColor = Color(0xFFC4C8CC)
+
+val Red = Color(0xFFE57373)
+val Green = Color(0xFF81C784)
+val Yellow = Color(0xFFFFF176)
