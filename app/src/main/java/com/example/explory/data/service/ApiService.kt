@@ -3,6 +3,7 @@ package com.example.explory.data.service
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.requests.FriendRequest
+import com.example.explory.data.model.statistic.UserStatisticDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -171,6 +172,9 @@ interface ApiService {
     suspend fun getUserList(
         @Query("username") username: String
     ): List<ProfileDto>
+
+    @GET("/statistic/my")
+    suspend fun getUserStatistic() : UserStatisticDto
 }
 
 data class CoinDto(

@@ -131,7 +131,10 @@ fun FriendsScreen(
                 }
 
                 items(filteredFriends.filter { it.isBestFriend }) { friend ->
-                    FriendItem(friend)
+                    FriendItem(
+                        friend = friend,
+                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) }
+                    )
                 }
 
                 item {
@@ -143,7 +146,10 @@ fun FriendsScreen(
                 }
 
                 items(filteredFriends) { friend ->
-                    FriendItem(friend)
+                    FriendItem(
+                        friend = friend,
+                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) }
+                    )
                 }
             }
         }

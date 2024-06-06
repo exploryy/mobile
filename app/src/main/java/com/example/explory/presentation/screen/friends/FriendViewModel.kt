@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.common.FriendMapper
+import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetUserListUseCase
+import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +20,9 @@ class FriendViewModel(
     private val getFriendsUseCase: GetFriendsUseCase,
     private val getUserListUseCase: GetUserListUseCase,
     private val addFriendUseCase: AddFriendUseCase,
-    private val getFriendRequestsUseCase: GetFriendRequestsUseCase
+    private val getFriendRequestsUseCase: GetFriendRequestsUseCase,
+    private val addFavoriteFriendUseCase: AddFavoriteFriendUseCase,
+    private val removeFavoriteFriendUseCase: RemoveFavoriteFriendUseCase
 ) : ViewModel() {
     private val _friendsState = MutableStateFlow(FriendsState())
     val friendsState: StateFlow<FriendsState> = _friendsState.asStateFlow()
@@ -54,7 +58,9 @@ class FriendViewModel(
             _userListState.value = _userListState.value.copy(isLoading = true)
             try {
                 val userListResponse = getUserListUseCase.execute(query)
-                _userListState.value = _userListState.value.copy(users = userListResponse)
+                val friendIds = _friendsState.value.friends.map { it.userId }
+                val filteredUsers = userListResponse.filter { it.userId !in friendIds }
+                _userListState.value = _userListState.value.copy(users = filteredUsers)
             } catch (e: Exception) {
                 _userListState.value = _userListState.value.copy(error = e.message)
             } finally {
@@ -91,6 +97,27 @@ class FriendViewModel(
                 _addFriendStatus.value = AddFriendStatus.Error(e.message ?: "Error adding friend")
             } finally {
                 _addFriendStatus.value = AddFriendStatus.Idle
+            }
+        }
+    }
+
+    fun toggleFavoriteFriend(userId: String) {
+        viewModelScope.launch {
+            try {
+                val isFavorite = _friendsState.value.friends.find { it.userId == userId }?.isBestFriend ?: false
+                if (isFavorite) {
+                    removeFavoriteFriendUseCase.execute(userId)
+                } else {
+                    addFavoriteFriendUseCase.execute(userId)
+                }
+                _friendsState.update { state ->
+                    val updatedFriends = state.friends.map {
+                        if (it.userId == userId) it.copy(isBestFriend = !isFavorite) else it
+                    }
+                    state.copy(friends = updatedFriends)
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
             }
         }
     }

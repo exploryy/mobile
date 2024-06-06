@@ -32,7 +32,10 @@ import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
 
 @Composable
-fun FriendItem(friend: Friend) {
+fun FriendItem(
+    friend: Friend,
+    toggleBestFriend: (String) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,7 +86,9 @@ fun FriendItem(friend: Friend) {
             Text("Чат")
         }
 
-        IconButton(onClick = {  }) {
+        IconButton(onClick = {
+            toggleBestFriend(friend.userId)
+        }) {
             Icon(
                 imageVector = if (friend.isBestFriend) Icons.Default.Star else Icons.Default.StarBorder,
                 contentDescription = "Notification icon",

@@ -29,4 +29,12 @@ class FriendRepository(private val apiService: ApiService) {
     suspend fun getUserList(username: String) : List<ProfileDto>{
         return apiService.getUserList(username)
     }
+
+    suspend fun addFavoriteFriend(userId: String){
+        return apiService.addFavorite(userId);
+    }
+
+    suspend fun removeFavoriteFriend(userId: String){
+        return apiService.removeFavorite(userId);
+    }
 }

@@ -7,6 +7,7 @@ import com.example.explory.data.model.profile.ProfileDto
 object FriendMapper {
     private fun toFriend(profileDto: ProfileDto, isBestFriend: Boolean = false): Friend {
         return Friend(
+            userId = profileDto.userId,
             name = profileDto.username,
             email = profileDto.email,
             avatar = profileDto.avatarUrl,

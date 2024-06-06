@@ -60,8 +60,8 @@ fun dataModule() = module {
     single<LocationProvider> { MapLocationProvider(get()) }
     single {
         LocationWebSocketClient(
-            get(),
             url = "ws://158.160.69.160:8080/ws/location",
+            get(),
             get()
         )
     }
