@@ -30,6 +30,11 @@ class MapViewModel(
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
 
+    private var lastSentLocation: LocationRequest? = null
+    private var lastSentTime: Long = 0
+    private val minDistanceChange = 7
+    private val minTimeInterval = 30000L
+
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
             Point.fromLngLat(180.0, 90.0),
@@ -74,16 +79,47 @@ class MapViewModel(
                     onCurrentLocationCityChanged(addresses[0].locality)
                 }
 
-            sendLocationToServer(location.latitude, location.longitude)
+            val currentTime = System.currentTimeMillis()
+            val locationRequest = LocationRequest(
+                longitude = location.longitude.toString(),
+                latitude = location.latitude.toString(),
+                figureType = "CIRCLE"
+            )
+
+            if (shouldSendLocation(locationRequest, currentTime)) {
+                sendLocationToServer(locationRequest)
+                lastSentLocation = locationRequest
+                lastSentTime = currentTime
+            }
         }
         locationTracker.startTracking()
     }
 
-    private fun sendLocationToServer(latitude: Double, longitude: Double) {
-        val locationRequest = LocationRequest(
-            longitude = longitude.toString(), latitude = latitude.toString(), figureType = "CIRCLE"
-        )
+    private fun sendLocationToServer(locationRequest: LocationRequest) {
         webSocketClient.sendLocationRequest(locationRequest)
+    }
+
+    private fun shouldSendLocation(locationRequest: LocationRequest, currentTime: Long): Boolean {
+        if (lastSentLocation == null) {
+            return true
+        }
+
+        val distance = calculateDistance(lastSentLocation!!, locationRequest)
+        val timeElapsed = currentTime - lastSentTime
+
+        return distance >= minDistanceChange || timeElapsed >= minTimeInterval
+    }
+
+    private fun calculateDistance(loc1: LocationRequest, loc2: LocationRequest): Float {
+        val results = FloatArray(1)
+        android.location.Location.distanceBetween(
+            loc1.latitude.toDouble(),
+            loc1.longitude.toDouble(),
+            loc2.latitude.toDouble(),
+            loc2.longitude.toDouble(),
+            results
+        )
+        return results[0]
     }
 
     private fun getStartData() {

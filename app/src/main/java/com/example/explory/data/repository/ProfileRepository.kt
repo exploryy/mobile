@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.profile.ProfileMultipart
+import com.example.explory.data.model.statistic.UserStatisticDto
 import com.example.explory.data.service.ApiService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -44,6 +45,10 @@ class ProfileRepository(
         apiService.updateProfile(
             requestBody.build()
         )
+    }
+
+    suspend fun getUserStatistic() : UserStatisticDto {
+        return apiService.getUserStatistic()
     }
 
     private fun Uri.createTempFile(): File {
