@@ -28,7 +28,12 @@ import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W600
 
 @Composable
-fun ShortQuestCard(questType: String, difficultyColor: Color, name: String) {
+fun ShortQuestCard(
+    questType: String,
+    difficultyColor: Color,
+    name: String,
+    onDetailsClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .widthIn(max = 200.dp)
@@ -36,8 +41,7 @@ fun ShortQuestCard(questType: String, difficultyColor: Color, name: String) {
             .background(Color.White, shape = RoundedCornerShape(8.dp))
     ) {
         Column(
-            modifier = Modifier
-                .padding(8.dp)
+            modifier = Modifier.padding(8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -57,7 +61,7 @@ fun ShortQuestCard(questType: String, difficultyColor: Color, name: String) {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
                 shape = RoundedCornerShape(8.dp),
-                onClick = { /*TODO*/ },
+                onClick = onDetailsClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Подробнее", style = S14_W600, color = Color.White)
@@ -69,5 +73,5 @@ fun ShortQuestCard(questType: String, difficultyColor: Color, name: String) {
 @Preview
 @Composable
 private fun ShortCardPreview() {
-    ShortQuestCard("Добраться до точки", Color.Red, "Квест 1")
+    ShortQuestCard("Добраться до точки", Color.Red, "Квест 1", onDetailsClick = { })
 }

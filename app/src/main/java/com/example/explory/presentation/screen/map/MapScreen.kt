@@ -8,7 +8,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -75,12 +74,12 @@ const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
 const val OPENED_WORLD_LAYER = "layer-parking"
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(MapboxExperimental::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(),
     onLogout: () -> Unit,
+    onNavigateToQuest: (String, String) -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -201,7 +200,10 @@ fun MapScreen(
                         ShortQuestCard(
                             questType = viewModel.getNameByType(quest.questType),
                             difficultyColor = viewModel.getColorByDifficulty(quest.difficultyType),
-                            name = quest.name
+                            name = quest.name,
+                            onDetailsClick = {
+                                onNavigateToQuest(quest.questId.toString(), quest.questType)
+                            }
                         )
                     }
                 }
