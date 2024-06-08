@@ -75,29 +75,38 @@ class MapViewModel(
     }
 
     private fun startLocationUpdates() {
-        locationTracker.setLocationListener { location ->
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses: List<Address>? =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)
-            if (!addresses.isNullOrEmpty())
-                if (addresses[0].locality != _mapState.value.currentLocationName) {
-                    onCurrentLocationCityChanged(addresses[0].locality)
+        viewModelScope.launch {
+            locationTracker.setLocationListener { location ->
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val addresses: List<Address>? =
+                    geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                if (!addresses.isNullOrEmpty())
+                    if (addresses[0].locality != _mapState.value.currentLocationName) {
+                        if (addresses[0].locality != null)
+                            onCurrentLocationCityChanged(addresses[0].locality)
+                        else if (addresses[0].subAdminArea != null)
+                            onCurrentLocationCityChanged(addresses[0].subAdminArea)
+                        else if (addresses[0].adminArea != null)
+                            onCurrentLocationCityChanged(addresses[0].adminArea)
+                        else if (addresses[0].countryName != null)
+                            onCurrentLocationCityChanged(addresses[0].countryName)
+                    }
+
+                val currentTime = System.currentTimeMillis()
+                val locationRequest = LocationRequest(
+                    longitude = location.longitude.toString(),
+                    latitude = location.latitude.toString(),
+                    figureType = "CIRCLE"
+                )
+
+                if (shouldSendLocation(locationRequest, currentTime)) {
+                    sendLocationToServer(locationRequest)
+                    lastSentLocation = locationRequest
+                    lastSentTime = currentTime
                 }
-
-            val currentTime = System.currentTimeMillis()
-            val locationRequest = LocationRequest(
-                longitude = location.longitude.toString(),
-                latitude = location.latitude.toString(),
-                figureType = "CIRCLE"
-            )
-
-            if (shouldSendLocation(locationRequest, currentTime)) {
-                sendLocationToServer(locationRequest)
-                lastSentLocation = locationRequest
-                lastSentTime = currentTime
             }
+            locationTracker.startTracking()
         }
-        locationTracker.startTracking()
     }
 
     private fun sendLocationToServer(locationRequest: LocationRequest) {
@@ -162,6 +171,17 @@ class MapViewModel(
             "MEDIUM" -> Yellow
             "HARD" -> Red
             else -> AccentColor
+        }
+    }
+
+    fun getNameByType(type: String): String {
+        return when (type) {
+            "POINT_TO_POINT" -> "Добраться до точки"
+            "FIND" -> "Найти"
+            "PHOTO" -> "Сделать фото"
+            "ANSWER" -> "Ответить на вопрос"
+            "DISTANCE" -> "Пройти расстояние"
+            else -> "Неизвестно"
         }
     }
 
