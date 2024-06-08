@@ -28,12 +28,23 @@ val S20_W600 = TextStyle(
     fontWeight = FontWeight.SemiBold
 )
 
+val S20_W400 = TextStyle(
+    fontFamily = Inter,
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Normal
+)
+
 val S16_W600 = TextStyle(
     fontFamily = Inter,
     fontSize = 16.sp,
     fontWeight = FontWeight.SemiBold
 )
 
+val S16_W400 = TextStyle(
+    fontFamily = Inter,
+    fontSize = 16.sp,
+    fontWeight = FontWeight.Normal
+)
 val S14_W600 = TextStyle(
     fontFamily = Inter,
     fontSize = 14.sp,

@@ -7,6 +7,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.repository.QuestRepository
+import com.example.explory.data.service.DistanceQuestDto
+import com.example.explory.data.service.PointToPointQuestDto
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
@@ -28,6 +31,7 @@ class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
     private val getQuestsUseCase: GetQuestsUseCase,
     private val getCoinsUseCase: GetCoinsUseCase,
+    private val questRepository: QuestRepository,
     private val webSocketClient: LocationWebSocketClient,
     private val locationTracker: LocationTracker,
     private val context: Context
@@ -56,6 +60,22 @@ class MapViewModel(
         webSocketClient.connect()
         startLocationUpdates()
         observeWebSocketMessages()
+    }
+
+    fun getQuestDetails(questId: String, questType: String) {
+        viewModelScope.launch {
+            when (questType) {
+                "DISTANCE" -> {
+                    val distanceQuest = questRepository.getDistanceQuest(questId)
+                    updateDistanceQuest(distanceQuest)
+                }
+
+                "POINT_TO_POINT" -> {
+                    val p2pQuest = questRepository.getP2PQuest(questId)
+                    updateP2PQuest(p2pQuest)
+                }
+            }
+        }
     }
 
     private fun getStartPolygons() {
@@ -165,6 +185,16 @@ class MapViewModel(
         }
     }
 
+    fun getCorrectTransportType(transportType: String): String {
+        return when (transportType) {
+            "WALK" -> "пешком"
+            "CAR" -> "на машине"
+            "BICYCLE" -> "на велосипеде"
+            "MOTORCYCLE" -> "на мотоцикле"
+            else -> "неизвестно"
+        }
+    }
+
     fun getColorByDifficulty(difficulty: String): Color {
         return when (difficulty) {
             "EASY" -> Green
@@ -185,32 +215,11 @@ class MapViewModel(
         }
     }
 
-
-//    private fun createRandomPointsList(): List<List<Point>> {
-//        val random = Random()
-//        val points = mutableListOf<Point>()
-//        val firstLast = Point.fromLngLat(
-//            random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-//        )
-//        points.add(firstLast)
-//        for (i in 0 until random.nextInt(322) + 4) {
-//            points.add(
-//                Point.fromLngLat(
-//                    random.nextDouble() * -360.0 + 180.0, random.nextDouble() * -180.0 + 90.0
-//                )
-//            )
-//        }
-//        points.add(firstLast)
-//        return listOf(points)
-//    }
-
-
     private fun onInnerListUpdate(newInnerPoints: List<LineString>) {
         _mapState.update { it.copy(innerPoints = newInnerPoints) }
     }
 
     private fun observeWebSocketMessages() {
-
         viewModelScope.launch {
             webSocketClient.messages.collect { response ->
                 response?.let {
@@ -259,8 +268,16 @@ class MapViewModel(
         _mapState.update { it.copy(showFriendsScreen = !it.showFriendsScreen) }
     }
 
-    fun onCurrentLocationCityChanged(locality: String?) {
+    private fun onCurrentLocationCityChanged(locality: String?) {
         _mapState.update { it.copy(currentLocationName = locality ?: "") }
+    }
+
+    fun updateP2PQuest(p2pQuest: PointToPointQuestDto?) {
+        _mapState.update { it.copy(p2pQuest = p2pQuest) }
+    }
+
+    fun updateDistanceQuest(distanceQuest: DistanceQuestDto?) {
+        _mapState.update { it.copy(distanceQuest = distanceQuest) }
     }
 }
 
