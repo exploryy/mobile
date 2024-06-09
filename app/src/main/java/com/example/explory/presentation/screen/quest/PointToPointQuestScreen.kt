@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,21 +26,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.example.explory.R
 import com.example.explory.data.service.PointDto
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.MediumGray
-import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
+import com.example.explory.ui.theme.S20_W400
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Point
@@ -154,8 +157,9 @@ fun PointToPointQuestScreen(
 fun P2PQuestSheet(
     name: String,
     image: String?,
+    point: PointDto,
     description: String,
-    difficulty: Color,
+    difficulty: String,
     transportType: String,
     distance: Long
 ) {
@@ -175,11 +179,12 @@ fun P2PQuestSheet(
     ) {
         P2PContent(
             name = name,
+            point = point,
             image = image,
             description = description,
-            difficultyColor = difficulty,
+            difficulty = difficulty,
             transportType = transportType,
-            distance = distance
+            distance = distance,
         )
     }
 }
@@ -187,48 +192,68 @@ fun P2PQuestSheet(
 @Composable
 fun P2PContent(
     name: String,
+    point: PointDto,
     image: String?,
     description: String,
-    difficultyColor: Color,
+    difficulty: String,
     transportType: String,
     distance: Long
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(model = image, contentDescription = null, modifier = Modifier.size(64.dp))
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(image)
+                    .crossfade(true)
+                    .build(),
+                loading = {
+                    CircularProgressIndicator()
+                },
+                error = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.picture),
+                        contentDescription = null
+                    )
+                },
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+            )
             Spacer(modifier = Modifier.width(16.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = name, style = S24_W600)
-                Text(text = description, style = S16_W400, color = MediumGray)
+            Column {
+                Text(text = "Квест", style = S24_W600)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = name, style = S20_W400)
             }
         }
-
-        Text(
-            text = "Рекомендуем выполнять $transportType",
-            style = S16_W400,
-            color = MediumGray
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Сложность", style = S16_W400, color = MediumGray)
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(shape = CircleShape)
-                    .background(difficultyColor)
+        Spacer(modifier = Modifier.height(18.dp))
+        InfoBox(text = "${point.latitude}, ${point.longitude}")
+        Spacer(modifier = Modifier.height(18.dp))
+        Text(text = description, style = S16_W400)
+        Spacer(modifier = Modifier.height(18.dp))
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            InfoBox(
+                text = transportType
             )
+            InfoBox(text = difficulty)
+            InfoBox(text = "$distance метров")
         }
-        Text(text = "Расстояние $distance метров", style = S16_W400, color = MediumGray)
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(40.dp))
         Button(
             shape = RoundedCornerShape(8.dp),
             onClick = {},
             modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+                .height(50.dp)
+                .fillMaxWidth(),
+
             colors = ButtonDefaults.buttonColors(
                 contentColor = Black,
                 containerColor = White
@@ -240,6 +265,22 @@ fun P2PContent(
     }
 }
 
+@Composable
+fun InfoBox(modifier: Modifier = Modifier, text: String) {
+    Box(
+        modifier = modifier
+            .background(MediumGray, shape = RoundedCornerShape(8.dp))
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        Text(
+            text = text,
+            style = S14_W600,
+            color = White
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun PreviewP2P() {
@@ -247,7 +288,13 @@ private fun PreviewP2P() {
         name = "Пойдём бухнем",
         image = null,
         description = "Давай сходим и прибухнем",
-        difficultyColor = Red,
+        point = PointDto(
+            latitude = 55.7558.toString(),
+            longitude = 37.6176.toString(),
+            nextLatitude = 55.7558.toString(),
+            nextLongitude = 37.6176.toString()
+        ),
+        difficulty = "легкий",
         transportType = "пешком",
         distance = 1000
     )

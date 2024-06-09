@@ -264,7 +264,7 @@ fun MapScreen(
                         mapState.p2pQuest!!.route.points.last().latitude.toDouble()
                     ),
                         iconEmissiveStrength = 0.0,
-                        iconSize = 0.1,
+                        iconSize = 1.0,
                         iconImageBitmap = finishBitmap,
                         onClick = {
                             true
@@ -337,9 +337,10 @@ fun MapScreen(
                 name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = mapState.p2pQuest!!.commonQuestDto.images.first(),
                 description = mapState.p2pQuest!!.commonQuestDto.description,
-                difficulty = viewModel.getColorByDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
+                difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
+                point = mapState.p2pQuest!!.route.points.first()
             )
         }
     }

@@ -195,6 +195,15 @@ class MapViewModel(
         }
     }
 
+    fun getCorrectDifficulty(difficulty: String): String {
+        return when (difficulty) {
+            "EASY" -> "легкий"
+            "MEDIUM" -> "средний"
+            "HARD" -> "сложный"
+            else -> "неизвестно"
+        }
+    }
+
     fun getColorByDifficulty(difficulty: String): Color {
         return when (difficulty) {
             "EASY" -> Green
