@@ -12,6 +12,7 @@
     <application
         android:usesCleartextTraffic="true"
         android:name=".app.App"
+        android:configChanges="uiMode"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

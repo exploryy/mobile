@@ -97,6 +97,8 @@ dependencies {
 
     implementation(libs.androidx.foundation)
 
+    implementation(libs.flexible.bottomsheet.material3)
+
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.constraintlayout)

@@ -1,6 +1,8 @@
 package com.example.explory.presentation.screen.map
 
 import com.example.explory.data.service.CoinDto
+import com.example.explory.data.service.DistanceQuestDto
+import com.example.explory.data.service.PointToPointQuestDto
 import com.example.explory.data.service.QuestDto
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
@@ -19,4 +21,6 @@ data class MapState(
     val currentLocationPercent: Double = 0.0,
     val currentLocationName: String = "",
     val showViewAnnotationIndex: Int? = null,
+    val p2pQuest: PointToPointQuestDto? = null,
+    val distanceQuest: DistanceQuestDto? = null,
 )

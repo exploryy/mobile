@@ -11,4 +11,5 @@ sealed class Screen(
     data object Login : Screen("login", "Login", null)
     data object Registration : Screen("registration", "Registration", null)
     data object Map : Screen("map", "Map", null)
+    data object Quest : Screen("quest", "Quest", null)
 }

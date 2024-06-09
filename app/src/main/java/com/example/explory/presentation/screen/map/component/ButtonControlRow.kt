@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,13 +23,14 @@ import com.example.explory.R
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.plugin.viewport.ViewportStatus
+import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 
 @OptIn(MapboxExperimental::class)
 @Composable
 fun ButtonControlRow(
     mapViewportState: MapViewportState,
     onUpdateFriendScreenState: () -> Unit
-){
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -41,11 +41,15 @@ fun ButtonControlRow(
             modifier = Modifier
                 .fillMaxWidth(),
             contentAlignment = Alignment.TopCenter
-        ){
+        ) {
             if (mapViewportState.mapViewportStatus == ViewportStatus.Idle) {
                 FloatingActionButton(
                     onClick = {
-                        mapViewportState.transitionToFollowPuckState()
+                        mapViewportState.transitionToFollowPuckState(
+                            followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
+                                .pitch(0.0).build(),
+                        )
+
                     },
                     containerColor = Color.White,
                     modifier = Modifier
@@ -67,7 +71,7 @@ fun ButtonControlRow(
         ) {
             FloatingActionButton(
                 containerColor = Color.White,
-                onClick = {  },
+                onClick = { },
                 modifier = Modifier
                     .clip(CircleShape)
             ) {
