@@ -48,8 +48,6 @@ fun AppNavigation() {
                             inclusive = true
                         }
                     }
-                }, onNavigateToQuest = { questId, questType ->
-                    navController.navigate("${Screen.Quest.route}/$questId/$questType")
                 })
             }
             composable(Screen.Login.route) {

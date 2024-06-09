@@ -88,8 +88,7 @@ const val OPENED_WORLD_LAYER = "layer-parking"
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(),
-    onLogout: () -> Unit,
-    onNavigateToQuest: (String, String) -> Unit
+    onLogout: () -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -244,7 +243,8 @@ fun MapScreen(
                             if (index < points.size - 1) {
                                 add(
                                     PolylineAnnotationOptions().withLineColor(AccentColor.toArgb())
-                                        .withLineWidth(4.0).withPoints(
+                                        .withLineWidth(3.0)
+                                        .withPoints(
                                             listOf(
                                                 Point.fromLngLat(
                                                     pointDto.longitude.toDouble(),
