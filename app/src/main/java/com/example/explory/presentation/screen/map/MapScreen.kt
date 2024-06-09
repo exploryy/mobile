@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.compose.foundation.layout.Box
@@ -41,15 +42,17 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
+import com.example.explory.data.service.PointDto
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
-import com.example.explory.presentation.screen.quest.P2PQuestSheet
+import com.example.explory.presentation.screen.quest.QuestSheet
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
@@ -60,6 +63,7 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
+import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
 import com.mapbox.maps.extension.compose.style.layers.generated.FillAntialias
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
@@ -155,23 +159,27 @@ fun MapScreen(
             MapboxMap(Modifier.fillMaxSize(), onMapClickListener = {
                 viewModel.updateShowViewAnnotationIndex(null)
                 true
-            }, scaleBar = {}, logo = {}, attribution = {}, compass = {
-                Compass(
-                    contentPadding = PaddingValues(20.dp),
-                )
-            }, style = {
-                MapboxStandardStyle(
-                    topSlot = {
-                        FillLayer(
-                            sourceState = withHolesSourceState,
-                            layerId = OPENED_WORLD_LAYER,
-                            fillColor = FillColor(Color(0xFF000000)),
+            },
+                scaleBar = {},
+                logo = {},
+                attribution = {},
+                compass = {
+                    Compass(
+                        contentPadding = PaddingValues(20.dp),
+                    )
+                }, style = {
+                    MapboxStandardStyle(
+                        topSlot = {
+                            FillLayer(
+                                sourceState = withHolesSourceState,
+                                layerId = OPENED_WORLD_LAYER,
+                                fillColor = FillColor(Color(0xFF000000)),
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
-                            fillAntialias = FillAntialias(true),
-                        )
-                    }, lightPreset = LightPreset.default
-                )
-            }, mapViewportState = mapViewportState
+                                fillAntialias = FillAntialias(true),
+                            )
+                        }, lightPreset = LightPreset.default
+                    )
+                }, mapViewportState = mapViewportState
             ) {
                 MapEffect(Unit) { mapView ->
                     mapView.location.updateSettings {
@@ -268,7 +276,23 @@ fun MapScreen(
                         iconImageBitmap = finishBitmap,
                         onClick = {
                             true
-                        })
+                        }
+                    )
+                }
+                if (mapState.distanceQuest != null) {
+                    // draw cycle with radius = distance in meters from center point
+                    val points = viewModel.getPointsForCircle(
+                        mapState.distanceQuest!!.commonQuestDto.latitude.toDouble(),
+                        mapState.distanceQuest!!.commonQuestDto.longitude.toDouble(),
+                        mapState.distanceQuest!!.distance.toDouble()
+                    )
+                    Log.d("MapScreen", "points: $points")
+                    PolygonAnnotation(
+                        points = points,
+                        fillColorInt = AccentColor.toArgb(),
+                        fillOpacity = 0.5,
+                        fillOutlineColorInt = White.toArgb()
+                    )
                 }
             }
         }
@@ -303,10 +327,11 @@ fun MapScreen(
         ButtonControlRow(
             mapViewportState = mapViewportState
         ) { viewModel.updateShowFriendScreen() }
-        if (mapState.p2pQuest != null) {
+        if (mapState.p2pQuest != null || mapState.distanceQuest != null) {
             IconButton(
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Black), onClick = {
                     viewModel.updateP2PQuest(null)
+                    viewModel.updateDistanceQuest(null)
                 }, modifier = Modifier
                     .padding(20.dp)
                     .size(45.dp)
@@ -333,7 +358,7 @@ fun MapScreen(
         }
 
         mapState.p2pQuest != null -> {
-            P2PQuestSheet(
+            QuestSheet(
                 name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = mapState.p2pQuest!!.commonQuestDto.images.first(),
                 description = mapState.p2pQuest!!.commonQuestDto.description,
@@ -341,6 +366,23 @@ fun MapScreen(
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
                 point = mapState.p2pQuest!!.route.points.first()
+            )
+        }
+
+        mapState.distanceQuest != null -> {
+            QuestSheet(
+                name = mapState.distanceQuest!!.commonQuestDto.name,
+                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
+                description = mapState.distanceQuest!!.commonQuestDto.description,
+                difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
+                transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
+                distance = mapState.distanceQuest!!.distance,
+                point = PointDto(
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude,
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude
+                )
             )
         }
     }
