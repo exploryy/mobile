@@ -13,6 +13,7 @@ import com.example.explory.data.service.AuthService
 import com.example.explory.data.service.OpenStreetMapService
 import com.example.explory.data.storage.LocalStorage
 import com.example.explory.data.storage.ThemePreferenceManager
+import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
 import com.example.explory.domain.websocket.LocationProvider
 import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.example.explory.domain.websocket.MapLocationProvider
@@ -63,6 +64,14 @@ fun dataModule() = module {
     single {
         LocationWebSocketClient(
             url = "ws://158.160.69.160:8080/ws/location",
+            get(),
+            get()
+        )
+    }
+
+    single {
+        FriendsLocationWebSocketClient(
+            baseUrl = "ws://158.160.69.160:8080/ws/topic/fri`ends/position",
             get(),
             get()
         )

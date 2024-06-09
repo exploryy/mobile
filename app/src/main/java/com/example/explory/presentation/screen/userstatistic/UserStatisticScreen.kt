@@ -33,8 +33,7 @@ fun UserStatisticScreen(
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
@@ -61,10 +60,10 @@ fun UserStatisticScreen(
 
                 if (progress != null) {
                     LinearProgressIndicator(
-                        progress = progress,
+                        progress = { progress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 16.dp),
                     )
                 }
 

@@ -52,7 +52,7 @@ fun ProfileScreen(
     onLogout: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 

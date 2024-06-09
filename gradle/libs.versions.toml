@@ -27,6 +27,7 @@ composeAnimation = "1.7.0-alpha07"
 kotlinSerialization = "1.6.3"
 coilVersion = "2.6.0"
 material = "1.2.1"
+jwtVersion = "4.0.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -66,6 +67,7 @@ androidx-navigation = { group = "androidx.navigation", name = "navigation-compos
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimation" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
+jwt = { group = "com.auth0", name = "java-jwt", version.ref = "jwtVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
