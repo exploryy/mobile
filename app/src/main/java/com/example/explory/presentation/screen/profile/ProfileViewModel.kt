@@ -11,6 +11,7 @@ import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.LogoutUseCase
+import com.example.explory.domain.websocket.LocationWebSocketClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +22,8 @@ class ProfileViewModel(
     private val getProfileUseCase: GetProfileUseCase,
     private val editProfileUseCase: EditProfileUseCase,
     private val getFriendRequestsUseCase: GetFriendRequestsUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val webSocketClient: LocationWebSocketClient
 ) : ViewModel() {
     private val _profileState = MutableStateFlow(ProfileState())
     val profileState: StateFlow<ProfileState> = _profileState.asStateFlow()
@@ -107,6 +109,7 @@ class ProfileViewModel(
     fun logout() {
         viewModelScope.launch {
             try {
+                webSocketClient.close()
                 logoutUseCase.execute()
                 _profileState.update { it.copy(loggedOut = true) }
             } catch (e: Exception) {

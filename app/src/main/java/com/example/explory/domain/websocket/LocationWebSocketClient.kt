@@ -25,41 +25,53 @@ class LocationWebSocketClient(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val interceptor: Interceptor
 ) {
-    private val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
     private val _messages = MutableStateFlow<LocationResponse?>(null)
     val messages: StateFlow<LocationResponse?> get() = _messages
 
-    private lateinit var webSocket: WebSocket
+    @Volatile
+    private var webSocket: WebSocket? = null
     private var reconnectAttempts = 0
     private val maxReconnectAttempts = 15
     private val reconnectInterval = 5000L
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val connectionLock = Any()
+
+    private fun createClient() = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     fun connect() {
         val token = getUserTokenUseCase.execute()
         Log.d("Token", token.toString())
         val request = Request.Builder()
             .url(url)
-//            .addHeader("Authorization", "Bearer $token")
+            //.addHeader("Authorization", "Bearer $token")
             .build()
 
-        webSocket = client.newWebSocket(request, createWebSocketListener())
+        synchronized(connectionLock) {
+            if (webSocket != null) {
+                Log.d("WebSocket", "Already connected or connecting")
+                return
+            }
+
+            val client = createClient()
+            webSocket = client.newWebSocket(request, createWebSocketListener(client))
+        }
     }
 
     fun sendLocationRequest(locationRequest: LocationRequest) {
         val jsonRequest = Json.encodeToString(locationRequest)
         Log.d("Sending coordinates", jsonRequest)
-        webSocket.send(jsonRequest)
+        webSocket?.send(jsonRequest)
     }
 
     fun close() {
-        webSocket.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, null)
-        client.dispatcher.executorService.shutdown()
+        synchronized(connectionLock) {
+            webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Closing WebSocket")
+            webSocket = null
+        }
     }
 
-    private fun createWebSocketListener() = object : WebSocketListener() {
+    private fun createWebSocketListener(client: OkHttpClient) = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             Log.d("Connected", "WebSocket connected")
             reconnectAttempts = 0
@@ -77,30 +89,37 @@ class LocationWebSocketClient(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.d("Connection failed", t.message.toString())
+            client.dispatcher.executorService.shutdown()  // Properly shut down the dispatcher
             attemptReconnect()
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            println("WebSocket Closing: $reason")
-            webSocket.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, null)
+            Log.d("WebSocket Closing", reason)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            println("WebSocket Closed: $reason")
+            Log.d("WebSocket Closed", reason)
         }
     }
 
     private fun attemptReconnect() {
-        if (reconnectAttempts < maxReconnectAttempts) {
-            reconnectAttempts++
-            coroutineScope.launch {
-                delay(reconnectInterval)
-                Log.d("Reconnecting attempt", "Attempt $reconnectAttempts")
-                connect()
+        synchronized(connectionLock) {
+            if (webSocket != null) {
+                webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Reconnecting")
+                webSocket = null
             }
-        } else {
-            Log.d("Reconnecting failed", "Max reconnect attempts reached")
-            close()
+
+            if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++
+                coroutineScope.launch {
+                    delay(reconnectInterval)
+                    Log.d("Reconnecting attempt", "Attempt $reconnectAttempts")
+                    connect()
+                }
+            } else {
+                Log.d("Reconnecting failed", "Max reconnect attempts reached")
+                close()
+            }
         }
     }
 
@@ -108,3 +127,6 @@ class LocationWebSocketClient(
         const val NORMAL_CLOSURE_STATUS = 1000
     }
 }
+
+
+

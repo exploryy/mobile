@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
 import com.example.explory.data.model.auth.AuthRequest
 import com.example.explory.domain.usecase.PostLoginUseCase
+import com.example.explory.domain.websocket.LocationWebSocketClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
 class LoginViewModel(
-    private val postLoginUseCase: PostLoginUseCase
+    private val postLoginUseCase: PostLoginUseCase,
+    private val webSocketClient: LocationWebSocketClient
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -89,6 +91,7 @@ class LoginViewModel(
             try {
                 postLoginUseCase.execute(authRequest = request)
                 processIntent(LoginIntent.SuccessLogin)
+                webSocketClient.connect()
             } catch (e: SocketTimeoutException) {
                 processIntent(LoginIntent.UpdateErrorText("Превышено время ожидания"))
             } catch (e: HttpException) {
