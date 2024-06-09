@@ -6,6 +6,7 @@ import android.location.Geocoder
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.service.DistanceQuestDto
@@ -13,6 +14,7 @@ import com.example.explory.data.service.PointToPointQuestDto
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.example.explory.ui.theme.AccentColor
@@ -35,6 +37,7 @@ class MapViewModel(
     private val getCoinsUseCase: GetCoinsUseCase,
     private val questRepository: QuestRepository,
     private val webSocketClient: LocationWebSocketClient,
+    private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
     private val locationTracker: LocationTracker,
     private val context: Context
 ) : ViewModel() {
@@ -60,8 +63,10 @@ class MapViewModel(
         getStartData()
 //        getStartPolygons()
         webSocketClient.connect()
+        friendsLocationWebSocketClient.connect()
         startLocationUpdates()
         observeWebSocketMessages()
+        observeFriendsLocationWebSocketMessages()
     }
 
     fun getQuestDetails(questId: String, questType: String) {
@@ -283,9 +288,25 @@ class MapViewModel(
         }
     }
 
+    private fun observeFriendsLocationWebSocketMessages() {
+        viewModelScope.launch {
+            friendsLocationWebSocketClient.messages.collect { friendLocation ->
+                friendLocation?.let {
+                    onFriendsLocationUpdate(it)
+                }
+            }
+        }
+    }
+
+    private fun onFriendsLocationUpdate(friendLocations: List<FriendLocationDto>) {
+        _mapState.update { it.copy(friendsLocations = friendLocations) }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
+        friendsLocationWebSocketClient.close()
     }
 
     private fun onAreaUpdate(areaPercent: Double) {
