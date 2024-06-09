@@ -3,16 +3,13 @@ package com.example.explory.presentation.navigation
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.explory.presentation.screen.auth.login.LoginScreen
 import com.example.explory.presentation.screen.auth.onboarding.OnBoardingScreen
 import com.example.explory.presentation.screen.auth.register.RegistrationScreen
 import com.example.explory.presentation.screen.map.MapScreen
-import com.example.explory.presentation.screen.quest.QuestScreen
 import com.example.explory.presentation.screen.splash.SplashScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -74,19 +71,19 @@ fun AppNavigation() {
                     }
                 })
             }
-            composable(Screen.Quest.route + "/{questId}/{questType}",
-                arguments = listOf(navArgument("questId") {
-                    type = NavType.StringType
-                }, navArgument("questType") {
-                    type = NavType.StringType
-                })
-            ) {
-                val questId = it.arguments?.getString("questId") ?: ""
-                val questType = it.arguments?.getString("questType") ?: ""
-                QuestScreen(questId = questId, questType = questType, onNavigateBack = {
-                    navController.popBackStack()
-                })
-            }
+//            composable(Screen.Quest.route + "/{questId}/{questType}",
+//                arguments = listOf(navArgument("questId") {
+//                    type = NavType.StringType
+//                }, navArgument("questType") {
+//                    type = NavType.StringType
+//                })
+//            ) {
+//                val questId = it.arguments?.getString("questId") ?: ""
+//                val questType = it.arguments?.getString("questType") ?: ""
+//                QuestScreen(questId = questId, questType = questType, onNavigateBack = {
+//                    navController.popBackStack()
+//                })
+//            }
         }
     }
 }

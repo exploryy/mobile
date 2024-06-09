@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Locale
+import kotlin.math.cos
+import kotlin.math.sin
 
 class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
@@ -68,11 +70,13 @@ class MapViewModel(
                 "DISTANCE" -> {
                     val distanceQuest = questRepository.getDistanceQuest(questId)
                     updateDistanceQuest(distanceQuest)
+                    updateP2PQuest(null)
                 }
 
                 "POINT_TO_POINT" -> {
                     val p2pQuest = questRepository.getP2PQuest(questId)
                     updateP2PQuest(p2pQuest)
+                    updateDistanceQuest(null)
                 }
             }
         }
@@ -185,12 +189,52 @@ class MapViewModel(
         }
     }
 
+    fun getPointsForCircle(
+        latitude: Double,
+        longitude: Double,
+        radiusInMeters: Double
+    ): List<List<Point>> {
+        val earthRadius = 6378137.0
+        val numberOfSides = 100
+        val deltaLat =
+            Math.toDegrees(radiusInMeters / earthRadius)
+        val deltaLon = deltaLat / cos(Math.toRadians(latitude))
+
+
+        val coordinates = mutableListOf<Point>()
+        for (i in 0 until numberOfSides) {
+            val angle = Math.toRadians(i * 360.0 / numberOfSides)
+            val x: Double = longitude + deltaLon * cos(angle)
+            val y: Double = latitude + deltaLat * sin(angle)
+            coordinates.add(Point.fromLngLat(x, y))
+        }
+        coordinates.add(coordinates[0])
+
+        return listOf(coordinates)
+    }
+
+//    fun getPointsForSquare(
+//        latitude: Double,
+//        longitude: Double,
+//        sideInMeters: Double
+//    ): List<Point> {
+//    }
+
     fun getCorrectTransportType(transportType: String): String {
         return when (transportType) {
             "WALK" -> "пешком"
             "CAR" -> "на машине"
             "BICYCLE" -> "на велосипеде"
             "MOTORCYCLE" -> "на мотоцикле"
+            else -> "неизвестно"
+        }
+    }
+
+    fun getCorrectDifficulty(difficulty: String): String {
+        return when (difficulty) {
+            "EASY" -> "легкий"
+            "MEDIUM" -> "средний"
+            "HARD" -> "сложный"
             else -> "неизвестно"
         }
     }
