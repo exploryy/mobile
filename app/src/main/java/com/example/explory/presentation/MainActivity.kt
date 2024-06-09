@@ -11,15 +11,19 @@ import androidx.compose.ui.Modifier
 import com.example.explory.BuildConfig
 import com.example.explory.foreground.LocationService
 import com.example.explory.presentation.navigation.AppNavigation
+import com.example.explory.presentation.screen.common.ThemeViewModel
 import com.example.explory.ui.theme.ExploryTheme
 import com.mapbox.common.MapboxOptions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+    private val themeViewModel: ThemeViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapboxOptions.accessToken = BuildConfig.MAPBOX_API_KEY
         setContent {
-            ExploryTheme(darkTheme = true) {
+            ExploryTheme(themeViewModel = themeViewModel) {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {

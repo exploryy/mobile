@@ -7,25 +7,33 @@ import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
@@ -41,6 +49,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
+import com.example.explory.presentation.screen.common.ThemeViewModel
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
@@ -48,6 +57,7 @@ import com.example.explory.presentation.screen.map.location.RequestLocationPermi
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.example.explory.presentation.screen.quest.P2PQuestSheet
+import com.example.explory.presentation.screen.settings.SettingsScreen
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
 import com.mapbox.geojson.Feature
@@ -88,9 +98,12 @@ const val OPENED_WORLD_LAYER = "layer-parking"
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(),
+    themeViewModel: ThemeViewModel = koinViewModel(),
     onLogout: () -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
+    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -169,7 +182,7 @@ fun MapScreen(
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
                             fillAntialias = FillAntialias(true),
                         )
-                    }, lightPreset = LightPreset.default
+                    }, lightPreset = if (isDarkTheme) LightPreset.NIGHT else LightPreset.default
                 )
             }, mapViewportState = mapViewportState
             ) {
@@ -300,6 +313,27 @@ fun MapScreen(
             currentLocationPercent = mapState.currentLocationPercent
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 80.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+        ) {
+            IconButton(
+                onClick = { viewModel.updateShowSettingsScreen() },
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
         ButtonControlRow(
             mapViewportState = mapViewportState
         ) { viewModel.updateShowFriendScreen() }
@@ -326,9 +360,13 @@ fun MapScreen(
         mapState.showFriendsScreen -> {
             ProfileScreen(
                 onBackClick = { viewModel.updateShowFriendScreen() },
-                onLogout = { onLogout() },
-                onInviteFriends = { },
-                onSettingsClick = { },
+                onLogout = { onLogout() }
+            )
+        }
+
+        mapState.showSettingsScreen -> {
+            SettingsScreen (
+                onBackClick = { viewModel.updateShowSettingsScreen() }
             )
         }
 

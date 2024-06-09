@@ -50,9 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
     onLogout: () -> Unit,
-    onBackClick: () -> Unit,
-    onInviteFriends: () -> Unit,
-    onSettingsClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()

@@ -12,6 +12,7 @@ import com.example.explory.data.service.ApiService
 import com.example.explory.data.service.AuthService
 import com.example.explory.data.service.OpenStreetMapService
 import com.example.explory.data.storage.LocalStorage
+import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.domain.websocket.LocationProvider
 import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.example.explory.domain.websocket.MapLocationProvider
@@ -31,6 +32,7 @@ fun dataModule() = module {
     singleOf(::CoinsRepository)
     singleOf(::QuestRepository)
     singleOf(::LocalStorage)
+    singleOf(::ThemePreferenceManager)
     single<OpenStreetMapService> {
         Retrofit.Builder().baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()

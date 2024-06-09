@@ -279,6 +279,10 @@ class MapViewModel(
     fun updateDistanceQuest(distanceQuest: DistanceQuestDto?) {
         _mapState.update { it.copy(distanceQuest = distanceQuest) }
     }
+
+    fun updateShowSettingsScreen(){
+        _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
+    }
 }
 
 
