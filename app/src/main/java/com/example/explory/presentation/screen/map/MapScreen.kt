@@ -189,7 +189,7 @@ fun MapScreen(
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
                                 fillAntialias = FillAntialias(true),
                             )
-                        }, lightPreset = LightPreset.default
+                        }, lightPreset = if (isDarkTheme) LightPreset.DUSK else LightPreset.DAY
                     )
                 }, mapViewportState = mapViewportState
             ) {
@@ -385,8 +385,6 @@ fun MapScreen(
             ProfileScreen(
                 onBackClick = { viewModel.updateShowFriendScreen() },
                 onLogout = { onLogout() },
-                onInviteFriends = { },
-                onSettingsClick = { },
             )
         }
 
@@ -403,7 +401,7 @@ fun MapScreen(
         }
 
         mapState.showSettingsScreen -> {
-            SettingsScreen (
+            SettingsScreen(
                 onBackClick = { viewModel.updateShowSettingsScreen() }
             )
         }
