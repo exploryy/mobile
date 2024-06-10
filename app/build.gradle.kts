@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.androidx.compose.animation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil)
+    implementation(libs.glide)
 
     implementation(libs.androidx.foundation)
 

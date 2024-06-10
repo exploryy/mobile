@@ -71,8 +71,7 @@ fun dataModule() = module {
 
     single {
         FriendsLocationWebSocketClient(
-            baseUrl = "ws://158.160.69.160:8080/ws/topic/friends/position",
-            get(),
+            baseUrl = "ws://158.160.69.160:8080/ws/friendPosition",
             get()
         )
     }

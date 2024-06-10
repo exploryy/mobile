@@ -25,7 +25,13 @@ fun UserStatisticScreen(
 
     when {
         state.isLoading -> {
-            LoadingItem()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LoadingItem()
+            }
         }
         state.userStatisticDto != null -> {
             val statistics = state.userStatisticDto

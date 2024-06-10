@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FriendLocationDto(
     val clientId: String,
-    val latitude: String,
-    val longitude: String
+    val latitude: Double,
+    val longitude: Double
 )

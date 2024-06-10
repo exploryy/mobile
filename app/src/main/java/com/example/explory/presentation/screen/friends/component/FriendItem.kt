@@ -84,12 +84,6 @@ fun FriendItem(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
-            onClick = {  },
-            enabled = false
-        ) {
-            Text("Чат")
-        }
 
         IconButton(onClick = {
             toggleBestFriend(friend.userId)
