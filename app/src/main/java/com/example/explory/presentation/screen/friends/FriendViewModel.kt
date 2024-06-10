@@ -10,6 +10,7 @@ import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetUserListUseCase
 import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
+import com.example.explory.domain.usecase.RemoveFriendUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,8 @@ class FriendViewModel(
     private val addFriendUseCase: AddFriendUseCase,
     private val getFriendRequestsUseCase: GetFriendRequestsUseCase,
     private val addFavoriteFriendUseCase: AddFavoriteFriendUseCase,
-    private val removeFavoriteFriendUseCase: RemoveFavoriteFriendUseCase
+    private val removeFavoriteFriendUseCase: RemoveFavoriteFriendUseCase,
+    private val removeFriendUseCase: RemoveFriendUseCase
 ) : ViewModel() {
     private val _friendsState = MutableStateFlow(FriendsState())
     val friendsState: StateFlow<FriendsState> = _friendsState.asStateFlow()
@@ -118,6 +120,27 @@ class FriendViewModel(
                 }
             } catch (e: Exception) {
                 // Обработка ошибки
+            }
+        }
+    }
+
+    fun changeRemoveFriendState(){
+        _friendsState.update { it.copy(isStartDeleteFriend = !it.isStartDeleteFriend ) }
+    }
+
+    fun removeFriend(userId: String){
+        viewModelScope.launch {
+            _userListState.value = _userListState.value.copy(isLoading = true)
+            try {
+                Log.d("remove", userId)
+                removeFriendUseCase.execute(userId);
+                fetchFriends()
+                changeRemoveFriendState()
+            } catch (e: Exception) {
+                _userListState.value = _userListState.value.copy(error = e.message)
+                Log.d("delete friend", e.message.toString())
+            } finally {
+                _userListState.value = _userListState.value.copy(isLoading = false)
             }
         }
     }

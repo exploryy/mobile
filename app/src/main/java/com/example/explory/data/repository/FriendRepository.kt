@@ -37,4 +37,8 @@ class FriendRepository(private val apiService: ApiService) {
     suspend fun removeFavoriteFriend(userId: String){
         return apiService.removeFavorite(userId);
     }
+
+    suspend fun removeFriend(userId: String){
+        return apiService.removeFriend(userId);
+    }
 }

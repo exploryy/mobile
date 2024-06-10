@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
@@ -30,11 +31,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.explory.R
 import com.example.explory.data.model.friend.Friend
+import com.example.explory.presentation.screen.friends.DeleteFriendDialog
 
 @Composable
 fun FriendItem(
     friend: Friend,
-    toggleBestFriend: (String) -> Unit
+    toggleBestFriend: (String) -> Unit,
+    onDeleteFriendButtonClick: () -> Unit,
+    onDeleteFriend: (String) -> Unit,
+    isRemoveFriendState: Boolean,
 ) {
     Row(
         modifier = Modifier
@@ -96,5 +101,22 @@ fun FriendItem(
             )
         }
 
+        IconButton(onClick = {
+            onDeleteFriendButtonClick()
+        }) {
+            Icon(
+                imageVector = Icons.Default.DeleteForever,
+                contentDescription = "Delete icon",
+                tint = Color.Red
+            )
+        }
+    }
+
+    if (isRemoveFriendState){
+        DeleteFriendDialog(
+            friend = friend,
+            deleteFriend = { onDeleteFriend(it) },
+            onDismiss = { onDeleteFriendButtonClick() }
+        )
     }
 }

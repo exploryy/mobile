@@ -9,7 +9,11 @@ class GetUserIdUseCase(
 ) {
     fun execute(): String {
         val token = authRepository.getToken()
-        val jwt: DecodedJWT = JWT.decode(token)
-        return jwt.getClaim("sub").asString()
+        if (!token.isNullOrEmpty()){
+            val jwt: DecodedJWT = JWT.decode(token)
+            return jwt.getClaim("sub").asString()
+        } else {
+            return ""
+        }
     }
 }
