@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.example.explory.R
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
@@ -16,6 +17,7 @@ import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.service.DistanceQuestDto
 import com.example.explory.data.service.PointToPointQuestDto
 import com.example.explory.domain.usecase.GetCoinsUseCase
+import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.domain.websocket.EventType
@@ -396,11 +398,6 @@ class MapViewModel(
     }
 
 
-    private fun onFriendsLocationUpdate(friendLocations: List<FriendLocationDto>) {
-        _mapState.update { it.copy(friendsLocations = friendLocations) }
-    }
-
-
     override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
@@ -443,7 +440,7 @@ class MapViewModel(
         _mapState.update { it.copy(distanceQuest = distanceQuest) }
     }
 
-    fun updateShowSettingsScreen(){
+    fun updateShowSettingsScreen() {
         _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
     }
 }

@@ -2,8 +2,6 @@ package com.example.explory.domain.websocket
 
 import android.util.Log
 import com.example.explory.data.model.location.FriendLocationDto
-import com.example.explory.domain.usecase.GetUserIdUseCase
-import com.example.explory.domain.usecase.GetUserTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

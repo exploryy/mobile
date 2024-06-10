@@ -13,7 +13,6 @@ import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
-import com.example.explory.domain.usecase.GetUserIdUseCase
 import com.example.explory.domain.usecase.GetUserListUseCase
 import com.example.explory.domain.usecase.GetUserStatisticUseCase
 import com.example.explory.domain.usecase.GetUserTokenUseCase
@@ -49,7 +48,6 @@ fun domainModule() = module {
     factoryOf(::AddFavoriteFriendUseCase)
     factoryOf(::RemoveFavoriteFriendUseCase)
     factoryOf(::GetUserStatisticUseCase)
-    factoryOf(::GetUserIdUseCase)
     factoryOf(::RemoveFriendUseCase)
     factoryOf(::GetFriendStatisticUseCase)
 }

@@ -1,6 +1,7 @@
 package com.example.explory.data.service
 
 import com.example.explory.data.model.friend.FriendsResponse
+import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.requests.FriendRequest
 import com.example.explory.data.model.statistic.UserStatisticDto
@@ -47,7 +48,8 @@ interface ApiService {
     // Quests
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
-        @Path("quest_id") questId: String
+        @Path("quest_id") questId: String,
+        @Query("transport_type") transportType: String
     )
 
     @POST("/quest/{quest_id}/review")
