@@ -2,6 +2,9 @@ package com.example.explory.presentation.screen.map
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Paint
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -117,7 +120,11 @@ fun MapScreen(
         }
     }
 
-    val withHolesSourceState = remember { GeoJsonSourceState() }
+
+    val withHolesSourceState = remember {
+        GeoJsonSourceState()
+    }
+
     withHolesSourceState.data = GeoJSONData(
         Feature.fromGeometry(
             Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints.toList())
@@ -252,6 +259,44 @@ fun MapScreen(
                         })
                 }
 
+                mapState.friendsLocations.forEach { (userId, location) ->
+                    val point = Point.fromLngLat(location.second, location.first)
+                    val friendAvatar = mapState.friendAvatars[userId]?.second
+                    val friendName = mapState.friendAvatars[userId]?.first
+
+                    if (friendAvatar == null){
+                        val defaultAvatarBitmap = createDefaultAvatar(userId)
+                        PointAnnotation(
+                            point = point,
+                            iconSize = 1.0,
+                            iconImageBitmap = defaultAvatarBitmap,
+                            onClick = {
+                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                true
+                            },
+                            textField = friendName,
+                            textOffset = listOf(0.0, 2.0)
+                        )
+
+                    } else {
+                        val targetSize = 100
+                        val circleBitmap = createCircularAvatar(friendAvatar, targetSize)
+
+                        PointAnnotation(
+                            point = point,
+                            iconSize = 1.0,
+                            iconImageBitmap = circleBitmap,
+                            onClick = {
+                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                true
+                            },
+                            textField = friendName,
+                            textOffset = listOf(0.0, 2.0),
+                            textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
+                        )
+                    }
+                }
+
                 if (mapState.p2pQuest != null) {
                     PolylineAnnotationGroup(annotations = mutableListOf<PolylineAnnotationOptions>().apply {
                         val points = mapState.p2pQuest!!.route.points
@@ -302,6 +347,8 @@ fun MapScreen(
                         fillOutlineColorInt = White.toArgb()
                     )
                 }
+
+
             }
         }
 
@@ -421,8 +468,8 @@ fun MapScreen(
                     mapState.distanceQuest!!.commonQuestDto.latitude
                 ),
                 onButtonClicked = {
-                    viewModel.updateDistanceQuest(null)
-                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    viewModel.updateP2PQuest(null)
+                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
                 }
             )
         }
@@ -442,4 +489,51 @@ fun Painter.drawToImageBitmap(): ImageBitmap {
         draw(intrinsicSize)
     }
     return bitmap
+}
+
+
+private fun createDefaultAvatar(userId: String): Bitmap {
+    val defaultAvatarSize = 100
+    val defaultAvatarBitmap = Bitmap.createBitmap(
+        defaultAvatarSize,
+        defaultAvatarSize,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = android.graphics.Canvas(defaultAvatarBitmap)
+    val paint = Paint().apply {
+        isAntiAlias = true
+        color = android.graphics.Color.GRAY
+    }
+    val radius = defaultAvatarSize / 2f
+    canvas.drawCircle(radius, radius, radius, paint)
+
+    return defaultAvatarBitmap
+}
+
+private fun createCircularAvatar(bitmap: Bitmap, targetSize: Int): Bitmap {
+    val scaledAvatarBitmap = Bitmap.createScaledBitmap(
+        bitmap,
+        targetSize,
+        targetSize,
+        false
+    )
+
+    val circleBitmap = Bitmap.createBitmap(
+        scaledAvatarBitmap.width,
+        scaledAvatarBitmap.height,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = android.graphics.Canvas(circleBitmap)
+    val paint = Paint().apply {
+        isAntiAlias = true
+        shader = BitmapShader(
+            scaledAvatarBitmap,
+            Shader.TileMode.CLAMP,
+            Shader.TileMode.CLAMP
+        )
+    }
+    val radius = scaledAvatarBitmap.width / 2f
+    canvas.drawCircle(radius, radius, radius, paint)
+
+    return circleBitmap
 }

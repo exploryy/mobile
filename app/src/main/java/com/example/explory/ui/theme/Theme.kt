@@ -37,7 +37,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = BlackButtonColor,
     onSecondary = MediumGray,
     onBackground = DarkGray,
-    onSurface = BlackButtonColor
+    onSurface = OffBlack
 )
 
 @Composable

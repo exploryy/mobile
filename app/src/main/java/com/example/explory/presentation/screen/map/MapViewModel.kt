@@ -1,12 +1,15 @@
 package com.example.explory.presentation.screen.map
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.explory.R
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.repository.QuestRepository
@@ -26,10 +29,13 @@ import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.FileNotFoundException
 import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
@@ -41,6 +47,7 @@ class MapViewModel(
     private val questRepository: QuestRepository,
     private val webSocketClient: LocationWebSocketClient,
     private val eventWebSocketClient: EventWebSocketClient,
+    private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
     private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
     private val locationTracker: LocationTracker,
     private val context: Context
@@ -72,7 +79,7 @@ class MapViewModel(
         startLocationUpdates()
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
-        observeEventWebSocketMessages()
+        loadFriendStatistics()
     }
 
     fun startQuest(questId: String) {
@@ -305,6 +312,28 @@ class MapViewModel(
         }
     }
 
+    private fun loadFriendStatistics() {
+        viewModelScope.launch {
+            try {
+                val friendStats = getFriendStatisticUseCase.execute()
+                val friendLocations = friendStats.associate {
+                    it.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
+                }
+                val friendAvatars = friendStats.associate { friendStat ->
+                    friendStat.userId to Pair(friendStat.name, loadAvatar(friendStat.photoUrl))
+                }
+                _mapState.update { state ->
+                    state.copy(
+                        friendsLocations = friendLocations,
+                        friendAvatars = friendAvatars
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     private fun observeEventWebSocketMessages() {
         viewModelScope.launch {
             eventWebSocketClient.events.collect { event ->
@@ -320,6 +349,33 @@ class MapViewModel(
         }
     }
 
+
+    private suspend fun loadAvatar(avatarUrl: String?): Bitmap? {
+        return try {
+            if (avatarUrl.isNullOrEmpty()) {
+                null
+            } else {
+                withContext(Dispatchers.IO) {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(avatarUrl)
+                        .submit()
+                        .get()
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            Log.d("FileNotFoundException", "File not found: $avatarUrl")
+            val defaultImageResource = R.drawable.picture
+            BitmapFactory.decodeResource(context.resources, defaultImageResource)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("Exception", "An unexpected error occurred")
+            val defaultImageResource = R.drawable.picture
+            BitmapFactory.decodeResource(context.resources, defaultImageResource)
+        }
+    }
+
     private fun observeFriendsLocationWebSocketMessages() {
         viewModelScope.launch {
             friendsLocationWebSocketClient.messages.collect { friendLocation ->
@@ -330,6 +386,16 @@ class MapViewModel(
         }
     }
 
+    private fun onFriendsLocationUpdate(friendLocation: FriendLocationDto) {
+        _mapState.update { state ->
+            val updatedLocations = state.friendsLocations.toMutableMap()
+            updatedLocations[friendLocation.clientId] =
+                friendLocation.latitude to friendLocation.longitude
+            state.copy(friendsLocations = updatedLocations)
+        }
+    }
+
+
     private fun onFriendsLocationUpdate(friendLocations: List<FriendLocationDto>) {
         _mapState.update { it.copy(friendsLocations = friendLocations) }
     }
@@ -339,7 +405,6 @@ class MapViewModel(
         super.onCleared()
         webSocketClient.close()
         friendsLocationWebSocketClient.close()
-        eventWebSocketClient.close()
     }
 
     private fun onAreaUpdate(areaPercent: Double) {
@@ -378,12 +443,8 @@ class MapViewModel(
         _mapState.update { it.copy(distanceQuest = distanceQuest) }
     }
 
-    fun updateShowSettingsScreen() {
+    fun updateShowSettingsScreen(){
         _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
-    }
-
-    fun updateQuestFinished(finished: Boolean) {
-        _mapState.update { it.copy(questFinished = finished) }
     }
 }
 

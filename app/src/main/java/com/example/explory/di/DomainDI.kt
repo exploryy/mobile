@@ -8,6 +8,7 @@ import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
+import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
@@ -21,6 +22,7 @@ import com.example.explory.domain.usecase.PostLoginUseCase
 import com.example.explory.domain.usecase.PostRegistrationUseCase
 import com.example.explory.domain.usecase.RefreshTokenUseCase
 import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
+import com.example.explory.domain.usecase.RemoveFriendUseCase
 import com.example.explory.domain.websocket.LocationTracker
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -48,4 +50,6 @@ fun domainModule() = module {
     factoryOf(::RemoveFavoriteFriendUseCase)
     factoryOf(::GetUserStatisticUseCase)
     factoryOf(::GetUserIdUseCase)
+    factoryOf(::RemoveFriendUseCase)
+    factoryOf(::GetFriendStatisticUseCase)
 }

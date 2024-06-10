@@ -1,6 +1,7 @@
 package com.example.explory.data.repository
 
 import com.example.explory.data.model.friend.FriendsResponse
+import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.requests.FriendRequest
 import com.example.explory.data.service.ApiService
@@ -36,5 +37,13 @@ class FriendRepository(private val apiService: ApiService) {
 
     suspend fun removeFavoriteFriend(userId: String){
         return apiService.removeFavorite(userId);
+    }
+
+    suspend fun removeFriend(userId: String){
+        return apiService.removeFriend(userId);
+    }
+
+    suspend fun getFriendStatistic(): List<LocationStatisticDto>{
+        return apiService.getFriendStatistic()
     }
 }

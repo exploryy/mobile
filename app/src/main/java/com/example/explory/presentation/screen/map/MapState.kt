@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.map
 
+import android.graphics.Bitmap
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.service.CoinDto
 import com.example.explory.data.service.DistanceQuestDto
@@ -26,5 +27,7 @@ data class MapState(
     val p2pQuest: PointToPointQuestDto? = null,
     val distanceQuest: DistanceQuestDto? = null,
     val friendsLocations: List<FriendLocationDto> = emptyList(),
+    val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
     val questFinished: Boolean = false
+
 )

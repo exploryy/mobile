@@ -28,6 +28,7 @@ kotlinSerialization = "1.6.3"
 coilVersion = "2.6.0"
 material = "1.2.1"
 jwtVersion = "4.0.0"
+glideVersion = "4.12.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -68,6 +69,7 @@ androidx-compose-animation = { group = "androidx.compose.animation", name = "ani
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
 jwt = { group = "com.auth0", name = "java-jwt", version.ref = "jwtVersion" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glideVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

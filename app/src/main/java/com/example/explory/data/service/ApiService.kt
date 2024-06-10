@@ -47,8 +47,7 @@ interface ApiService {
     // Quests
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
-        @Path("quest_id") questId: String,
-        @Query("transport_type") transportType: String
+        @Path("quest_id") questId: String
     )
 
     @POST("/quest/{quest_id}/review")
@@ -175,7 +174,10 @@ interface ApiService {
     ): List<ProfileDto>
 
     @GET("/statistic/my")
-    suspend fun getUserStatistic(): UserStatisticDto
+    suspend fun getUserStatistic() : UserStatisticDto
+
+    @GET("/statistic/friend/coordinates")
+    suspend fun getFriendStatistic() : List<LocationStatisticDto>
 }
 
 data class CoinDto(

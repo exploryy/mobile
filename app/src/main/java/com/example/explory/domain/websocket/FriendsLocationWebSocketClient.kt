@@ -3,6 +3,7 @@ package com.example.explory.domain.websocket
 import android.util.Log
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.domain.usecase.GetUserIdUseCase
+import com.example.explory.domain.usecase.GetUserTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,11 +21,10 @@ import okhttp3.WebSocketListener
 
 class FriendsLocationWebSocketClient(
     private val baseUrl: String,
-    private val getUserIdUseCase: GetUserIdUseCase,
     private val interceptor: Interceptor
 ) {
-    private val _messages = MutableStateFlow<List<FriendLocationDto>?>(null)
-    val messages: StateFlow<List<FriendLocationDto>?> get() = _messages
+    private val _messages = MutableStateFlow<FriendLocationDto?>(null)
+    val messages: StateFlow<FriendLocationDto?> get() = _messages
 
     @Volatile
     private var webSocket: WebSocket? = null
@@ -38,8 +38,7 @@ class FriendsLocationWebSocketClient(
     private fun createClient() = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     fun connect() {
-        val userId = getUserIdUseCase.execute()
-        val url = "$baseUrl/$userId"
+        val url = baseUrl
         Log.d("WebSocket URL", url)
         val request = Request.Builder()
             .url(url)
@@ -73,16 +72,15 @@ class FriendsLocationWebSocketClient(
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d("Received friend location", text)
             try {
-                val response = Json.decodeFromString<List<FriendLocationDto>>(text)
+                val response = Json.decodeFromString<FriendLocationDto>(text.dropLast(1).drop(1).replace("\\", ""))
                 _messages.value = response
-                Log.d("Friends position", response.toString())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            Log.d("Connection failed", t.message.toString())
+            Log.d("Friends Connection failed", t.message.toString())
             client.dispatcher.executorService.shutdown()
             attemptReconnect()
         }
@@ -99,7 +97,7 @@ class FriendsLocationWebSocketClient(
     private fun attemptReconnect() {
         synchronized(connectionLock) {
             if (webSocket != null) {
-                webSocket?.close(NORMAL_CLOSURE_STATUS, "Reconnecting")
+                webSocket?.close(NORMAL_CLOSURE_STATUS, "Friend Reconnecting")
                 webSocket = null
             }
 

@@ -7,5 +7,6 @@ data class FriendsState(
     val friends: List<Friend> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isFriendRequestDialogOpen: Boolean = false
+    val isFriendRequestDialogOpen: Boolean = false,
+    val isStartDeleteFriend: Boolean = false
 )

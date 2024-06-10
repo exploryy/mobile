@@ -133,7 +133,10 @@ fun FriendsScreen(
                 items(filteredFriends.filter { it.isBestFriend }) { friend ->
                     FriendItem(
                         friend = friend,
-                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) }
+                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) },
+                        onDeleteFriendButtonClick = { viewModel.changeRemoveFriendState() },
+                        onDeleteFriend = { viewModel.removeFriend(it) },
+                        isRemoveFriendState = friendsState.isStartDeleteFriend
                     )
                 }
 
@@ -148,7 +151,10 @@ fun FriendsScreen(
                 items(filteredFriends) { friend ->
                     FriendItem(
                         friend = friend,
-                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) }
+                        toggleBestFriend = { viewModel.toggleFavoriteFriend(it) },
+                        onDeleteFriendButtonClick = { viewModel.changeRemoveFriendState() },
+                        onDeleteFriend = { viewModel.removeFriend(it) },
+                        isRemoveFriendState = friendsState.isStartDeleteFriend
                     )
                 }
             }
