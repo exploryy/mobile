@@ -66,7 +66,7 @@ class LocationWebSocketClient(
 
     fun close() {
         synchronized(connectionLock) {
-            webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Closing WebSocket")
+            webSocket?.close(NORMAL_CLOSURE_STATUS, "Closing WebSocket")
             webSocket = null
         }
     }
@@ -105,7 +105,7 @@ class LocationWebSocketClient(
     private fun attemptReconnect() {
         synchronized(connectionLock) {
             if (webSocket != null) {
-                webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Reconnecting")
+                webSocket?.close(NORMAL_CLOSURE_STATUS, "Reconnecting")
                 webSocket = null
             }
 

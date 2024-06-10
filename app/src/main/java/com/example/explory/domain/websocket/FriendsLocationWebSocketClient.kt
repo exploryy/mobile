@@ -3,7 +3,6 @@ package com.example.explory.domain.websocket
 import android.util.Log
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.domain.usecase.GetUserIdUseCase
-import com.example.explory.domain.usecase.GetUserTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -60,7 +59,7 @@ class FriendsLocationWebSocketClient(
 
     fun close() {
         synchronized(connectionLock) {
-            webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Closing Friend WebSocket")
+            webSocket?.close(NORMAL_CLOSURE_STATUS, "Closing Friend WebSocket")
             webSocket = null
         }
     }
@@ -100,7 +99,7 @@ class FriendsLocationWebSocketClient(
     private fun attemptReconnect() {
         synchronized(connectionLock) {
             if (webSocket != null) {
-                webSocket?.close(WebSocketListenerImpl.NORMAL_CLOSURE_STATUS, "Reconnecting")
+                webSocket?.close(NORMAL_CLOSURE_STATUS, "Reconnecting")
                 webSocket = null
             }
 

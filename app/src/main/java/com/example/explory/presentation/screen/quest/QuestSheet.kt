@@ -15,7 +15,8 @@ fun QuestSheet(
     description: String,
     difficulty: String,
     transportType: String,
-    distance: Long
+    distance: Long,
+    onButtonClicked: () -> Unit
 ) {
     FlexibleBottomSheet(
         onDismissRequest = { },
@@ -39,6 +40,7 @@ fun QuestSheet(
             difficulty = difficulty,
             transportType = transportType,
             distance = distance,
+            onButtonClicked = onButtonClicked
         )
     }
 }

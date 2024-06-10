@@ -25,5 +25,6 @@ data class MapState(
     val showViewAnnotationIndex: Int? = null,
     val p2pQuest: PointToPointQuestDto? = null,
     val distanceQuest: DistanceQuestDto? = null,
-    val friendsLocations: List<FriendLocationDto> = emptyList()
+    val friendsLocations: List<FriendLocationDto> = emptyList(),
+    val questFinished: Boolean = false
 )

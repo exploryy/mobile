@@ -17,4 +17,8 @@ class QuestRepository(private val apiService: ApiService) {
     suspend fun getDistanceQuest(id: String): DistanceQuestDto {
         return apiService.getDistanceQuest(id)
     }
+
+    suspend fun startQuest(id: String, transportType: String) {
+        apiService.startQuest(id, transportType)
+    }
 }

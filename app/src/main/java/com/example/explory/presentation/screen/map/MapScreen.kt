@@ -117,11 +117,7 @@ fun MapScreen(
         }
     }
 
-
-    val withHolesSourceState = remember {
-        GeoJsonSourceState()
-    }
-
+    val withHolesSourceState = remember { GeoJsonSourceState() }
     withHolesSourceState.data = GeoJSONData(
         Feature.fromGeometry(
             Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints.toList())
@@ -396,7 +392,11 @@ fun MapScreen(
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
-                point = mapState.p2pQuest!!.route.points.first()
+                point = mapState.p2pQuest!!.route.points.first(),
+                onButtonClicked = {
+                    viewModel.updateP2PQuest(null)
+                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                }
             )
         }
 
@@ -419,7 +419,11 @@ fun MapScreen(
                     mapState.distanceQuest!!.commonQuestDto.latitude,
                     mapState.distanceQuest!!.commonQuestDto.longitude,
                     mapState.distanceQuest!!.commonQuestDto.latitude
-                )
+                ),
+                onButtonClicked = {
+                    viewModel.updateDistanceQuest(null)
+                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                }
             )
         }
     }

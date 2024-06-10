@@ -47,7 +47,8 @@ interface ApiService {
     // Quests
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
-        @Path("quest_id") questId: String
+        @Path("quest_id") questId: String,
+        @Query("transport_type") transportType: String
     )
 
     @POST("/quest/{quest_id}/review")

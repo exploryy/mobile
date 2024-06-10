@@ -3,6 +3,7 @@ package com.example.explory.presentation.screen.map
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +15,8 @@ import com.example.explory.data.service.PointToPointQuestDto
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.domain.websocket.EventType
+import com.example.explory.domain.websocket.EventWebSocketClient
 import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
 import com.example.explory.domain.websocket.LocationTracker
 import com.example.explory.domain.websocket.LocationWebSocketClient
@@ -37,6 +40,7 @@ class MapViewModel(
     private val getCoinsUseCase: GetCoinsUseCase,
     private val questRepository: QuestRepository,
     private val webSocketClient: LocationWebSocketClient,
+    private val eventWebSocketClient: EventWebSocketClient,
     private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
     private val locationTracker: LocationTracker,
     private val context: Context
@@ -63,10 +67,23 @@ class MapViewModel(
         getStartData()
 //        getStartPolygons()
         webSocketClient.connect()
+        eventWebSocketClient.connect()
         friendsLocationWebSocketClient.connect()
         startLocationUpdates()
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
+        observeEventWebSocketMessages()
+    }
+
+    fun startQuest(questId: String) {
+        viewModelScope.launch {
+            try {
+                Log.d("MapViewModel", "Quest id $questId")
+                questRepository.startQuest(questId, "WALK")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun getQuestDetails(questId: String, questType: String) {
@@ -288,6 +305,21 @@ class MapViewModel(
         }
     }
 
+    private fun observeEventWebSocketMessages() {
+        viewModelScope.launch {
+            eventWebSocketClient.events.collect { event ->
+                event.let {
+                    when (it.type) {
+                        EventType.COMPLETE_QUEST -> {
+                            updateP2PQuest(null)
+                            updateDistanceQuest(null)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun observeFriendsLocationWebSocketMessages() {
         viewModelScope.launch {
             friendsLocationWebSocketClient.messages.collect { friendLocation ->
@@ -307,6 +339,7 @@ class MapViewModel(
         super.onCleared()
         webSocketClient.close()
         friendsLocationWebSocketClient.close()
+        eventWebSocketClient.close()
     }
 
     private fun onAreaUpdate(areaPercent: Double) {
@@ -345,8 +378,12 @@ class MapViewModel(
         _mapState.update { it.copy(distanceQuest = distanceQuest) }
     }
 
-    fun updateShowSettingsScreen(){
+    fun updateShowSettingsScreen() {
         _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
+    }
+
+    fun updateQuestFinished(finished: Boolean) {
+        _mapState.update { it.copy(questFinished = finished) }
     }
 }
 

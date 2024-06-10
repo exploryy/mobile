@@ -44,7 +44,8 @@ fun P2PContent(
     description: String,
     difficulty: String,
     transportType: String,
-    distance: Long
+    distance: Long,
+    onButtonClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
@@ -96,7 +97,7 @@ fun P2PContent(
         Spacer(modifier = Modifier.height(40.dp))
         Button(
             shape = RoundedCornerShape(8.dp),
-            onClick = {},
+            onClick = { onButtonClicked() },
             modifier = Modifier
                 .height(50.dp)
                 .fillMaxWidth(),
@@ -127,7 +128,8 @@ private fun PreviewP2P() {
         ),
         difficulty = "легкий",
         transportType = "пешком",
-        distance = 1000
+        distance = 1000,
+        onButtonClicked = {}
     )
 
 }

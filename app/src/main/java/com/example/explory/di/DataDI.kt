@@ -1,6 +1,7 @@
 package com.example.explory.di
 
 import com.example.explory.common.Constants
+import com.example.explory.common.Constants.Companion.BASE_URL_WEBSOCKET
 import com.example.explory.data.network.interceptor.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
 import com.example.explory.data.repository.CoinsRepository
@@ -13,6 +14,7 @@ import com.example.explory.data.service.AuthService
 import com.example.explory.data.service.OpenStreetMapService
 import com.example.explory.data.storage.LocalStorage
 import com.example.explory.data.storage.ThemePreferenceManager
+import com.example.explory.domain.websocket.EventWebSocketClient
 import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
 import com.example.explory.domain.websocket.LocationProvider
 import com.example.explory.domain.websocket.LocationWebSocketClient
@@ -73,6 +75,13 @@ fun dataModule() = module {
         FriendsLocationWebSocketClient(
             baseUrl = "ws://158.160.69.160:8080/ws/topic/friends/position",
             get(),
+            get()
+        )
+    }
+
+    single {
+        EventWebSocketClient(
+            url = "$BASE_URL_WEBSOCKET/event",
             get()
         )
     }
