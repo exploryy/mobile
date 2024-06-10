@@ -46,7 +46,8 @@ class EventWebSocketClient(
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d("EventWebSocket", "Received: $text")
             try {
-                val eventDto = Json.decodeFromString<EventDto>(text)
+                val eventDto =
+                    Json.decodeFromString<EventDto>(text.dropLast(1).drop(1).replace("\\", ""))
                 Log.d("EventWebSocket", "Decoded: $eventDto")
                 _events.tryEmit(eventDto)
             } catch (e: Exception) {

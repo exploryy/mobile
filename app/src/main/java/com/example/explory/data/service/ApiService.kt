@@ -175,7 +175,7 @@ interface ApiService {
     ): List<ProfileDto>
 
     @GET("/statistic/my")
-    suspend fun getUserStatistic() : UserStatisticDto
+    suspend fun getUserStatistic(): UserStatisticDto
 }
 
 data class CoinDto(
