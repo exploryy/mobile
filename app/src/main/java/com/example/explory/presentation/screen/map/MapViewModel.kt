@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.map
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,10 +12,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.explory.R
+import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.websocket.EventType
 import com.example.explory.data.websocket.EventWebSocketClient
@@ -42,11 +45,13 @@ import java.util.Locale
 import kotlin.math.cos
 import kotlin.math.sin
 
+@SuppressLint("StaticFieldLeak")
 class MapViewModel(
     private val getPolygonsUseCase: GetPolygonsUseCase,
     private val getQuestsUseCase: GetQuestsUseCase,
     private val getCoinsUseCase: GetCoinsUseCase,
     private val questRepository: QuestRepository,
+    private val coinsRepository: CoinsRepository,
     private val webSocketClient: LocationWebSocketClient,
     private val eventWebSocketClient: EventWebSocketClient,
     private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
@@ -81,6 +86,46 @@ class MapViewModel(
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
         loadFriendStatistics()
+    }
+
+    fun distanceToUser(
+        firstLat: Double,
+        firstLng: Double,
+        secondLat: Double,
+        secondLng: Double
+    ): Double {
+        val results = FloatArray(1)
+        android.location.Location.distanceBetween(
+            firstLat,
+            firstLng,
+            secondLat,
+            secondLng,
+            results
+        )
+        Log.d("MapViewModel", "Distance to user: ${results[0]}")
+        return results[0].toDouble()
+    }
+
+    fun collectCoin(coin: CoinDto, userLocation: Point) {
+        viewModelScope.launch {
+            try {
+                if (distanceToUser(
+                        coin.latitude.toDouble(),
+                        coin.longitude.toDouble(),
+                        userLocation.latitude(),
+                        userLocation.longitude()
+                    ) > 100.0
+                ) {
+                    return@launch
+                }
+                coinsRepository.collectCoin(coin.coin_id)
+                _mapState.update { it ->
+                    it.copy(coins = it.coins.filter { it.coin_id != coin.coin_id })
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun startQuest(questId: String) {
@@ -131,6 +176,7 @@ class MapViewModel(
     private fun startLocationUpdates() {
         viewModelScope.launch {
             locationTracker.setLocationListener { location ->
+                updateUserLocation(location.latitude, location.longitude)
                 val geocoder = Geocoder(context, Locale.getDefault())
                 val addresses: List<Address>? =
                     geocoder.getFromLocation(location.latitude, location.longitude, 1)
@@ -446,6 +492,10 @@ class MapViewModel(
 
     fun updateShowSettingsScreen() {
         _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
+    }
+
+    fun updateUserLocation(latitude: Double, longitude: Double) {
+        _mapState.update { it.copy(userPoint = Point.fromLngLat(longitude, latitude)) }
     }
 }
 

@@ -19,7 +19,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -34,7 +33,6 @@ import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
-import com.example.explory.ui.theme.S20_W400
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
@@ -51,7 +49,8 @@ fun QuestSheet(
     difficulty: String,
     transportType: String,
     distance: Long,
-    onButtonClicked: () -> Unit
+    onButtonClicked: () -> Unit,
+    onBackClicked: () -> Unit
 ) {
     FlexibleBottomSheet(
         onDismissRequest = { },
@@ -68,9 +67,11 @@ fun QuestSheet(
         containerColor = DarkGray,
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 20.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(image)
@@ -91,28 +92,31 @@ fun QuestSheet(
                         .size(64.dp)
                         .clip(CircleShape)
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(text = "Квест", style = S24_W600)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = name, style = S20_W400)
-                }
+                Spacer(modifier = Modifier.width(24.dp))
+                Text(
+                    text = name,
+                    style = S24_W600,
+                )
             }
-            Spacer(modifier = Modifier.height(18.dp))
-            InfoBox(text = "${point.latitude}, ${point.longitude}")
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                InfoBox(text = "${point.latitude}, ${point.longitude}")
+            }
+
             Spacer(modifier = Modifier.height(18.dp))
             Text(text = description, style = S16_W400)
             Spacer(modifier = Modifier.height(18.dp))
             FlowRow(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 InfoBox(
                     text = transportType
                 )
-                InfoBox(text = difficulty)
                 InfoBox(text = "$distance метров")
+                InfoBox(text = difficulty)
+                InfoBox(text = "одиночный")
             }
             Spacer(modifier = Modifier.height(40.dp))
             Button(

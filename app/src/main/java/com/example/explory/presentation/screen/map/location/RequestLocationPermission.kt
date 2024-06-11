@@ -7,6 +7,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 
@@ -14,8 +16,10 @@ import androidx.core.content.ContextCompat
 fun RequestLocationPermission(
     requestCount: Int = 0,
     onPermissionDenied: () -> Unit,
-    onPermissionReady: () -> Unit
+    onPermissionReady: () -> Unit,
+    afterRequest: @Composable () -> Unit
 ) {
+    val requestFinished = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -23,9 +27,14 @@ fun RequestLocationPermission(
         val granted = permissionsMap.values.all { it }
         if (granted) {
             onPermissionReady()
+            requestFinished.value = true
         } else {
             onPermissionDenied()
+            requestFinished.value = true
         }
+    }
+    if (requestFinished.value) {
+        afterRequest()
     }
     LaunchedEffect(requestCount) {
         context.checkAndRequestLocationPermission(
@@ -53,7 +62,6 @@ private fun Context.checkAndRequestLocationPermission(
         launcher.launch(permissions)
     }
 }
-
 
 
 private val locationPermissions = arrayOf(

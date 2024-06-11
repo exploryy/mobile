@@ -29,7 +29,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
-import com.example.explory.presentation.screen.common.ThemeViewModel
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
@@ -69,6 +67,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.ViewAnnotationAnchor
+import com.mapbox.maps.dsl.cameraOptions
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
@@ -81,13 +80,12 @@ import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
-import com.mapbox.maps.extension.compose.style.standard.LightPreset
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
 import com.mapbox.maps.plugin.PuckBearing
+import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
-import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import com.mapbox.maps.viewannotation.annotationAnchors
 import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
@@ -103,11 +101,11 @@ const val OPENED_WORLD_LAYER = "layer-parking"
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(),
-    themeViewModel: ThemeViewModel = koinViewModel(),
+//    themeViewModel: ThemeViewModel = koinViewModel(),
     onLogout: () -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
-    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+//    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
 
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
@@ -164,36 +162,35 @@ fun MapScreen(
             onPermissionReady = {
                 viewModel.updateShowRequestPermissionButton(false)
                 viewModel.updateShowMap(true)
+            },
+            afterRequest = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    RequestNotificationPermission()
+                }
             })
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RequestNotificationPermission()
-        }
 
         if (mapState.showMap) {
             MapboxMap(Modifier.fillMaxSize(), onMapClickListener = {
                 viewModel.updateShowViewAnnotationIndex(null)
                 true
-            },
-                scaleBar = {},
-                logo = {},
-                attribution = {},
-                compass = {
-                    Compass(
-                        contentPadding = PaddingValues(vertical = 50.dp, horizontal = 20.dp),
-                    )
-                }, style = {
-                    MapboxStandardStyle(
-                        topSlot = {
-                            FillLayer(
-                                sourceState = withHolesSourceState,
-                                layerId = OPENED_WORLD_LAYER,
-                                fillColor = FillColor(Color(0xFF000000)),
+            }, scaleBar = {}, logo = {}, attribution = {}, compass = {
+                Compass(
+                    contentPadding = PaddingValues(vertical = 50.dp, horizontal = 20.dp),
+                )
+            }, style = {
+                MapboxStandardStyle(
+                    topSlot = {
+                        FillLayer(
+                            sourceState = withHolesSourceState,
+                            layerId = OPENED_WORLD_LAYER,
+                            fillColor = FillColor(Color(0xFF000000)),
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
-                                fillAntialias = FillAntialias(true),
-                            )
-                        }, lightPreset = LightPreset.default
-                    )
-                }, mapViewportState = mapViewportState
+                            fillAntialias = FillAntialias(true),
+                        )
+                    },
+//                        lightPreset = if (isDarkTheme) LightPreset.DUSK else LightPreset.DAY
+                )
+            }, mapViewportState = mapViewportState
             ) {
                 MapEffect(Unit) { mapView ->
                     mapView.location.updateSettings {
@@ -203,8 +200,8 @@ fun MapScreen(
                         enabled = true
                     }
                     mapViewportState.transitionToFollowPuckState(
-                        followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
-                            .pitch(PITCH).build(),
+//                        followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
+//                            .pitch(PITCH).build(),
                     )
 
                 }
@@ -238,12 +235,13 @@ fun MapScreen(
 
                     PointAnnotation(point = point,
                         iconEmissiveStrength = 0.0,
+                        iconHaloColorInt = Black.toArgb(),
+                        iconHaloWidth = 1.0,
                         iconImageBitmap = taskBitmap,
                         onClick = {
                             viewModel.updateShowViewAnnotationIndex(index)
                             true
-                        }
-                    )
+                        })
                 }
 
                 mapState.coins.forEach { coin ->
@@ -254,7 +252,15 @@ fun MapScreen(
                         iconEmissiveStrength = 0.0,
                         iconImageBitmap = coinBitmap,
                         onClick = {
-                            Toast.makeText(context, "Это монетка =)", LENGTH_SHORT).show()
+                            val coinsCount = mapState.coins.size
+                            if (mapState.userPoint != null) {
+                                viewModel.collectCoin(coin, mapState.userPoint!!)
+                            }
+                            if (mapState.coins.size == coinsCount - 1) {
+                                Toast.makeText(context, "Монетка собрана!", LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Вы слишком далеко", LENGTH_SHORT).show()
+                            }
                             true
                         })
                 }
@@ -298,53 +304,83 @@ fun MapScreen(
                 }
 
                 if (mapState.p2pQuest != null) {
-                    PolylineAnnotationGroup(annotations = mutableListOf<PolylineAnnotationOptions>().apply {
-                        val points = mapState.p2pQuest!!.route.points
-                        points.forEachIndexed { index, pointDto ->
-                            if (index < points.size - 1) {
-                                add(
-                                    PolylineAnnotationOptions().withLineColor(AccentColor.toArgb())
-                                        .withLineWidth(3.0)
-                                        .withPoints(
-                                            listOf(
-                                                Point.fromLngLat(
-                                                    pointDto.longitude.toDouble(),
-                                                    pointDto.latitude.toDouble()
-                                                ), Point.fromLngLat(
-                                                    points[index + 1].longitude.toDouble(),
-                                                    points[index + 1].latitude.toDouble()
+                    PolylineAnnotationGroup(
+                        lineDasharray = listOf(1.0, 1.0),
+                        annotations = mutableListOf<PolylineAnnotationOptions>().apply {
+                            val points = mapState.p2pQuest!!.route.points
+                            points.forEachIndexed { index, pointDto ->
+                                if (index < points.size - 1) {
+                                    add(
+                                        PolylineAnnotationOptions()
+                                            .withLineColor(AccentColor.toArgb())
+                                            .withLineWidth(5.0).withPoints(
+                                                listOf(
+                                                    Point.fromLngLat(
+                                                        pointDto.longitude.toDouble(),
+                                                        pointDto.latitude.toDouble()
+                                                    ), Point.fromLngLat(
+                                                        points[index + 1].longitude.toDouble(),
+                                                        points[index + 1].latitude.toDouble()
+                                                    )
                                                 )
                                             )
-                                        )
-                                )
+                                    )
+                                }
                             }
-                        }
-                    })
-                    PointAnnotation(point = Point.fromLngLat(
-                        mapState.p2pQuest!!.route.points.last().longitude.toDouble(),
-                        mapState.p2pQuest!!.route.points.last().latitude.toDouble()
-                    ),
-                        iconEmissiveStrength = 0.0,
+                            mapViewportState.flyTo(
+                                cameraOptions {
+                                    center(
+                                        Point.fromLngLat(
+                                            mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
+                                            mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
+                                        )
+                                    )
+                                    zoom(13.0)
+                                    pitch(0.0)
+                                },
+                                animationOptions = MapAnimationOptions.mapAnimationOptions {
+                                    duration(2000)
+                                }
+                            )
+                        })
+
+                    PointAnnotation(
+                        point = Point.fromLngLat(
+                            mapState.p2pQuest!!.route.points.last().longitude.toDouble(),
+                            mapState.p2pQuest!!.route.points.last().latitude.toDouble()
+                        ),
                         iconSize = 1.0,
-                        iconImageBitmap = finishBitmap,
-                        onClick = {
-                            true
-                        }
+                        iconOffset = listOf(0.0, -20.0),
+                        iconImageBitmap = finishBitmap
                     )
                 }
                 if (mapState.distanceQuest != null) {
-                    // draw cycle with radius = distance in meters from center point
-                    val points = viewModel.getPointsForCircle(
-                        mapState.distanceQuest!!.commonQuestDto.latitude.toDouble(),
+                    val point = Point.fromLngLat(
                         mapState.distanceQuest!!.commonQuestDto.longitude.toDouble(),
+                        mapState.distanceQuest!!.commonQuestDto.latitude.toDouble()
+                    )
+                    val points = viewModel.getPointsForCircle(
+                        point.latitude(),
+                        point.longitude(),
                         mapState.distanceQuest!!.distance.toDouble()
                     )
+                    mapViewportState.flyTo(
+                        cameraOptions {
+                            center(point)
+                            zoom(13.0)
+                            pitch(0.0)
+                        },
+                        animationOptions = MapAnimationOptions.mapAnimationOptions {
+                            duration(2000)
+                        }
+                    )
+
                     Log.d("MapScreen", "points: $points")
                     PolygonAnnotation(
                         points = points,
                         fillColorInt = AccentColor.toArgb(),
-                        fillOpacity = 0.5,
-                        fillOutlineColorInt = White.toArgb()
+                        fillOpacity = 0.2,
+                        fillOutlineColorInt = White.toArgb(),
                     )
                 }
 
@@ -405,12 +441,12 @@ fun MapScreen(
                     viewModel.updateP2PQuest(null)
                     viewModel.updateDistanceQuest(null)
                 }, modifier = Modifier
-                    .padding(20.dp)
+                    .padding(start = 20.dp, top = 60.dp)
                     .size(45.dp)
 
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.back),
+                    painter = painterResource(id = R.drawable.close),
                     tint = Color.White,
                     contentDescription = null,
                     modifier = Modifier.scale(1.4f)
@@ -428,8 +464,7 @@ fun MapScreen(
         }
 
         mapState.p2pQuest != null -> {
-            QuestSheet(
-                name = mapState.p2pQuest!!.commonQuestDto.name,
+            QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = mapState.p2pQuest!!.commonQuestDto.images.first(),
                 description = mapState.p2pQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
@@ -437,21 +472,18 @@ fun MapScreen(
                 distance = mapState.p2pQuest!!.route.distance,
                 point = mapState.p2pQuest!!.route.points.first(),
                 onButtonClicked = {
-                    viewModel.updateP2PQuest(null)
+                    viewModel.updateDistanceQuest(null)
                     viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                }
-            )
+                },
+                onBackClicked = { viewModel.updateP2PQuest(null) })
         }
 
         mapState.showSettingsScreen -> {
-            SettingsScreen(
-                onBackClick = { viewModel.updateShowSettingsScreen() }
-            )
+            SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
         }
 
         mapState.distanceQuest != null -> {
-            QuestSheet(
-                name = mapState.distanceQuest!!.commonQuestDto.name,
+            QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
                 image = mapState.distanceQuest!!.commonQuestDto.images.first(),
                 description = mapState.distanceQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
@@ -465,9 +497,9 @@ fun MapScreen(
                 ),
                 onButtonClicked = {
                     viewModel.updateP2PQuest(null)
-                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                }
-            )
+                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                },
+                onBackClicked = { viewModel.updateDistanceQuest(null) })
         }
     }
 }
@@ -491,9 +523,7 @@ fun Painter.drawToImageBitmap(): ImageBitmap {
 private fun createDefaultAvatar(userId: String): Bitmap {
     val defaultAvatarSize = 100
     val defaultAvatarBitmap = Bitmap.createBitmap(
-        defaultAvatarSize,
-        defaultAvatarSize,
-        Bitmap.Config.ARGB_8888
+        defaultAvatarSize, defaultAvatarSize, Bitmap.Config.ARGB_8888
     )
     val canvas = android.graphics.Canvas(defaultAvatarBitmap)
     val paint = Paint().apply {
@@ -508,24 +538,17 @@ private fun createDefaultAvatar(userId: String): Bitmap {
 
 private fun createCircularAvatar(bitmap: Bitmap, targetSize: Int): Bitmap {
     val scaledAvatarBitmap = Bitmap.createScaledBitmap(
-        bitmap,
-        targetSize,
-        targetSize,
-        false
+        bitmap, targetSize, targetSize, false
     )
 
     val circleBitmap = Bitmap.createBitmap(
-        scaledAvatarBitmap.width,
-        scaledAvatarBitmap.height,
-        Bitmap.Config.ARGB_8888
+        scaledAvatarBitmap.width, scaledAvatarBitmap.height, Bitmap.Config.ARGB_8888
     )
     val canvas = android.graphics.Canvas(circleBitmap)
     val paint = Paint().apply {
         isAntiAlias = true
         shader = BitmapShader(
-            scaledAvatarBitmap,
-            Shader.TileMode.CLAMP,
-            Shader.TileMode.CLAMP
+            scaledAvatarBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP
         )
     }
     val radius = scaledAvatarBitmap.width / 2f

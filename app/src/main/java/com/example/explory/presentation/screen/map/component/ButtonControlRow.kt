@@ -23,7 +23,6 @@ import com.example.explory.R
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.plugin.viewport.ViewportStatus
-import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 
 @OptIn(MapboxExperimental::class)
 @Composable
@@ -46,8 +45,8 @@ fun ButtonControlRow(
                 FloatingActionButton(
                     onClick = {
                         mapViewportState.transitionToFollowPuckState(
-                            followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
-                                .pitch(0.0).build(),
+//                            followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
+//                                .pitch(0.0).build(),
                         )
 
                     },

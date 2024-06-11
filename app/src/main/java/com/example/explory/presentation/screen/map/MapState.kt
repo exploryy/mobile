@@ -8,11 +8,11 @@ import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 
 data class MapState(
     val uiState: UiState = UiState.Default,
     val polygons: List<List<List<List<Double>>>>? = null,
-    val userPosition: Pair<Double, Double>? = null,
     val innerPoints: List<LineString> = emptyList(),
     val completedQuests: List<CompletedQuestDto> = emptyList(),
     val activeQuest: QuestDto? = null,
@@ -30,6 +30,6 @@ data class MapState(
     val distanceQuest: DistanceQuestDto? = null,
     val friendsLocations: Map<String, Pair<Double, Double>> = emptyMap(),
     val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
-    val questFinished: Boolean = false
-
+    val questFinished: Boolean = false,
+    val userPoint: Point? = null,
 )
