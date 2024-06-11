@@ -11,7 +11,7 @@ import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.LogoutUseCase
-import com.example.explory.domain.websocket.LocationWebSocketClient
+import com.example.explory.data.websocket.LocationWebSocketClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

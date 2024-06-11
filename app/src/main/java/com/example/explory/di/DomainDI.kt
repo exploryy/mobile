@@ -22,7 +22,6 @@ import com.example.explory.domain.usecase.PostRegistrationUseCase
 import com.example.explory.domain.usecase.RefreshTokenUseCase
 import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
 import com.example.explory.domain.usecase.RemoveFriendUseCase
-import com.example.explory.domain.websocket.LocationTracker
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -32,7 +31,6 @@ fun domainModule() = module {
     factoryOf(::PostRegistrationUseCase)
     factoryOf(::CheckUserTokenUseCase)
     factoryOf(::GetUserTokenUseCase)
-    factoryOf(::LocationTracker)
     factoryOf(::RefreshTokenUseCase)
     factoryOf(::GetProfileUseCase)
     factoryOf(::EditProfileUseCase)

@@ -2,7 +2,7 @@ package com.example.explory.di
 
 import com.example.explory.common.Constants
 import com.example.explory.common.Constants.Companion.BASE_URL_WEBSOCKET
-import com.example.explory.data.network.interceptor.AuthInterceptor
+import com.example.explory.data.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.FriendRepository
@@ -11,16 +11,20 @@ import com.example.explory.data.repository.ProfileRepository
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.service.ApiService
 import com.example.explory.data.service.AuthService
-import com.example.explory.data.service.OpenStreetMapService
 import com.example.explory.data.storage.LocalStorage
 import com.example.explory.data.storage.ThemePreferenceManager
-import com.example.explory.domain.websocket.EventWebSocketClient
-import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
-import com.example.explory.domain.websocket.LocationProvider
-import com.example.explory.domain.websocket.LocationWebSocketClient
-import com.example.explory.domain.websocket.MapLocationProvider
+import com.example.explory.data.websocket.EventWebSocketClient
+import com.example.explory.data.websocket.FriendsLocationWebSocketClient
+import com.example.explory.data.websocket.LocationProvider
+import com.example.explory.data.websocket.LocationTracker
+import com.example.explory.data.websocket.LocationWebSocketClient
+import com.example.explory.data.websocket.MapLocationProvider
+import com.example.explory.foreground.DefaultLocationClient
+import com.example.explory.foreground.LocationClient
+import com.google.android.gms.location.LocationServices
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -36,11 +40,8 @@ fun dataModule() = module {
     singleOf(::QuestRepository)
     singleOf(::LocalStorage)
     singleOf(::ThemePreferenceManager)
-    single<OpenStreetMapService> {
-        Retrofit.Builder().baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create()).build()
-            .create(OpenStreetMapService::class.java)
-    }
+    singleOf(::LocationTracker)
+
     single<Interceptor> { AuthInterceptor(get(), get()) }
 
     single<OkHttpClient> {
@@ -62,12 +63,21 @@ fun dataModule() = module {
             .create(ApiService::class.java)
     }
 
-    single<LocationProvider> { MapLocationProvider(get()) }
+    single<LocationClient> {
+        DefaultLocationClient(
+            get(),
+            LocationServices.getFusedLocationProviderClient(androidContext())
+        )
+    }
+
+    single<LocationProvider> {
+        MapLocationProvider(get())
+    }
+
     single {
         LocationWebSocketClient(
             url = "ws://158.160.69.160:8080/ws/location",
             get(),
-            get()
         )
     }
 

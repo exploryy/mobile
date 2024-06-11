@@ -7,30 +7,23 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.explory.R
 import com.example.explory.presentation.MainActivity
-import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
 
 class LocationService : Service() {
 
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private lateinit var locationClient: LocationClient
+//    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+//    private lateinit var locationClient: LocationClient
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        locationClient = DefaultLocationClient(
-            applicationContext,
-            LocationServices.getFusedLocationProviderClient(applicationContext)
-        )
-    }
+//    override fun onCreate() {
+//        super.onCreate()
+//        locationClient = DefaultLocationClient(
+//            applicationContext,
+//            LocationServices.getFusedLocationProviderClient(applicationContext)
+//        )
+//    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
@@ -56,10 +49,11 @@ class LocationService : Service() {
                 )
             )
             .setOngoing(true)
-        locationClient
-            .getLocationUpdates(10000L)
-            .catch { e -> e.printStackTrace() }
-            .launchIn(serviceScope)
+
+//        locationClient
+//            .getLocationUpdates(5000L)
+//            .catch { e -> e.printStackTrace() }
+//            .launchIn(serviceScope)
         startForeground(1, notification.build())
     }
 
@@ -68,10 +62,10 @@ class LocationService : Service() {
         stopSelf()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        serviceScope.cancel()
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+////        serviceScope.cancel()
+//    }
 
     companion object {
         const val ACTION_START = "ACTION_START"

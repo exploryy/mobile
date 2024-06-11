@@ -1,12 +1,12 @@
 package com.example.explory.data.repository
 
+import com.example.explory.data.model.quest.DistanceQuestDto
+import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.model.quest.QuestListDto
 import com.example.explory.data.service.ApiService
-import com.example.explory.data.service.DistanceQuestDto
-import com.example.explory.data.service.PointToPointQuestDto
-import com.example.explory.data.service.QuestDto
 
 class QuestRepository(private val apiService: ApiService) {
-    suspend fun getQuests(): List<QuestDto> {
+    suspend fun getQuests(): QuestListDto {
         return apiService.getQuests()
     }
 

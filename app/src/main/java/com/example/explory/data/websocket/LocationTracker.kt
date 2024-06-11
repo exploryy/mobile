@@ -1,9 +1,9 @@
-package com.example.explory.domain.websocket
+package com.example.explory.data.websocket
 
 import android.location.Location
 
 class LocationTracker(
-    private val locationProvider: LocationProvider
+    private val locationProvider: LocationProvider,
 ) {
     private var locationListener: ((Location) -> Unit)? = null
 
@@ -11,11 +11,6 @@ class LocationTracker(
         locationProvider.startLocationUpdates { location ->
             locationListener?.invoke(location)
         }
-    }
-
-    fun stopTracking() {
-        locationProvider.stopLocationUpdates()
-        locationListener = null
     }
 
     fun setLocationListener(listener: (Location) -> Unit) {

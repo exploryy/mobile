@@ -1,4 +1,4 @@
-package com.example.explory.data.network.interceptor
+package com.example.explory.data
 
 import android.util.Log
 import com.example.explory.common.Constants.Companion.AUTHORIZATION_HEADER

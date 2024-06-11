@@ -1,7 +1,7 @@
 package com.example.explory.data.repository
 
 import com.example.explory.data.service.ApiService
-import com.example.explory.data.service.PolygonDto
+import com.example.explory.data.model.location.PolygonDto
 
 class PolygonRepository(
     private val apiService: ApiService,

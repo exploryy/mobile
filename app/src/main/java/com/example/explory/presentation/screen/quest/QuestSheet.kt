@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.explory.R
-import com.example.explory.data.service.PointDto
+import com.example.explory.data.model.quest.PointDto
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.S14_W600

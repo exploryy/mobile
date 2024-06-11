@@ -1,9 +1,8 @@
-package com.example.explory.domain.websocket
+package com.example.explory.data.websocket
 
 import android.util.Log
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.location.LocationResponse
-import com.example.explory.domain.usecase.GetUserTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,7 +21,6 @@ import okhttp3.WebSocketListener
 
 class LocationWebSocketClient(
     private val url: String,
-    private val getUserTokenUseCase: GetUserTokenUseCase,
     private val interceptor: Interceptor
 ) {
     private val _messages = MutableStateFlow<LocationResponse?>(null)
@@ -40,16 +38,12 @@ class LocationWebSocketClient(
     private fun createClient() = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     fun connect() {
-        val token = getUserTokenUseCase.execute()
-        Log.d("Token", token.toString())
         val request = Request.Builder()
             .url(url)
-            //.addHeader("Authorization", "Bearer $token")
             .build()
 
         synchronized(connectionLock) {
             if (webSocket != null) {
-                Log.d("WebSocket", "Already connected or connecting")
                 return
             }
 

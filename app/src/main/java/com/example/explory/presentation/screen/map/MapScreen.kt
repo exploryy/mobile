@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
-import com.example.explory.data.service.PointDto
+import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.common.ThemeViewModel
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
@@ -209,7 +209,7 @@ fun MapScreen(
 
                 }
                 if (mapState.showViewAnnotationIndex != null) {
-                    val quest = mapState.quests[mapState.showViewAnnotationIndex!!]
+                    val quest = mapState.notCompletedQuests[mapState.showViewAnnotationIndex!!]
                     ViewAnnotation(options = viewAnnotationOptions {
                         geometry(
                             Point.fromLngLat(
@@ -232,7 +232,7 @@ fun MapScreen(
                             })
                     }
                 }
-                mapState.quests.forEachIndexed { index, quest ->
+                mapState.notCompletedQuests.forEachIndexed { index, quest ->
                     val point =
                         Point.fromLngLat(quest.longitude.toDouble(), quest.latitude.toDouble())
 
@@ -242,7 +242,8 @@ fun MapScreen(
                         onClick = {
                             viewModel.updateShowViewAnnotationIndex(index)
                             true
-                        })
+                        }
+                    )
                 }
 
                 mapState.coins.forEach { coin ->

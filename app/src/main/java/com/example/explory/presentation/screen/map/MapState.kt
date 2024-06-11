@@ -1,10 +1,11 @@
 package com.example.explory.presentation.screen.map
 
 import android.graphics.Bitmap
-import com.example.explory.data.service.CoinDto
-import com.example.explory.data.service.DistanceQuestDto
-import com.example.explory.data.service.PointToPointQuestDto
-import com.example.explory.data.service.QuestDto
+import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.quest.CompletedQuestDto
+import com.example.explory.data.model.quest.DistanceQuestDto
+import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 
@@ -13,7 +14,9 @@ data class MapState(
     val polygons: List<List<List<List<Double>>>>? = null,
     val userPosition: Pair<Double, Double>? = null,
     val innerPoints: List<LineString> = emptyList(),
-    val quests: List<QuestDto> = emptyList(),
+    val completedQuests: List<CompletedQuestDto> = emptyList(),
+    val activeQuest: QuestDto? = null,
+    val notCompletedQuests: List<QuestDto> = emptyList(),
     val coins: List<CoinDto> = emptyList(),
     val showMap: Boolean = false,
     val showRequestPermissionButton: Boolean = false,

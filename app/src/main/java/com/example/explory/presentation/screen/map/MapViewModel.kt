@@ -13,18 +13,18 @@ import com.bumptech.glide.Glide
 import com.example.explory.R
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.model.quest.DistanceQuestDto
+import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.repository.QuestRepository
-import com.example.explory.data.service.DistanceQuestDto
-import com.example.explory.data.service.PointToPointQuestDto
+import com.example.explory.data.websocket.EventType
+import com.example.explory.data.websocket.EventWebSocketClient
+import com.example.explory.data.websocket.FriendsLocationWebSocketClient
+import com.example.explory.data.websocket.LocationTracker
+import com.example.explory.data.websocket.LocationWebSocketClient
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
-import com.example.explory.domain.websocket.EventType
-import com.example.explory.domain.websocket.EventWebSocketClient
-import com.example.explory.domain.websocket.FriendsLocationWebSocketClient
-import com.example.explory.domain.websocket.LocationTracker
-import com.example.explory.domain.websocket.LocationWebSocketClient
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
@@ -74,7 +74,6 @@ class MapViewModel(
 
     init {
         getStartData()
-//        getStartPolygons()
         webSocketClient.connect()
         eventWebSocketClient.connect()
         friendsLocationWebSocketClient.connect()
@@ -201,11 +200,16 @@ class MapViewModel(
     private suspend fun getQuests() {
         try {
             val quests = getQuestsUseCase.execute()
+            Log.d("MapViewModel", "Quests: $quests")
             _mapState.update {
-                it.copy(quests = quests)
+                it.copy(
+                    notCompletedQuests = quests.notCompleted,
+                    completedQuests = quests.completed,
+                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null
+                )
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("MapViewModel", "Error getting quests", e)
         }
     }
 

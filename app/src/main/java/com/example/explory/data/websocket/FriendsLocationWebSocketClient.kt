@@ -1,4 +1,4 @@
-package com.example.explory.domain.websocket
+package com.example.explory.data.websocket
 
 import android.util.Log
 import com.example.explory.data.model.location.FriendLocationDto

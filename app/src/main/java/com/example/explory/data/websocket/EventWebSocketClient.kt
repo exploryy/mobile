@@ -1,4 +1,4 @@
-package com.example.explory.domain.websocket
+package com.example.explory.data.websocket
 
 import android.util.Log
 import kotlinx.coroutines.channels.BufferOverflow

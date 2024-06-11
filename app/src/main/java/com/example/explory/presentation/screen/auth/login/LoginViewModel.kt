@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
 import com.example.explory.data.model.auth.AuthRequest
 import com.example.explory.domain.usecase.PostLoginUseCase
-import com.example.explory.domain.websocket.LocationWebSocketClient
+import com.example.explory.data.websocket.LocationWebSocketClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

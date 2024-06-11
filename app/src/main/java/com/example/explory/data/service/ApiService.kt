@@ -1,9 +1,19 @@
 package com.example.explory.data.service
 
+import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.friend.FriendsResponse
+import com.example.explory.data.model.location.AreaDto
 import com.example.explory.data.model.location.LocationStatisticDto
+import com.example.explory.data.model.location.PolygonDto
 import com.example.explory.data.model.profile.ProfileDto
+import com.example.explory.data.model.quest.DistanceQuestDto
+import com.example.explory.data.model.quest.PointDto
+import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.model.quest.QuestDto
+import com.example.explory.data.model.quest.QuestListDto
+import com.example.explory.data.model.quest.RouteDto
 import com.example.explory.data.model.requests.FriendRequest
+import com.example.explory.data.model.statistic.AchievementDto
 import com.example.explory.data.model.statistic.UserStatisticDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -15,7 +25,6 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.OffsetDateTime
 
 interface ApiService {
     @POST("/user/register")
@@ -72,7 +81,7 @@ interface ApiService {
     suspend fun getActiveQuests(): List<QuestDto?>
 
     @GET("/quest/list")
-    suspend fun getQuests(): List<QuestDto>
+    suspend fun getQuests(): QuestListDto
 
     @GET("/quest/distance/{quest_id}")
     suspend fun getDistanceQuest(
@@ -181,74 +190,5 @@ interface ApiService {
     @GET("/statistic/friend/coordinates")
     suspend fun getFriendStatistic() : List<LocationStatisticDto>
 }
-
-data class CoinDto(
-    val coin_id: Long,
-    val client_id: Long,
-    val latitude: String,
-    val longitude: String,
-    val taken: Boolean,
-    val value: Long
-)
-
-data class PointToPointQuestDto(
-    val commonQuestDto: QuestDto,
-    val route: RouteDto
-)
-
-data class DistanceQuestDto(
-    val commonQuestDto: QuestDto,
-    val distance: Long
-)
-
-data class QuestDto(
-    val questId: Long,
-    val name: String,
-    val description: String,
-    val difficultyType: String,
-    val questType: String,
-    val transportType: String,
-    val latitude: String,
-    val longitude: String,
-    val images: List<String>
-)
-
-data class PolygonDto(
-    val type: String, val features: List<FeatureResponse>
-)
-
-data class FeatureResponse(
-    val type: String, val properties: Map<String, String>, val geometry: GeometryResponse
-)
-
-data class GeometryResponse(
-    val type: String, val coordinates: List<List<List<List<Double>>>>
-)
-
-
-data class AreaDto(
-    val area: Double
-)
-
-data class AchievementDto(
-    val achievementId: Long,
-    val name: String,
-    val description: String,
-    val imageUrl: String,
-    val isCompleted: Boolean,
-    val completionDate: OffsetDateTime
-)
-
-data class RequestsResponse(
-    val my: List<ProfileDto>, val other: List<ProfileDto>
-)
-
-data class RouteDto(
-    val points: List<PointDto>, val distance: Long, val routeId: Long
-)
-
-data class PointDto(
-    val longitude: String, val latitude: String, val nextLongitude: String, val nextLatitude: String
-)
 
 
