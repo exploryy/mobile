@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlinedTextFieldWithLabel(
     label: String,

@@ -1,10 +1,12 @@
 package com.example.explory.domain.usecase
 
-import com.example.explory.data.model.auth.Registration
-import com.example.explory.data.model.token.TokenResponse
+import com.example.explory.data.model.auth.RegistrationRequest
+import com.example.explory.data.repository.RegisterRepository
 
-class PostRegistrationUseCase {
-    suspend fun invoke(register: Registration): Result<TokenResponse> {
-        return Result.success(TokenResponse("dfssdas", "sdfsd"));
+class PostRegistrationUseCase(
+    private val registerRepository: RegisterRepository
+) {
+    suspend fun invoke(register: RegistrationRequest) {
+        registerRepository.register(register)
     }
 }

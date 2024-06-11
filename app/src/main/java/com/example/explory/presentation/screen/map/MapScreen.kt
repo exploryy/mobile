@@ -175,7 +175,7 @@ fun MapScreen(
                 true
             }, scaleBar = {}, logo = {}, attribution = {}, compass = {
                 Compass(
-                    contentPadding = PaddingValues(vertical = 50.dp, horizontal = 20.dp),
+                    contentPadding = PaddingValues(vertical = 110.dp, horizontal = 20.dp),
                 )
             }, style = {
                 MapboxStandardStyle(
@@ -367,7 +367,7 @@ fun MapScreen(
                     mapViewportState.flyTo(
                         cameraOptions {
                             center(point)
-                            zoom(13.0)
+                            zoom(12.0)
                             pitch(0.0)
                         },
                         animationOptions = MapAnimationOptions.mapAnimationOptions {
@@ -379,7 +379,7 @@ fun MapScreen(
                     PolygonAnnotation(
                         points = points,
                         fillColorInt = AccentColor.toArgb(),
-                        fillOpacity = 0.2,
+                        fillOpacity = 0.7,
                         fillOutlineColorInt = White.toArgb(),
                     )
                 }
@@ -388,27 +388,6 @@ fun MapScreen(
             }
         }
 
-        if (mapState.showRequestPermissionButton) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier.align(Alignment.Center)) {
-                    Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                        viewModel.incrementPermissionRequestCount()
-                    }) {
-                        Text("Request permission again (${mapState.permissionRequestCount})")
-                    }
-                    Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                        context.startActivity(
-                            Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", context.packageName, null)
-                            )
-                        )
-                    }) {
-                        Text("Show App Settings page")
-                    }
-                }
-            }
-        }
         TopInfoColumn(
             modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp),
             currentLocationName = mapState.currentLocationName,
@@ -420,7 +399,7 @@ fun MapScreen(
             colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 110.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
                 .clip(CircleShape)
                 .size(48.dp)
 
@@ -461,6 +440,28 @@ fun MapScreen(
                 onBackClick = { viewModel.updateShowFriendScreen() },
                 onLogout = { onLogout() },
             )
+        }
+
+        mapState.showRequestPermissionButton -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.align(Alignment.Center)) {
+                    Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+                        viewModel.incrementPermissionRequestCount()
+                    }) {
+                        Text("Request permission again (${mapState.permissionRequestCount})")
+                    }
+                    Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", context.packageName, null)
+                            )
+                        )
+                    }) {
+                        Text("Show App Settings page")
+                    }
+                }
+            }
         }
 
         mapState.p2pQuest != null -> {

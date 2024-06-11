@@ -1,7 +1,7 @@
 package com.example.explory.data.model.auth
 
-data class Registration (
-    val name: String,
+data class RegistrationRequest (
+    val username: String,
     val email: String,
     val password: String
 )

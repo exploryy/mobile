@@ -32,7 +32,7 @@ interface ApiService {
         @Query("username") username: String,
         @Query("email") email: String,
         @Query("password") password: String
-    ): String
+    )
 
     @GET("/user/profile")
     suspend fun getProfile(): ProfileDto
@@ -185,10 +185,10 @@ interface ApiService {
     ): List<ProfileDto>
 
     @GET("/statistic/my")
-    suspend fun getUserStatistic() : UserStatisticDto
+    suspend fun getUserStatistic(): UserStatisticDto
 
     @GET("/statistic/friend/coordinates")
-    suspend fun getFriendStatistic() : List<LocationStatisticDto>
+    suspend fun getFriendStatistic(): List<LocationStatisticDto>
 }
 
 

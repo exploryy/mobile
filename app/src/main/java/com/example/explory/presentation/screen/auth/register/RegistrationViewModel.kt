@@ -1,33 +1,23 @@
 package com.example.explory.presentation.screen.auth.register
 
-import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.explory.common.Constants
+import androidx.lifecycle.viewModelScope
+import com.example.explory.data.model.auth.RegistrationRequest
 import com.example.explory.domain.usecase.PostRegistrationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class RegistrationViewModel(
-    private val context: Context,
     private val postRegistrationUseCase: PostRegistrationUseCase
 ) : ViewModel() {
-    private val emptyState = RegistrationState(
-        Constants.EMPTY_STRING,
-        Constants.EMPTY_STRING,
-        Constants.EMPTY_STRING,
-        Constants.FALSE,
-        Constants.FALSE,
-        Constants.FALSE,
-        null,
-        null,
-        null,
-        Constants.FALSE
-    )
 
-    private val _state = MutableStateFlow(emptyState)
-    val state: StateFlow<RegistrationState> get() = _state
+    private val _state = MutableStateFlow(RegistrationState())
+    val state: StateFlow<RegistrationState> get() = _state.asStateFlow()
 
 
     fun processIntent(intent: RegistrationIntent) {
@@ -51,9 +41,11 @@ class RegistrationViewModel(
             }
 
             is RegistrationIntent.Registration -> {
-//                performRegistration(state.value) {
-//                    clearData()
-//                }
+                performRegistration(
+                    intent.email,
+                    intent.name,
+                    intent.password
+                )
             }
 
             RegistrationIntent.UpdateLoading -> {
@@ -62,16 +54,12 @@ class RegistrationViewModel(
                 )
             }
 
-            RegistrationIntent.GoBackToAuth -> {
-                //router.toAuth()
+            RegistrationIntent.NavigateBack -> _state.update {
+                it.copy(navigationEvent = NavigationEvent.NavigateBack)
             }
 
-            RegistrationIntent.GoBackToFirst -> {
-                //router.toRegistration()
-            }
-
-            RegistrationIntent.GoToLogin -> {
-                //router.toLogin()
+            RegistrationIntent.NavigateToMap -> _state.update {
+                it.copy(navigationEvent = NavigationEvent.NavigateToMap)
             }
         }
     }
@@ -80,63 +68,43 @@ class RegistrationViewModel(
     fun isContinueButtonAvailable(): Boolean {
         return state.value.name.isNotEmpty() &&
                 state.value.email.isNotEmpty() &&
-                state.value.password.isNotEmpty() &&
-                state.value.isErrorEmailText == null &&
-                state.value.isErrorNameText == null
+                state.value.password.isNotEmpty()
     }
 
-    private fun clearData() {
-        processIntent(RegistrationIntent.UpdateName(Constants.EMPTY_STRING))
-        processIntent(RegistrationIntent.UpdateEmail(Constants.EMPTY_STRING))
-        processIntent(RegistrationIntent.UpdatePassword(Constants.EMPTY_STRING))
-    }
+    private fun performRegistration(
+        email: String, username: String, password: String
+    ) {
+        val registrationRequest = RegistrationRequest(username, email, password)
+        processIntent(RegistrationIntent.UpdateLoading)
+        viewModelScope.launch {
+            try {
+                postRegistrationUseCase.invoke(registrationRequest)
+                processIntent(RegistrationIntent.NavigateToMap)
+            } catch (e: Exception) {
+                Log.e("RegistrationViewModel", "Error", e)
+                handleRegistrationError(e)
+            } finally {
+                processIntent(RegistrationIntent.UpdateLoading)
+            }
+        }
 
-//    private fun performRegistration(registrationState: RegistrationState, afterRegistration: () -> Unit) {
-//        val registration = Registration("fdsfd", "dfsd", "fdsffsd")
-//        processIntent(RegistrationIntent.UpdateLoading)
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                val result = postRegistrationUseCase.invoke(registration)
-//                withContext(Dispatchers.Main) {
-//                    result.fold(
-//                        onSuccess = { tokenResponse ->
-//                            LocalStorage(context).saveToken(tokenResponse)
-//                            NetworkService.setAuthToken(tokenResponse.accessToken)
-//                            afterRegistration()
-//                        },
-//                        onFailure = { exception ->
-//                            handleRegistrationError(exception)
-//                        }
-//                    )
-//                }
-//            } catch (e: SocketTimeoutException) {
-//                withContext(Dispatchers.Main) {
-//                    showToast("Превышено время ожидания соединения. Пожалуйста, проверьте ваше интернет-соединение.")
-//                }
-//            } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    showToast("Произошла ошибка: ${e.message}")
-//                }
-//            } finally {
-//                processIntent(RegistrationIntent.UpdateLoading)
-//            }
-//        }
-//
-//    }
+    }
 
     private fun handleRegistrationError(exception: Throwable) {
         when (exception) {
             is HttpException -> when (exception.code()) {
-                400 -> showToast("Ошибка регистрации")
-                else -> showToast("Неизвестная ошибка: ${exception.code()}")
+                400 -> _state.update {
+                    it.copy(error = "Пользователь с таким email уже существует")
+                }
+
+                else -> _state.update {
+                    it.copy(error = "Ошибка сервера")
+                }
             }
 
-            else -> showToast("Ошибка соединения с сервером")
+            else -> _state.update {
+                it.copy(error = "Ошибка сервера")
+            }
         }
     }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
 }

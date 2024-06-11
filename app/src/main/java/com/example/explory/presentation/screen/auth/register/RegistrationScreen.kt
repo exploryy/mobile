@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +30,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -58,12 +59,20 @@ fun SharedTransitionScope.RegistrationScreen(
     viewModel: RegistrationViewModel = koinViewModel(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onSuccessNavigation: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
     val spacerHeight = 64.dp
 
+    LaunchedEffect(state.navigationEvent) {
+        state.navigationEvent?.let { event ->
+            when (event) {
+                NavigationEvent.NavigateBack -> onBackClick()
+                NavigationEvent.NavigateToMap -> onSuccessNavigation()
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,18 +83,15 @@ fun SharedTransitionScope.RegistrationScreen(
             },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopAppBar(
-            title = { Text(text = "") },
-            navigationIcon = {
-                IconButton(onClick = {
-                    onBackClick()
-                }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
-            )
+        TopAppBar(title = { Text(text = "") }, navigationIcon = {
+            IconButton(onClick = {
+                onBackClick()
+            }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
         )
 
         Spacer(modifier = Modifier.height(spacerHeight))
@@ -93,14 +99,11 @@ fun SharedTransitionScope.RegistrationScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .sharedElement(
-                    state = rememberSharedContentState(key = "column"),
+                .sharedElement(state = rememberSharedContentState(key = "column"),
                     animatedVisibilityScope = animatedVisibilityScope,
                     boundsTransform = { _, _ ->
                         tween(durationMillis = 500)
-                    }
-                ),
-            verticalArrangement = Arrangement.Bottom
+                    }), verticalArrangement = Arrangement.Bottom
         ) {
             Box(
                 modifier = Modifier
@@ -118,14 +121,15 @@ fun SharedTransitionScope.RegistrationScreen(
                         text = stringResource(R.string.to_register),
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects)
+                        modifier = Modifier.padding(
+                            top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects
+                        )
                     )
 
                     OutlinedTextFieldWithLabel(
                         label = stringResource(R.string.email),
                         value = state.email,
                         onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateEmail(it)) },
-                        error = state.isErrorEmailText,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
@@ -142,7 +146,6 @@ fun SharedTransitionScope.RegistrationScreen(
                         label = stringResource(R.string.name),
                         value = state.name,
                         onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateName(it)) },
-                        error = state.isErrorNameText,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
@@ -158,10 +161,16 @@ fun SharedTransitionScope.RegistrationScreen(
                     PasswordTextField(
                         label = stringResource(R.string.password),
                         value = state.password,
-                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdatePassword(it)) },
+                        onValueChange = {
+                            viewModel.processIntent(
+                                RegistrationIntent.UpdatePassword(
+                                    it
+                                )
+                            )
+                        },
+                        errorText = state.error,
                         transformationState = state.isPasswordHide,
                         onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
-                        errorText = state.isErrorPasswordText,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.Gray,
@@ -178,7 +187,13 @@ fun SharedTransitionScope.RegistrationScreen(
 
                     Button(
                         onClick = {
-                            viewModel.processIntent(RegistrationIntent.Registration(state))
+                            viewModel.processIntent(
+                                RegistrationIntent.Registration(
+                                    state.name,
+                                    state.email,
+                                    state.password
+                                )
+                            )
                         },
                         shape = RoundedCornerShape(Value.BigRound),
                         modifier = Modifier
@@ -190,11 +205,8 @@ fun SharedTransitionScope.RegistrationScreen(
                         )
                     ) {
                         Text(
-                            text = stringResource(R.string.login_button),
-                            style = TextStyle(
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.W600,
-                                color = Color.Black
+                            text = stringResource(R.string.login_button), style = TextStyle(
+                                fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
                             )
                         )
                     }
@@ -211,7 +223,7 @@ fun SharedTransitionScope.RegistrationScreen(
                     AdviceText(
                         baseText = stringResource(R.string.need_login),
                         clickableText = stringResource(R.string.need_login_clickable),
-                        onClick = { onLoginClick() },
+                        onClick = { onSuccessNavigation() },
                         modifier = Modifier.weight(1f)
                     )
                 }

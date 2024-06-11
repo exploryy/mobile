@@ -7,11 +7,12 @@ sealed class RegistrationIntent {
     data class UpdatePassword(val password: String) : RegistrationIntent()
     data object UpdatePasswordVisibility : RegistrationIntent()
     data class Registration(
-        val registrationState: RegistrationState
-    ): RegistrationIntent()
+        val name: String,
+        val email: String,
+        val password: String
+    ) : RegistrationIntent()
 
-    data object UpdateLoading: RegistrationIntent()
-    data object GoBackToAuth: RegistrationIntent()
-    data object GoBackToFirst: RegistrationIntent()
-    data object GoToLogin: RegistrationIntent()
+    data object UpdateLoading : RegistrationIntent()
+    data object NavigateBack : RegistrationIntent()
+    data object NavigateToMap : RegistrationIntent()
 }

@@ -65,9 +65,11 @@ fun AppNavigation() {
             composable(Screen.Registration.route) {
                 RegistrationScreen(animatedVisibilityScope = this, onBackClick = {
                     navController.popBackStack()
-                }, onLoginClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Welcome.route)
+                }, onSuccessNavigation = {
+                    navController.navigate(Screen.Map.route) {
+                        popUpTo(Screen.Registration.route) {
+                            inclusive = true
+                        }
                     }
                 })
             }
