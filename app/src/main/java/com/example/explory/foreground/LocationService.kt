@@ -1,9 +1,7 @@
 package com.example.explory.foreground
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -16,7 +14,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class LocationService : Service() {
 
@@ -48,9 +45,8 @@ class LocationService : Service() {
         val pendingIntentFlags =
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val notification = NotificationCompat.Builder(this, "location")
-            .setContentTitle("Tracking your location...")
-            .setContentText("Location: null")
-            .setSmallIcon(R.drawable.compass)
+            .setContentTitle("Explory works in background ...")
+            .setSmallIcon(R.drawable.compass_alt)
             .setContentIntent(
                 PendingIntent.getActivity(
                     this,
@@ -60,20 +56,9 @@ class LocationService : Service() {
                 )
             )
             .setOngoing(true)
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
         locationClient
             .getLocationUpdates(10000L)
             .catch { e -> e.printStackTrace() }
-            .onEach { location ->
-                val lat = location.latitude.toString()
-                val long = location.longitude.toString()
-                val updatedNotification = notification.setContentText(
-                    "Location: ($lat, $long)"
-                )
-                notificationManager.notify(1, updatedNotification.build())
-            }
             .launchIn(serviceScope)
         startForeground(1, notification.build())
     }

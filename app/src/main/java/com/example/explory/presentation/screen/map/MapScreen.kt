@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -180,7 +179,7 @@ fun MapScreen(
                 attribution = {},
                 compass = {
                     Compass(
-                        contentPadding = PaddingValues(20.dp),
+                        contentPadding = PaddingValues(vertical = 50.dp, horizontal = 20.dp),
                     )
                 }, style = {
                     MapboxStandardStyle(
@@ -192,7 +191,7 @@ fun MapScreen(
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
                                 fillAntialias = FillAntialias(true),
                             )
-                        }, lightPreset = if (isDarkTheme) LightPreset.DUSK else LightPreset.DAY
+                        }, lightPreset = LightPreset.default
                     )
                 }, mapViewportState = mapViewportState
             ) {
@@ -264,7 +263,7 @@ fun MapScreen(
                     val friendAvatar = mapState.friendAvatars[userId]?.second
                     val friendName = mapState.friendAvatars[userId]?.first
 
-                    if (friendAvatar == null){
+                    if (friendAvatar == null) {
                         val defaultAvatarBitmap = createDefaultAvatar(userId)
                         PointAnnotation(
                             point = point,
@@ -374,31 +373,27 @@ fun MapScreen(
             }
         }
         TopInfoColumn(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp),
             currentLocationName = mapState.currentLocationName,
             currentLocationPercent = mapState.currentLocationPercent
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-        Box(
+        IconButton(
+            onClick = { viewModel.updateShowSettingsScreen() },
+            colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 80.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-                .size(48.dp)
+                .padding(top = 110.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
+                .size(48.dp)
+
         ) {
-            IconButton(
-                onClick = { viewModel.updateShowSettingsScreen() },
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = "Settings",
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+
         }
         ButtonControlRow(
             mapViewportState = mapViewportState
