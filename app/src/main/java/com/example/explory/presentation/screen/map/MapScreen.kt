@@ -11,6 +11,12 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -269,6 +275,16 @@ fun MapScreen(
                     val point = Point.fromLngLat(location.second, location.first)
                     val friendAvatar = mapState.friendAvatars[userId]?.second
                     val friendName = mapState.friendAvatars[userId]?.first
+
+//                    val infiniteTransition = rememberInfiniteTransition(label = "")
+//                    val animatedSize = infiniteTransition.animateFloat(
+//                        initialValue = 0.9f,
+//                        targetValue = 1.1f,
+//                        animationSpec = infiniteRepeatable(
+//                            animation = tween(durationMillis = 3000, easing = LinearEasing),
+//                            repeatMode = RepeatMode.Reverse
+//                        ), label = ""
+//                    )
 
                     if (friendAvatar == null) {
                         val defaultAvatarBitmap = createDefaultAvatar(userId)
