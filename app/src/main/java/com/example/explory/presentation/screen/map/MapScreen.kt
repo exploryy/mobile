@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
@@ -293,7 +294,7 @@ fun MapScreen(
                             iconSize = 1.0,
                             iconImageBitmap = defaultAvatarBitmap,
                             onClick = {
-                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                viewModel.onFriendMarkerClicked(userId)
                                 true
                             },
                             textField = friendName,
@@ -309,7 +310,7 @@ fun MapScreen(
                             iconSize = 1.0,
                             iconImageBitmap = circleBitmap,
                             onClick = {
-                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                viewModel.onFriendMarkerClicked(userId)
                                 true
                             },
                             textField = friendName,
@@ -517,6 +518,13 @@ fun MapScreen(
                     viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
                 },
                 onBackClicked = { viewModel.updateDistanceQuest(null) })
+        }
+
+        mapState.showFriendProfileScreen && mapState.selectedFriendId != null -> {
+            FriendProfileScreen(
+                friendId = mapState.selectedFriendId!!,
+                onBackClick = { viewModel.closeFriendProfileScreen() }
+            )
         }
     }
 }

@@ -9,5 +9,7 @@ data class ProfileState(
     val isEditDialogOpen: Boolean = false,
     val profileScreenState: Int = 1,
     val notificationCount: Int = 0,
-    val loggedOut: Boolean = false
+    val loggedOut: Boolean = false,
+    val showFriendProfileScreen: Boolean = false,
+    val selectedFriendId: String? = null
 )

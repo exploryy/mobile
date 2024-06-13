@@ -5,6 +5,7 @@ import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.location.AreaDto
 import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.location.PolygonDto
+import com.example.explory.data.model.profile.FriendProfileDto
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointDto
@@ -186,6 +187,9 @@ interface ApiService {
 
     @GET("/statistic/my")
     suspend fun getUserStatistic(): UserStatisticDto
+
+    @GET("/statistic/friend/{client_id}")
+    suspend fun getFriendProfile(@Path("client_id") clientId: String): FriendProfileDto
 
     @GET("/statistic/friend/coordinates")
     suspend fun getFriendStatistic(): List<LocationStatisticDto>

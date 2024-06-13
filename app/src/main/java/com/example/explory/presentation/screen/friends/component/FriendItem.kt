@@ -2,6 +2,7 @@ package com.example.explory.presentation.screen.friends.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,7 @@ fun FriendItem(
     onDeleteFriendButtonClick: () -> Unit,
     onDeleteFriend: (String) -> Unit,
     isRemoveFriendState: Boolean,
+    onFriendProfileClick: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -48,39 +50,46 @@ fun FriendItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         val imageUrl = friend.avatar
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable { onFriendProfileClick(friend.userId) }
+        ){
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .background(Color.DarkGray, shape = CircleShape)
+            ) {
+                if (imageUrl != null) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .align(Alignment.Center)
+                            .clip(CircleShape)
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.picture),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .align(Alignment.Center),
+                        tint = Color.White
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .background(Color.DarkGray, shape = CircleShape)
-        ) {
-            if (imageUrl != null) {
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .align(Alignment.Center)
-                        .clip(CircleShape)
-                )
-            } else {
-                Icon(
-                    painter = painterResource(R.drawable.picture),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .align(Alignment.Center),
-                    tint = Color.White
-                )
+            Column (
+                modifier = Modifier
+            ){
+                Text(text = friend.name, style = MaterialTheme.typography.bodyMedium)
+                Text(text = friend.email, style = MaterialTheme.typography.bodyMedium)
             }
         }
-        Spacer(modifier = Modifier.width(8.dp))
 
-        Column {
-            Text(text = friend.name, style = MaterialTheme.typography.bodyMedium)
-            Text(text = friend.email, style = MaterialTheme.typography.bodyMedium)
-        }
 
         Spacer(modifier = Modifier.weight(1f))
 

@@ -3,6 +3,7 @@ package com.example.explory.di
 import com.example.explory.presentation.screen.auth.login.LoginViewModel
 import com.example.explory.presentation.screen.auth.register.RegistrationViewModel
 import com.example.explory.presentation.screen.common.ThemeViewModel
+import com.example.explory.presentation.screen.friendprofile.FriendProfileViewModel
 import com.example.explory.presentation.screen.friends.FriendViewModel
 import com.example.explory.presentation.screen.map.MapViewModel
 import com.example.explory.presentation.screen.profile.ProfileViewModel
@@ -24,4 +25,5 @@ fun appModule() = module {
     viewModelOf(::UserStatisticViewModel)
     viewModelOf(::QuestViewModel)
     single { ThemeViewModel(get()) }
+    viewModelOf(::FriendProfileViewModel)
 }

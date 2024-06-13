@@ -497,6 +497,21 @@ class MapViewModel(
     fun updateUserLocation(latitude: Double, longitude: Double) {
         _mapState.update { it.copy(userPoint = Point.fromLngLat(longitude, latitude)) }
     }
+
+    fun onFriendMarkerClicked(friendId: String) {
+        _mapState.update {
+            it.copy(
+                selectedFriendId = friendId,
+                showFriendProfileScreen = true
+            )
+        }
+    }
+
+    fun closeFriendProfileScreen() {
+        _mapState.update {
+            it.copy(showFriendProfileScreen = false, selectedFriendId = null)
+        }
+    }
 }
 
 

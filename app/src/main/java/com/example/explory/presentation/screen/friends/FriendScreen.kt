@@ -39,7 +39,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FriendsScreen(
-    viewModel: FriendViewModel = koinViewModel()
+    viewModel: FriendViewModel = koinViewModel(),
+    onFriendProfileClick: (String) -> Unit
 ) {
     val friendsState by viewModel.friendsState.collectAsStateWithLifecycle()
     val userListState by viewModel.userListState.collectAsStateWithLifecycle()
@@ -136,7 +137,8 @@ fun FriendsScreen(
                         toggleBestFriend = { viewModel.toggleFavoriteFriend(it) },
                         onDeleteFriendButtonClick = { viewModel.changeRemoveFriendState() },
                         onDeleteFriend = { viewModel.removeFriend(it) },
-                        isRemoveFriendState = friendsState.isStartDeleteFriend
+                        isRemoveFriendState = friendsState.isStartDeleteFriend,
+                        onFriendProfileClick = { onFriendProfileClick(it) }
                     )
                 }
 
@@ -154,7 +156,8 @@ fun FriendsScreen(
                         toggleBestFriend = { viewModel.toggleFavoriteFriend(it) },
                         onDeleteFriendButtonClick = { viewModel.changeRemoveFriendState() },
                         onDeleteFriend = { viewModel.removeFriend(it) },
-                        isRemoveFriendState = friendsState.isStartDeleteFriend
+                        isRemoveFriendState = friendsState.isStartDeleteFriend,
+                        onFriendProfileClick = { onFriendProfileClick(it) }
                     )
                 }
             }
