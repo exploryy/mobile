@@ -35,6 +35,7 @@ import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -256,6 +257,7 @@ class MapViewModel(
             }
         } catch (e: Exception) {
             Log.e("MapViewModel", "Error getting quests", e)
+            setError(e.message ?: "Unknown error occurred")
         }
     }
 
@@ -266,7 +268,7 @@ class MapViewModel(
                 it.copy(coins = coins)
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            setError(e.message ?: "Unknown error occurred")
         }
     }
 
@@ -381,7 +383,7 @@ class MapViewModel(
                     )
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                setError(e.message ?: "Unknown error occurred")
             }
         }
     }
@@ -510,6 +512,18 @@ class MapViewModel(
     fun closeFriendProfileScreen() {
         _mapState.update {
             it.copy(showFriendProfileScreen = false, selectedFriendId = null)
+        }
+    }
+
+    private fun setError(message: String?) {
+        _mapState.update { it.copy(errorText = message) }
+        clearErrorAfterDelay()
+    }
+
+    private fun clearErrorAfterDelay() {
+        viewModelScope.launch {
+            delay(3000)
+            _mapState.update { it.copy(errorText = null) }
         }
     }
 }

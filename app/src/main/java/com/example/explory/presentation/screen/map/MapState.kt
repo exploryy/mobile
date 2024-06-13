@@ -33,5 +33,6 @@ data class MapState(
     val questFinished: Boolean = false,
     val userPoint: Point? = null,
     val showFriendProfileScreen: Boolean = false,
-    val selectedFriendId: String? = null
+    val selectedFriendId: String? = null,
+    val errorText: String? = null
 )

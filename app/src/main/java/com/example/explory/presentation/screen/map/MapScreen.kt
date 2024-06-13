@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.presentation.screen.common.AnimatedErrorBox
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
@@ -157,6 +158,7 @@ fun MapScreen(
         coin.drawToImageBitmap().asAndroidBitmap()
     }
 
+    AnimatedErrorBox(errorMessage = mapState.errorText)
 
     Box(Modifier.fillMaxSize()) {
         RequestLocationPermission(requestCount = mapState.permissionRequestCount,
