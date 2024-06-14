@@ -158,9 +158,10 @@ fun MapScreen(
         coin.drawToImageBitmap().asAndroidBitmap()
     }
 
-    AnimatedErrorBox(errorMessage = mapState.errorText)
+
 
     Box(Modifier.fillMaxSize()) {
+        AnimatedErrorBox(errorMessage = mapState.currentError)
         RequestLocationPermission(requestCount = mapState.permissionRequestCount,
             onPermissionDenied = {
                 scope.launch {
@@ -269,6 +270,7 @@ fun MapScreen(
                                 Toast.makeText(context, "Монетка собрана!", LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(context, "Вы слишком далеко", LENGTH_SHORT).show()
+                                viewModel.setError("Вы слишком далеко")
                             }
                             true
                         })

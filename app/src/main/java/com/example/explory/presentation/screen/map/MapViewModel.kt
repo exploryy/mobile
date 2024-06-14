@@ -515,15 +515,28 @@ class MapViewModel(
         }
     }
 
-    private fun setError(message: String?) {
-        _mapState.update { it.copy(errorText = message) }
-        clearErrorAfterDelay()
+    fun setError(message: String?) {
+        if (message != null) {
+            _mapState.update { it.withErrorEnqueued(message) }
+            if (_mapState.value.currentError == null) {
+                showNextError()
+            }
+        }
+    }
+
+    private fun showNextError() {
+        val nextError = _mapState.value.errorQueue.peek()
+        if (nextError != null) {
+            _mapState.update { it.withCurrentError(nextError) }
+            clearErrorAfterDelay()
+        }
     }
 
     private fun clearErrorAfterDelay() {
         viewModelScope.launch {
-            delay(3000)
-            _mapState.update { it.copy(errorText = null) }
+            delay(4000)
+            _mapState.update { it.withNextErrorDequeued().withCurrentError(null) }
+            showNextError()
         }
     }
 }
