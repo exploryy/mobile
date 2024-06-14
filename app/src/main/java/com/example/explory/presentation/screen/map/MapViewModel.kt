@@ -119,9 +119,9 @@ class MapViewModel(
                 ) {
                     return@launch
                 }
-                coinsRepository.collectCoin(coin.coin_id)
+                coinsRepository.collectCoin(coin.coinId)
                 _mapState.update { it ->
-                    it.copy(coins = it.coins.filter { it.coin_id != coin.coin_id })
+                    it.copy(coins = it.coins.filter { it.coinId != coin.coinId })
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
