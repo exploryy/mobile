@@ -20,6 +20,7 @@ import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -174,9 +175,10 @@ interface ApiService {
     @GET("/coin/list")
     suspend fun getCoins(): List<CoinDto>
 
+    @Multipart
     @PATCH("/coin/consume")
     suspend fun consumeCoin(
-        @Query("coin_id") coinId: Long
+        @Part("coin_id") coinId: Long
     )
 
     @GET("/user")

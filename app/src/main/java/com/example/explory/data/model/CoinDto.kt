@@ -1,8 +1,10 @@
 package com.example.explory.data.model
 
+import java.util.UUID
+
 data class CoinDto(
-    val coin_id: Long,
-    val client_id: Long,
+    val coinId: Long,
+    val clientId: UUID,
     val latitude: String,
     val longitude: String,
     val taken: Boolean,

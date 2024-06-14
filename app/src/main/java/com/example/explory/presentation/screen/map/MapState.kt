@@ -32,4 +32,5 @@ data class MapState(
     val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
     val questFinished: Boolean = false,
     val userPoint: Point? = null,
+    val toastText: String? = null
 )

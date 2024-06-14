@@ -88,7 +88,7 @@ class MapViewModel(
         loadFriendStatistics()
     }
 
-    fun distanceToUser(
+    private fun distanceToUser(
         firstLat: Double,
         firstLng: Double,
         secondLat: Double,
@@ -116,11 +116,15 @@ class MapViewModel(
                         userLocation.longitude()
                     ) > 100.0
                 ) {
+                    _mapState.update { it.copy(toastText = "Слишком далеко") }
                     return@launch
                 }
-                coinsRepository.collectCoin(coin.coin_id)
+                coinsRepository.collectCoin(coin.coinId)
                 _mapState.update { it ->
-                    it.copy(coins = it.coins.filter { it.coin_id != coin.coin_id })
+                    it.copy(
+                        coins = it.coins.filter { it.coinId != coin.coinId },
+                        toastText = "Монетка собрана"
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -262,11 +266,12 @@ class MapViewModel(
     private suspend fun getCoins() {
         try {
             val coins = getCoinsUseCase.execute()
+            Log.d("MapViewModel", "Coins is $coins")
             _mapState.update {
                 it.copy(coins = coins)
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("MapViewModel", "Error while getting coin", e)
         }
     }
 
@@ -496,6 +501,10 @@ class MapViewModel(
 
     fun updateUserLocation(latitude: Double, longitude: Double) {
         _mapState.update { it.copy(userPoint = Point.fromLngLat(longitude, latitude)) }
+    }
+
+    fun updateToastText(text: String?) {
+        _mapState.update { it.copy(toastText = text) }
     }
 }
 
