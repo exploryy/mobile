@@ -71,7 +71,13 @@ fun AppNavigation() {
                             inclusive = true
                         }
                     }
-                })
+                },
+                    onLoginClick = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Welcome.route)
+                        }
+                    }
+                )
             }
 //            composable(Screen.Quest.route + "/{questId}/{questType}",
 //                arguments = listOf(navArgument("questId") {

@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -59,11 +62,12 @@ fun SharedTransitionScope.RegistrationScreen(
     viewModel: RegistrationViewModel = koinViewModel(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
-    onSuccessNavigation: () -> Unit
+    onSuccessNavigation: () -> Unit,
+    onLoginClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
-    val spacerHeight = 64.dp
+    val spacerHeight = 128.dp
 
     LaunchedEffect(state.navigationEvent) {
         state.navigationEvent?.let { event ->
@@ -73,159 +77,171 @@ fun SharedTransitionScope.RegistrationScreen(
             }
         }
     }
-    Column(
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
                 })
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
+            }
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.earth),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+        )
+
         TopAppBar(title = { Text(text = "") }, navigationIcon = {
             IconButton(onClick = {
                 onBackClick()
             }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
-        )
-        )
-
-        Spacer(modifier = Modifier.height(spacerHeight))
+        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent))
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .sharedElement(state = rememberSharedContentState(key = "column"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = { _, _ ->
-                        tween(durationMillis = 500)
-                    }), verticalArrangement = Arrangement.Bottom
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Box(
+
+            Spacer(modifier = Modifier.height(spacerHeight))
+
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                    .background(Color.Black)
-                    .padding(16.dp)
+                    .sharedElement(state = rememberSharedContentState(key = "column"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ ->
+                            tween(durationMillis = 500)
+                        }), verticalArrangement = Arrangement.Bottom
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                        .background(Color.Black)
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        text = stringResource(R.string.to_register),
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(
-                            top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects
-                        )
-                    )
-
-                    OutlinedTextFieldWithLabel(
-                        label = stringResource(R.string.email),
-                        value = state.email,
-                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateEmail(it)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.Gray,
-                            cursorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.Gray,
-                            errorBorderColor = Color.Red,
-                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
-                        ),
+                    Column(
                         modifier = Modifier
-                    )
-
-                    OutlinedTextFieldWithLabel(
-                        label = stringResource(R.string.name),
-                        value = state.name,
-                        onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateName(it)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.Gray,
-                            cursorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.Gray,
-                            errorBorderColor = Color.Red,
-                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
-                        ),
-                        modifier = Modifier
-                    )
-
-                    PasswordTextField(
-                        label = stringResource(R.string.password),
-                        value = state.password,
-                        onValueChange = {
-                            viewModel.processIntent(
-                                RegistrationIntent.UpdatePassword(
-                                    it
-                                )
-                            )
-                        },
-                        errorText = state.error,
-                        transformationState = state.isPasswordHide,
-                        onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.Gray,
-                            cursorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.Gray,
-                            errorBorderColor = Color.Red,
-                            errorContainerColor = Color.Red.copy(alpha = 0.1f)
-                        ),
-                        modifier = Modifier
-                    )
-
-                    Spacer(modifier = Modifier.height(Value.MoreSpaceBetweenObjects))
-
-                    Button(
-                        onClick = {
-                            viewModel.processIntent(
-                                RegistrationIntent.Registration(
-                                    state.name,
-                                    state.email,
-                                    state.password
-                                )
-                            )
-                        },
-                        shape = RoundedCornerShape(Value.BigRound),
-                        modifier = Modifier
+                            .wrapContentHeight()
                             .fillMaxWidth()
-                            .height(IntrinsicSize.Min),
-                        enabled = !state.isLoading && viewModel.isContinueButtonAvailable(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White
-                        )
                     ) {
                         Text(
-                            text = stringResource(R.string.login_button), style = TextStyle(
-                                fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
+                            text = stringResource(R.string.to_register),
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Left,
+                            modifier = Modifier.padding(
+                                top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects
                             )
                         )
-                    }
 
-                    if (state.isLoading) {
-                        Spacer(
+                        OutlinedTextFieldWithLabel(
+                            label = stringResource(R.string.email),
+                            value = state.email,
+                            onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateEmail(it)) },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.Gray,
+                                cursorColor = Color.White,
+                                focusedLabelColor = Color.White,
+                                unfocusedLabelColor = Color.Gray,
+                                errorBorderColor = Color.Red,
+                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                            ),
+                            modifier = Modifier
+                        )
+
+                        OutlinedTextFieldWithLabel(
+                            label = stringResource(R.string.name),
+                            value = state.name,
+                            onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateName(it)) },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.Gray,
+                                cursorColor = Color.White,
+                                focusedLabelColor = Color.White,
+                                unfocusedLabelColor = Color.Gray,
+                                errorBorderColor = Color.Red,
+                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                            ),
+                            modifier = Modifier
+                        )
+
+                        PasswordTextField(
+                            label = stringResource(R.string.password),
+                            value = state.password,
+                            onValueChange = {
+                                viewModel.processIntent(
+                                    RegistrationIntent.UpdatePassword(
+                                        it
+                                    )
+                                )
+                            },
+                            errorText = state.error,
+                            transformationState = state.isPasswordHide,
+                            onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.Gray,
+                                cursorColor = Color.White,
+                                focusedLabelColor = Color.White,
+                                unfocusedLabelColor = Color.Gray,
+                                errorBorderColor = Color.Red,
+                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                            ),
+                            modifier = Modifier
+                        )
+
+                        Spacer(modifier = Modifier.height(Value.MoreSpaceBetweenObjects))
+
+                        Button(
+                            onClick = {
+                                viewModel.processIntent(
+                                    RegistrationIntent.Registration(
+                                        state.name,
+                                        state.email,
+                                        state.password
+                                    )
+                                )
+                            },
+                            shape = RoundedCornerShape(Value.BigRound),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = Value.BasePadding)
-                        )
-                        LoadingItem()
-                    }
+                                .height(IntrinsicSize.Min),
+                            enabled = !state.isLoading && viewModel.isContinueButtonAvailable(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.login_button), style = TextStyle(
+                                    fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
+                                )
+                            )
+                        }
 
-                    AdviceText(
-                        baseText = stringResource(R.string.need_login),
-                        clickableText = stringResource(R.string.need_login_clickable),
-                        onClick = { onSuccessNavigation() },
-                        modifier = Modifier.weight(1f)
-                    )
+                        if (state.isLoading) {
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = Value.BasePadding)
+                            )
+                            LoadingItem()
+                        }
+
+                        AdviceText(
+                            baseText = stringResource(R.string.need_login),
+                            clickableText = stringResource(R.string.need_login_clickable),
+                            onClick = { onLoginClick() },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
