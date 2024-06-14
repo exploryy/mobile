@@ -44,16 +44,15 @@ fun ShopScreen(
     onDismiss: () -> Unit
 ) {
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
-    val selectedCategory = remember { mutableStateOf(categories.first()) }
 
     val shopState by viewModel.shopState.collectAsState()
 
     val filteredCosmeticItems = remember {
         derivedStateOf {
-            if (selectedCategory.value == "Все") {
+            if (shopState.selectedCategory == "Все") {
                 shopState.shopList
             } else {
-                shopState.shopList.filter { it.cosmeticType.name == selectedCategory.value }
+                shopState.shopList.filter { it.cosmeticType.name == shopState.selectedCategory }
             }
         }
     }
@@ -89,7 +88,7 @@ fun ShopScreen(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "85423",
+                        text = shopState.balance.toString(),
                         color = Color.White,
                         style = S20_W600,
                         modifier = Modifier.padding(end = 8.dp)
@@ -107,11 +106,12 @@ fun ShopScreen(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             CategorySelectionRow(
                 categories = categories,
-                selectedCategory = selectedCategory.value,
+                selectedCategory = shopState.selectedCategory,
                 onCategorySelected = { category ->
-                    selectedCategory.value = category
                     viewModel.selectCategory(category)
                 }
             )
@@ -140,3 +140,44 @@ fun getRarityColor(rarityType: RarityType): Color {
         RarityType.LEGENDARY -> Color.Yellow
     }
 }
+
+
+//для тестов
+val dummyCosmeticItems = listOf(
+    CosmeticItemInShopDto(
+        itemId = 1,
+        name = "Cool Footprint",
+        description = "Leave cool footprints wherever you go!",
+        price = 100,
+        rarityType = RarityType.RARE,
+        cosmeticType = CosmeticType.FOOTPRINT,
+        isOwned = false
+    ),
+    CosmeticItemInShopDto(
+        itemId = 2,
+        name = "Epic Avatar Frames",
+        description = "Frame your avatar with epic style!",
+        price = 200,
+        rarityType = RarityType.EPIC,
+        cosmeticType = CosmeticType.AVATAR_FRAMES,
+        isOwned = true
+    ),
+    CosmeticItemInShopDto(
+        itemId = 3,
+        name = "Mystical Fog",
+        description = "Surround yourself with mystical fog.",
+        price = 150,
+        rarityType = RarityType.COMMON,
+        cosmeticType = CosmeticType.FOG,
+        isOwned = false
+    ),
+    CosmeticItemInShopDto(
+        itemId = 4,
+        name = "Application Image",
+        description = "Customize your application with this image.",
+        price = 80,
+        rarityType = RarityType.LEGENDARY,
+        cosmeticType = CosmeticType.APPLICATION_IMAGE,
+        isOwned = false
+    )
+)

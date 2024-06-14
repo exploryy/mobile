@@ -19,13 +19,25 @@ class ShopViewModel(
 
     init {
         fetchShopItems()
+        fetchBalance()
     }
 
     private fun fetchShopItems() {
         viewModelScope.launch {
             try {
                 val items = getShopUseCase.execute()
-                _shopState.value = _shopState.value.copy(shopList = items)
+                _shopState.update { it.copy(shopList = items) }
+            } catch (e: Exception) {
+                // Handle the error
+            }
+        }
+    }
+
+    private fun fetchBalance() {
+        viewModelScope.launch {
+            try {
+                val balance = getBalanceUseCase.execute()
+                _shopState.update { it.copy(balance = balance.balance) }
             } catch (e: Exception) {
                 // Handle the error
             }
