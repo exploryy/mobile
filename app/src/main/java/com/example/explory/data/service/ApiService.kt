@@ -1,5 +1,6 @@
 package com.example.explory.data.service
 
+import com.example.explory.data.model.BalanceDto
 import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.location.AreaDto
@@ -182,6 +183,9 @@ interface ApiService {
         @Part("coin_id") coinId: Long
     )
 
+    @GET("/coin/balance")
+    suspend fun getBalance() : BalanceDto
+
     @GET("/user")
     suspend fun getUserList(
         @Query("username") username: String
@@ -195,6 +199,8 @@ interface ApiService {
 
     @GET("/statistic/friend/coordinates")
     suspend fun getFriendStatistic(): List<LocationStatisticDto>
+
+
 }
 
 

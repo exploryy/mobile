@@ -24,6 +24,7 @@ import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
 import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
+import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
@@ -57,6 +58,7 @@ class MapViewModel(
     private val eventWebSocketClient: EventWebSocketClient,
     private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
     private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
+    private val getBalanceUseCase: GetBalanceUseCase,
     private val locationTracker: LocationTracker,
     private val context: Context
 ) : ViewModel() {
@@ -65,8 +67,8 @@ class MapViewModel(
 
     private var lastSentLocation: LocationRequest? = null
     private var lastSentTime: Long = 0
-    private val minDistanceChange = 7
-    private val minTimeInterval = 30000L
+    private val minDistanceChange = 5
+    private val minTimeInterval = 20000L
 
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
@@ -87,6 +89,7 @@ class MapViewModel(
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
         loadFriendStatistics()
+        fetchBalance()
     }
 
     fun distanceToUser(
@@ -123,6 +126,7 @@ class MapViewModel(
                 _mapState.update { it ->
                     it.copy(coins = it.coins.filter { it.coinId != coin.coinId })
                 }
+                fetchBalance()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -448,6 +452,16 @@ class MapViewModel(
         }
     }
 
+    fun fetchBalance() {
+        viewModelScope.launch {
+            try {
+                val result = getBalanceUseCase.execute()
+                _mapState.update { it.copy(balance = result.balance) }
+            } catch (e: Exception) {
+                Log.e("BalanceViewModel", "Failed to fetch balance", e)
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -501,6 +515,10 @@ class MapViewModel(
 
     fun updateToastText(text: String?) {
         _mapState.update { it.copy(toastText = text) }
+    }
+
+    fun updateShopOpen() {
+        _mapState.update { it.copy(isShopOpen = !it.isShopOpen) }
     }
 
     fun onFriendMarkerClicked(friendId: String) {

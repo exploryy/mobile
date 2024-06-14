@@ -37,9 +37,10 @@ data class MapState(
     val toastText: String? = null,
     val showFriendProfileScreen: Boolean = false,
     val selectedFriendId: String? = null,
-    val coinCount: Int = 0,
+    val balance: Int = 0,
     val errorQueue: Queue<String> = LinkedList(),
-    val currentError: String? = null
+    val currentError: String? = null,
+    val isShopOpen: Boolean = false
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })

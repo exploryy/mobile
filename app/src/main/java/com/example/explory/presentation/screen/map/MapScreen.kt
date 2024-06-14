@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,6 +62,7 @@ import com.example.explory.presentation.screen.map.notifications.RequestNotifica
 import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.example.explory.presentation.screen.quest.QuestSheet
 import com.example.explory.presentation.screen.settings.SettingsScreen
+import com.example.explory.presentation.screen.shop.ShopScreen
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.White
@@ -258,11 +260,11 @@ fun MapScreen(
                             if (mapState.userPoint != null) {
                                 viewModel.collectCoin(coin, mapState.userPoint!!)
                             }
-//                            if (mapState.coins.size == coinsCount - 1) {
-//                                Toast.makeText(context, "Монетка собрана!", LENGTH_SHORT).show()
-//                            } else {
-//                                Toast.makeText(context, "Вы слишком далеко", LENGTH_SHORT).show()
-//                            }
+                            if (mapState.coins.size == coinsCount - 1) {
+                                Toast.makeText(context, "Монетка собрана!", LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Вы слишком далеко", LENGTH_SHORT).show()
+                            }
                             true
                         })
                 }
@@ -403,26 +405,49 @@ fun MapScreen(
         TopInfoColumn(
             modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp),
             currentLocationName = mapState.currentLocationName,
-            currentLocationPercent = mapState.currentLocationPercent
+            currentLocationPercent = mapState.currentLocationPercent,
+            coinCount = mapState.balance
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-        IconButton(
-            onClick = { viewModel.updateShowSettingsScreen() },
-            colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-                .clip(CircleShape)
-                .size(48.dp)
-
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.End
         ) {
-            Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = "Settings",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+            IconButton(
+                onClick = { viewModel.updateShowSettingsScreen() },
+                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
 
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+
+            }
+
+            IconButton(
+                onClick = { viewModel.updateShopOpen() },
+                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
+
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Shop,
+                    contentDescription = "Shop",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+
+            }
         }
+
         ButtonControlRow(
             mapViewportState = mapViewportState
         ) { viewModel.updateShowFriendScreen() }
@@ -520,6 +545,10 @@ fun MapScreen(
                     viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
                 },
                 onBackClicked = { viewModel.updateDistanceQuest(null) })
+        }
+
+        mapState.isShopOpen -> {
+            ShopScreen()
         }
     }
     LaunchedEffect(mapState.toastText) {
