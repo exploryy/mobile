@@ -35,8 +35,7 @@ data class MapState(
     val questFinished: Boolean = false,
     val userPoint: Point? = null,
     val toastText: String? = null,
-    val showFriendProfileScreen: Boolean = false,
-    val selectedFriendId: String? = null,
+    val selectedFriendProfile: FriendProfile? = null,
     val coinCount: Int = 0,
     val errorQueue: Queue<String> = LinkedList(),
     val currentError: String? = null
@@ -53,3 +52,8 @@ data class MapState(
         return copy(currentError = message)
     }
 }
+
+data class FriendProfile(
+    val id: String,
+    val polygons: List<List<Point>>
+)

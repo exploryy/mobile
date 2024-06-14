@@ -18,6 +18,7 @@ import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.repository.CoinsRepository
+import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.websocket.EventType
 import com.example.explory.data.websocket.EventWebSocketClient
@@ -53,6 +54,7 @@ class MapViewModel(
     private val getCoinsUseCase: GetCoinsUseCase,
     private val questRepository: QuestRepository,
     private val coinsRepository: CoinsRepository,
+    private val polygonRepository: PolygonRepository,
     private val webSocketClient: LocationWebSocketClient,
     private val eventWebSocketClient: EventWebSocketClient,
     private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
@@ -117,11 +119,16 @@ class MapViewModel(
                         userLocation.longitude()
                     ) > 100.0
                 ) {
+                    _mapState.update { it.copy(toastText = "Вы слишком далеко от монеты") }
                     return@launch
                 }
                 coinsRepository.collectCoin(coin.coinId)
                 _mapState.update { it ->
-                    it.copy(coins = it.coins.filter { it.coinId != coin.coinId })
+                    it.copy(
+                        coins = it.coins.filter { it.coinId != coin.coinId },
+                        coinCount = it.coinCount + 1,
+                        toastText = "Монета собрана"
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -504,17 +511,35 @@ class MapViewModel(
     }
 
     fun onFriendMarkerClicked(friendId: String) {
-        _mapState.update {
-            it.copy(
-                selectedFriendId = friendId,
-                showFriendProfileScreen = true
-            )
+        viewModelScope.launch {
+            try {
+                val friendPolygons = polygonRepository.getFriendPolygons(friendId)
+                val friendProfile = FriendProfile(
+                    id = friendId,
+                    polygons = friendPolygons.features.flatMap { feature ->
+                                        feature.geometry.coordinates.flatMap { coordinateList ->
+                                            coordinateList.map { innerList ->
+                                                innerList.map { coordinates ->
+                                                Point.fromLngLat(coordinates[0], coordinates[1])
+                                                }
+                                            }
+                                        }
+                                    }
+                )
+                _mapState.update {
+                    it.copy(
+                        selectedFriendProfile = friendProfile
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     fun closeFriendProfileScreen() {
         _mapState.update {
-            it.copy(showFriendProfileScreen = false, selectedFriendId = null)
+            it.copy(selectedFriendProfile = null)
         }
     }
 

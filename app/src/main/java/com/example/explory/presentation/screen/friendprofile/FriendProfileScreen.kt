@@ -2,12 +2,9 @@ package com.example.explory.presentation.screen.friendprofile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,9 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.explory.R
-import com.example.explory.data.model.profile.FriendProfileDto
+import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
+import com.skydoves.flexible.core.FlexibleSheetSize
+import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +41,15 @@ fun FriendProfileScreen(
     friendId: String,
     onBackClick: () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberFlexibleBottomSheetState(
+        flexibleSheetSize = FlexibleSheetSize(
+            fullyExpanded = 0.9f,
+            intermediatelyExpanded = 0.5f,
+            slightlyExpanded = 0.2f,
+        ),
+        isModal = false,
+        skipSlightlyExpanded = false,
+    )
     val focusManager = LocalFocusManager.current
     val friendProfileDto by viewModel.friendProfile.collectAsStateWithLifecycle()
 
@@ -52,7 +57,7 @@ fun FriendProfileScreen(
         viewModel.loadFriendProfile(friendId)
     }
 
-    ModalBottomSheet(
+    FlexibleBottomSheet(
         onDismissRequest = { onBackClick() },
         sheetState = sheetState
     ) {

@@ -171,6 +171,11 @@ interface ApiService {
     @GET("/multipolygon/area")
     suspend fun getPolygonArea(): AreaDto
 
+    @GET("/multipolygon/friend")
+    suspend fun getFriendPolygons(
+        @Query("friend_id") friendId: String
+    ): PolygonDto
+
     // Coin
 
     @GET("/coin/list")

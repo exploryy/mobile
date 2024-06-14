@@ -63,6 +63,7 @@ import com.example.explory.presentation.screen.quest.QuestSheet
 import com.example.explory.presentation.screen.settings.SettingsScreen
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
@@ -80,6 +81,9 @@ import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import com.mapbox.maps.extension.compose.style.layers.generated.FillAntialias
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
+import com.mapbox.maps.extension.compose.style.layers.generated.LineColor
+import com.mapbox.maps.extension.compose.style.layers.generated.LineLayer
+import com.mapbox.maps.extension.compose.style.layers.generated.LineWidth
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
@@ -254,7 +258,6 @@ fun MapScreen(
                         iconEmissiveStrength = 0.0,
                         iconImageBitmap = coinBitmap,
                         onClick = {
-                            val coinsCount = mapState.coins.size
                             if (mapState.userPoint != null) {
                                 viewModel.collectCoin(coin, mapState.userPoint!!)
                             }
@@ -396,8 +399,42 @@ fun MapScreen(
                     )
                 }
 
-
+                if (mapState.selectedFriendProfile != null) {
+                    val userSourceState = GeoJsonSourceState(
+                        initialData = GeoJSONData(
+                            Feature.fromGeometry(
+                                Polygon.fromLngLats(
+                                    mapState.selectedFriendProfile!!.polygons
+                                )
+                            )
+                        )
+                    )
+                    mapViewportState.flyTo(
+                        cameraOptions {
+                            center(
+                                Point.fromLngLat(
+                                    mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.second,
+                                    mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.first
+                                )
+                            )
+                            zoom(14.0)
+                            pitch(0.0)
+                        },
+                        animationOptions = MapAnimationOptions.mapAnimationOptions {
+                            duration(2000)
+                        })
+                    FillLayer(
+                        sourceState = userSourceState,
+                        layerId = "user-layer",
+                    )
+                    LineLayer(
+                        sourceState = userSourceState, layerId = "user-line-layer",
+                        lineColor = LineColor(Red),
+                        lineWidth = LineWidth(5.0)
+                    )
+                }
             }
+
         }
 
         TopInfoColumn(
@@ -495,9 +532,9 @@ fun MapScreen(
             SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
         }
 
-        mapState.showFriendProfileScreen && mapState.selectedFriendId != null -> {
+        mapState.selectedFriendProfile != null -> {
             FriendProfileScreen(
-                friendId = mapState.selectedFriendId!!,
+                friendId = mapState.selectedFriendProfile!!.id,
                 onBackClick = { viewModel.closeFriendProfileScreen() }
             )
         }
