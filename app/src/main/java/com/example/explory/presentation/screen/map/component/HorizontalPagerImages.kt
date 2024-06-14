@@ -37,7 +37,7 @@ fun HorizontalPagerImages() {
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .height(300.dp)
             ) { page ->
                 Image(
                     painter = painterResource(id = getPageImage(page)),

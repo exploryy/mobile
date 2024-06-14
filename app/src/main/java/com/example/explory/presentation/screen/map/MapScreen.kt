@@ -548,7 +548,9 @@ fun MapScreen(
         }
 
         mapState.isShopOpen -> {
-            ShopScreen()
+            ShopScreen(
+                onDismiss = { viewModel.updateShopOpen() }
+            )
         }
     }
     LaunchedEffect(mapState.toastText) {

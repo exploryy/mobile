@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.shop
 
+import android.content.DialogInterface.OnDismissListener
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +17,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -80,8 +84,11 @@ val dummyCosmeticItems = listOf(
     )
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopScreen() {
+fun ShopScreen(
+    onDismiss: () -> Unit
+) {
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
     val selectedCategory = remember { mutableStateOf(categories.first()) }
     val filteredCosmeticItems = remember {
@@ -94,17 +101,17 @@ fun ShopScreen() {
         }
     }
 
-    Surface(
-        color = Color(0xFF121212),
-        modifier = Modifier.fillMaxSize()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxSize()
         ) {
-
-            Spacer(modifier = Modifier.height(32.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -117,7 +124,6 @@ fun ShopScreen() {
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge
                 )
-
                 Row {
                     Image(
                         painter = painterResource(id = R.drawable.money),
@@ -181,10 +187,4 @@ fun getRarityColor(rarityType: RarityType): Color {
         RarityType.EPIC -> Color.Magenta
         RarityType.LEGENDARY -> Color.Yellow
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewShopScreen() {
-    ShopScreen()
 }
