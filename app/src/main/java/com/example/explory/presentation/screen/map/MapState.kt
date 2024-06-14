@@ -6,6 +6,7 @@ import com.example.explory.data.model.quest.CompletedQuestDto
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
+import com.example.explory.data.websocket.EventDto
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
@@ -32,14 +33,15 @@ data class MapState(
     val distanceQuest: DistanceQuestDto? = null,
     val friendsLocations: Map<String, Pair<Double, Double>> = emptyMap(),
     val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
-    val questFinished: Boolean = false,
     val userPoint: Point? = null,
     val toastText: String? = null,
     val selectedFriendProfile: FriendProfile? = null,
     val coinCount: Int = 0,
     val errorQueue: Queue<String> = LinkedList(),
-    val currentError: String? = null
-) {
+    val currentError: String? = null,
+    val event: EventDto? = null,
+
+    ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })
     }

@@ -12,6 +12,6 @@ class CompletedQuestDto(
     val latitude: String,
     val longitude: String,
     val images: List<String>,
-    val startDate: OffsetDateTime,
-    val endDate: OffsetDateTime
+    val startDate: String,
+    val endDate: String
 )

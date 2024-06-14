@@ -5,12 +5,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapShader
 import android.graphics.Paint
 import android.graphics.Shader
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.annotation.ColorInt
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,6 +58,7 @@ import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
+import com.example.explory.presentation.screen.map.component.EventDialog
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
@@ -141,19 +146,16 @@ fun MapScreen(
 //        painter.drawToImageBitmap()
 //    }
 
-    val task = painterResource(id = R.drawable.marker)
-    val taskBitmap: Bitmap = remember(task) {
-        task.drawToImageBitmap().asAndroidBitmap()
+    val taskBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
     }
 
-    val finish = painterResource(id = R.drawable.finish)
-    val finishBitmap: Bitmap = remember(finish) {
-        finish.drawToImageBitmap().asAndroidBitmap()
+    val finishBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.finish))
     }
 
-    val coin = painterResource(id = R.drawable.money)
-    val coinBitmap: Bitmap = remember(coin) {
-        coin.drawToImageBitmap().asAndroidBitmap()
+    val coinBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.money))
     }
 
 
@@ -516,16 +518,46 @@ fun MapScreen(
         mapState.p2pQuest != null -> {
             QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = mapState.p2pQuest!!.commonQuestDto.images.first(),
+                point = mapState.p2pQuest!!.route.points.first(),
                 description = mapState.p2pQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
-                point = mapState.p2pQuest!!.route.points.first(),
+                questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId
+                ) "активный" else null,
                 onButtonClicked = {
-                    viewModel.updateDistanceQuest(null)
-                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                },
-                onBackClicked = { viewModel.updateP2PQuest(null) })
+                    if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
+                        viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                    } else {
+                        viewModel.updateP2PQuest(null)
+                        viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                    }
+                })
+        }
+
+        mapState.distanceQuest != null -> {
+            QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
+                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
+                point = PointDto(
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude,
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude
+                ),
+                description = mapState.distanceQuest!!.commonQuestDto.description,
+                difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
+                transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
+                distance = mapState.distanceQuest!!.distance,
+                questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId
+                ) "активный" else null,
+                onButtonClicked = {
+                    if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
+                        viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    } else {
+                        viewModel.updateP2PQuest(null)
+                        viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    }
+                })
         }
 
         mapState.showSettingsScreen -> {
@@ -539,25 +571,11 @@ fun MapScreen(
             )
         }
 
-        mapState.distanceQuest != null -> {
-            QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
-                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
-                description = mapState.distanceQuest!!.commonQuestDto.description,
-                difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
-                transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
-                distance = mapState.distanceQuest!!.distance,
-                point = PointDto(
-                    mapState.distanceQuest!!.commonQuestDto.longitude,
-                    mapState.distanceQuest!!.commonQuestDto.latitude,
-                    mapState.distanceQuest!!.commonQuestDto.longitude,
-                    mapState.distanceQuest!!.commonQuestDto.latitude
-                ),
-                onButtonClicked = {
-                    viewModel.updateP2PQuest(null)
-                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
-                },
-                onBackClicked = { viewModel.updateDistanceQuest(null) })
-        }
+
+    }
+
+    if (mapState.event != null) {
+        EventDialog(event = mapState.event!!, onDismissRequest = { viewModel.updateEvent(null) })
     }
     LaunchedEffect(mapState.toastText) {
         if (mapState.toastText != null) {
@@ -580,7 +598,41 @@ fun Painter.drawToImageBitmap(): ImageBitmap {
     ) {
         draw(intrinsicSize)
     }
+
     return bitmap
+}
+
+private fun drawableToBitmap(
+    sourceDrawable: Drawable?,
+    flipX: Boolean = false,
+    flipY: Boolean = false,
+    @ColorInt tint: Int? = null,
+): Bitmap? {
+    if (sourceDrawable == null) {
+        return null
+    }
+    return if (sourceDrawable is BitmapDrawable) {
+        sourceDrawable.bitmap
+    } else {
+        // copying drawable object to not manipulate on the same reference
+        val constantState = sourceDrawable.constantState ?: return null
+        val drawable = constantState.newDrawable().mutate()
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth, drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        tint?.let(drawable::setTint)
+        val canvas = android.graphics.Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        canvas.scale(
+            if (flipX) -1f else 1f,
+            if (flipY) -1f else 1f,
+            canvas.width / 2f,
+            canvas.height / 2f
+        )
+        drawable.draw(canvas)
+        bitmap
+    }
 }
 
 

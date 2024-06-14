@@ -35,6 +35,7 @@ import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
+import com.example.explory.ui.theme.Yellow
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.FlexibleSheetSize
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
@@ -50,7 +51,7 @@ fun QuestSheet(
     transportType: String,
     distance: Long,
     onButtonClicked: () -> Unit,
-    onBackClicked: () -> Unit
+    questStatus: String? = null
 ) {
     FlexibleBottomSheet(
         onDismissRequest = { },
@@ -97,6 +98,10 @@ fun QuestSheet(
                     text = name,
                     style = S24_W600,
                 )
+                if (questStatus != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    InfoBox(text = questStatus, containerColor = Yellow)
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -131,7 +136,10 @@ fun QuestSheet(
                     containerColor = White
                 )
             ) {
-                Text("Начать", style = S14_W600)
+                Text(
+                    if (questStatus == null) "Начать квест" else "Отменить квест",
+                    style = S14_W600
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
         }

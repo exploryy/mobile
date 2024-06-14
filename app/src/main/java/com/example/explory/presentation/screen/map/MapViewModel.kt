@@ -20,6 +20,7 @@ import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
+import com.example.explory.data.websocket.EventDto
 import com.example.explory.data.websocket.EventType
 import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
@@ -88,6 +89,7 @@ class MapViewModel(
         startLocationUpdates()
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
+        observeEventWebSocketMessages()
         loadFriendStatistics()
     }
 
@@ -141,6 +143,12 @@ class MapViewModel(
             try {
                 Log.d("MapViewModel", "Quest id $questId")
                 questRepository.startQuest(questId, "WALK")
+                _mapState.update { it ->
+                    it.copy(toastText = "Квест начат",
+                        activeQuest = it.notCompletedQuests.find { it.questId.toString() == questId },
+                        notCompletedQuests = it.notCompletedQuests.filter { it.questId.toString() != questId }
+                    )
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -161,6 +169,23 @@ class MapViewModel(
                     updateP2PQuest(p2pQuest)
                     updateDistanceQuest(null)
                 }
+            }
+        }
+    }
+
+    fun cancelQuest(questId: String) {
+        viewModelScope.launch {
+            try {
+                questRepository.cancelQuest(questId)
+                _mapState.update {
+                    it.copy(
+                        toastText = "Квест отменен",
+                        activeQuest = null,
+                        notCompletedQuests = it.notCompletedQuests + it.activeQuest!!
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -254,12 +279,26 @@ class MapViewModel(
     private suspend fun getQuests() {
         try {
             val quests = getQuestsUseCase.execute()
-            Log.d("MapViewModel", "Quests: $quests")
+            if (quests.active.isNotEmpty()) {
+                when (quests.active[0].questType) {
+                    "DISTANCE" -> {
+                        val distanceQuest =
+                            questRepository.getDistanceQuest(quests.active[0].questId.toString())
+                        updateDistanceQuest(distanceQuest)
+                    }
+
+                    "POINT_TO_POINT" -> {
+                        val p2pQuest =
+                            questRepository.getP2PQuest(quests.active[0].questId.toString())
+                        updateP2PQuest(p2pQuest)
+                    }
+                }
+            }
             _mapState.update {
                 it.copy(
                     notCompletedQuests = quests.notCompleted,
                     completedQuests = quests.completed,
-                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null
+                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
                 )
             }
         } catch (e: Exception) {
@@ -398,10 +437,14 @@ class MapViewModel(
         viewModelScope.launch {
             eventWebSocketClient.events.collect { event ->
                 event.let {
+                    Log.d("MapViewModel", "Got new event: $it")
                     when (it.type) {
                         EventType.COMPLETE_QUEST -> {
-                            updateP2PQuest(null)
-                            updateDistanceQuest(null)
+                            _mapState.update { state -> state.copy(event = it) }
+                            if (it.type == EventType.COMPLETE_QUEST) {
+                                updateP2PQuest(null)
+                                updateDistanceQuest(null)
+                            }
                         }
                     }
                 }
@@ -502,7 +545,7 @@ class MapViewModel(
         _mapState.update { it.copy(showSettingsScreen = !it.showSettingsScreen) }
     }
 
-    fun updateUserLocation(latitude: Double, longitude: Double) {
+    private fun updateUserLocation(latitude: Double, longitude: Double) {
         _mapState.update { it.copy(userPoint = Point.fromLngLat(longitude, latitude)) }
     }
 
@@ -517,14 +560,14 @@ class MapViewModel(
                 val friendProfile = FriendProfile(
                     id = friendId,
                     polygons = friendPolygons.features.flatMap { feature ->
-                                        feature.geometry.coordinates.flatMap { coordinateList ->
-                                            coordinateList.map { innerList ->
-                                                innerList.map { coordinates ->
-                                                Point.fromLngLat(coordinates[0], coordinates[1])
-                                                }
-                                            }
-                                        }
-                                    }
+                        feature.geometry.coordinates.flatMap { coordinateList ->
+                            coordinateList.map { innerList ->
+                                innerList.map { coordinates ->
+                                    Point.fromLngLat(coordinates[0], coordinates[1])
+                                }
+                            }
+                        }
+                    }
                 )
                 _mapState.update {
                     it.copy(
@@ -541,6 +584,10 @@ class MapViewModel(
         _mapState.update {
             it.copy(selectedFriendProfile = null)
         }
+    }
+
+    fun updateEvent(event: EventDto?) {
+        _mapState.update { it.copy(event = event) }
     }
 
     fun setError(message: String?) {

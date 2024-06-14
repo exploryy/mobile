@@ -21,4 +21,8 @@ class QuestRepository(private val apiService: ApiService) {
     suspend fun startQuest(id: String, transportType: String) {
         apiService.startQuest(id, transportType)
     }
+
+    suspend fun cancelQuest(questId: String) {
+        apiService.cancelQuest(questId)
+    }
 }

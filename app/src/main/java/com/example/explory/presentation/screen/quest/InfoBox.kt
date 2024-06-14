@@ -8,23 +8,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.explory.ui.theme.MediumGray
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.White
 
 @Composable
-fun InfoBox(modifier: Modifier = Modifier, text: String) {
+fun InfoBox(
+    modifier: Modifier = Modifier,
+    text: String,
+    containerColor: Color = MediumGray,
+    textColor: Color = White
+) {
     Box(
         modifier = modifier
-            .background(MediumGray, shape = RoundedCornerShape(8.dp))
+            .background(containerColor, shape = RoundedCornerShape(8.dp))
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(8.dp))
     ) {
         Text(
             text = text,
             style = S14_W600,
-            color = White
+            color = textColor
         )
     }
 }
