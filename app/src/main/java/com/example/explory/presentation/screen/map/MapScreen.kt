@@ -289,7 +289,7 @@ fun MapScreen(
                             iconSize = 1.0,
                             iconImageBitmap = defaultAvatarBitmap,
                             onClick = {
-                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                viewModel.onFriendMarkerClicked(userId)
                                 true
                             },
                             textField = friendName,
@@ -305,7 +305,7 @@ fun MapScreen(
                             iconSize = 1.0,
                             iconImageBitmap = circleBitmap,
                             onClick = {
-                                Toast.makeText(context, "Друг: $userId", LENGTH_SHORT).show()
+                                viewModel.onFriendMarkerClicked(userId)
                                 true
                             },
                             textField = friendName,
