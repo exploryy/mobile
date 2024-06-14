@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.explory.R
+import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
@@ -182,7 +183,9 @@ fun ProfileScreen(
             )
 
             when (profileState.profileScreenState) {
-                1 -> FriendsScreen()
+                1 -> FriendsScreen(
+                    onFriendProfileClick = { viewModel.onFriendMarkerClicked(friendId = it) }
+                )
                 2 -> UserStatisticScreen()
                 3 -> FriendRequestsScreen()
             }
@@ -194,6 +197,13 @@ fun ProfileScreen(
             profile = profileState.profile,
             onDismiss = { viewModel.changeOpenEditDialogState() },
             onSave = { viewModel.editProfile(it) }
+        )
+    }
+
+    if (profileState.showFriendProfileScreen && profileState.selectedFriendId != null) {
+        FriendProfileScreen(
+            friendId = profileState.selectedFriendId!!,
+            onBackClick = { viewModel.closeFriendProfileScreen() }
         )
     }
 }

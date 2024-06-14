@@ -9,6 +9,8 @@ import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
+import java.util.LinkedList
+import java.util.Queue
 
 data class MapState(
     val uiState: UiState = UiState.Default,
@@ -32,5 +34,22 @@ data class MapState(
     val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
     val questFinished: Boolean = false,
     val userPoint: Point? = null,
-    val toastText: String? = null
-)
+    val toastText: String? = null,
+    val showFriendProfileScreen: Boolean = false,
+    val selectedFriendId: String? = null,
+    val coinCount: Int = 0,
+    val errorQueue: Queue<String> = LinkedList(),
+    val currentError: String? = null
+) {
+    fun withErrorEnqueued(message: String): MapState {
+        return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })
+    }
+
+    fun withNextErrorDequeued(): MapState {
+        return copy(errorQueue = LinkedList(errorQueue).apply { poll() })
+    }
+
+    fun withCurrentError(message: String?): MapState {
+        return copy(currentError = message)
+    }
+}

@@ -118,4 +118,19 @@ class ProfileViewModel(
             }
         }
     }
+
+    fun onFriendMarkerClicked(friendId: String) {
+        _profileState.update {
+            it.copy(
+                selectedFriendId = friendId,
+                showFriendProfileScreen = true
+            )
+        }
+    }
+
+    fun closeFriendProfileScreen() {
+        _profileState.update {
+            it.copy(showFriendProfileScreen = false, selectedFriendId = null)
+        }
+    }
 }

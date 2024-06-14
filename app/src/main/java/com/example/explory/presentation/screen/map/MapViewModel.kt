@@ -35,6 +35,7 @@ import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -88,7 +89,7 @@ class MapViewModel(
         loadFriendStatistics()
     }
 
-    private fun distanceToUser(
+    fun distanceToUser(
         firstLat: Double,
         firstLng: Double,
         secondLat: Double,
@@ -116,15 +117,11 @@ class MapViewModel(
                         userLocation.longitude()
                     ) > 100.0
                 ) {
-                    _mapState.update { it.copy(toastText = "Слишком далеко") }
                     return@launch
                 }
-                coinsRepository.collectCoin(coin.coinId)
+                coinsRepository.collectCoin(coin.coin_id)
                 _mapState.update { it ->
-                    it.copy(
-                        coins = it.coins.filter { it.coinId != coin.coinId },
-                        toastText = "Монетка собрана"
-                    )
+                    it.copy(coins = it.coins.filter { it.coin_id != coin.coin_id })
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -266,12 +263,11 @@ class MapViewModel(
     private suspend fun getCoins() {
         try {
             val coins = getCoinsUseCase.execute()
-            Log.d("MapViewModel", "Coins is $coins")
             _mapState.update {
                 it.copy(coins = coins)
             }
         } catch (e: Exception) {
-            Log.e("MapViewModel", "Error while getting coin", e)
+            e.printStackTrace()
         }
     }
 
@@ -505,6 +501,46 @@ class MapViewModel(
 
     fun updateToastText(text: String?) {
         _mapState.update { it.copy(toastText = text) }
+    }
+
+    fun onFriendMarkerClicked(friendId: String) {
+        _mapState.update {
+            it.copy(
+                selectedFriendId = friendId,
+                showFriendProfileScreen = true
+            )
+        }
+    }
+
+    fun closeFriendProfileScreen() {
+        _mapState.update {
+            it.copy(showFriendProfileScreen = false, selectedFriendId = null)
+        }
+    }
+
+    fun setError(message: String?) {
+        if (message != null) {
+            _mapState.update { it.withErrorEnqueued(message) }
+            if (_mapState.value.currentError == null) {
+                showNextError()
+            }
+        }
+    }
+
+    private fun showNextError() {
+        val nextError = _mapState.value.errorQueue.peek()
+        if (nextError != null) {
+            _mapState.update { it.withCurrentError(nextError) }
+            clearErrorAfterDelay()
+        }
+    }
+
+    private fun clearErrorAfterDelay() {
+        viewModelScope.launch {
+            delay(4000)
+            _mapState.update { it.withNextErrorDequeued().withCurrentError(null) }
+            showNextError()
+        }
     }
 }
 

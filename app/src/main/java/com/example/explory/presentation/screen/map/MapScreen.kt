@@ -500,6 +500,13 @@ fun MapScreen(
             SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
         }
 
+        mapState.showFriendProfileScreen && mapState.selectedFriendId != null -> {
+            FriendProfileScreen(
+                friendId = mapState.selectedFriendId!!,
+                onBackClick = { viewModel.closeFriendProfileScreen() }
+            )
+        }
+
         mapState.distanceQuest != null -> {
             QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
                 image = mapState.distanceQuest!!.commonQuestDto.images.first(),
