@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.friendprofile.component
+package com.example.explory.presentation.screen.shop.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.explory.presentation.screen.shop.component.CategoryButton
 
 @Composable
 fun CategorySelectionRow(

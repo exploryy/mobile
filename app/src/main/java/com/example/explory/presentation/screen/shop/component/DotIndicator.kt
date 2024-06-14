@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.map.component
+package com.example.explory.presentation.screen.shop.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

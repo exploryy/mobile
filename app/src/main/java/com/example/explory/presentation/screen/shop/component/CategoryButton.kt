@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.friendprofile.component
+package com.example.explory.presentation.screen.shop.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults

@@ -15,6 +15,7 @@ import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.model.quest.QuestListDto
 import com.example.explory.data.model.quest.RouteDto
 import com.example.explory.data.model.requests.FriendRequest
+import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.statistic.AchievementDto
 import com.example.explory.data.model.statistic.UserStatisticDto
 import okhttp3.MultipartBody
@@ -200,7 +201,8 @@ interface ApiService {
     @GET("/statistic/friend/coordinates")
     suspend fun getFriendStatistic(): List<LocationStatisticDto>
 
-
+    @GET("/shop")
+    suspend fun getShop() : List<CosmeticItemInShopDto>
 }
 
 

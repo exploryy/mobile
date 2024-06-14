@@ -15,6 +15,7 @@ import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.domain.usecase.GetShopUseCase
 import com.example.explory.domain.usecase.GetUserListUseCase
 import com.example.explory.domain.usecase.GetUserStatisticUseCase
 import com.example.explory.domain.usecase.GetUserTokenUseCase
@@ -52,4 +53,5 @@ fun domainModule() = module {
     factoryOf(::GetFriendStatisticUseCase)
     factoryOf(::GetFriendProfileUseCase)
     factoryOf(::GetBalanceUseCase)
+    factoryOf(::GetShopUseCase)
 }

@@ -1,10 +1,7 @@
 package com.example.explory.presentation.screen.shop
 
-import android.content.DialogInterface.OnDismissListener
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,89 +11,49 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.model.shop.RarityType
-import com.example.explory.presentation.screen.friendprofile.component.CategorySelectionRow
-import com.example.explory.presentation.screen.friendprofile.component.CosmeticItemsList
-import com.example.explory.presentation.screen.map.component.DotIndicator
-import com.example.explory.presentation.screen.map.component.HorizontalPagerImages
+import com.example.explory.presentation.screen.shop.component.CategorySelectionRow
+import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
+import com.example.explory.presentation.screen.shop.component.HorizontalPagerImages
 import com.example.explory.ui.theme.S20_W600
-
-val dummyCosmeticItems = listOf(
-    CosmeticItemInShopDto(
-        itemId = 1,
-        name = "Cool Footprint",
-        description = "Leave cool footprints wherever you go!",
-        price = 100,
-        rarityType = RarityType.RARE,
-        cosmeticType = CosmeticType.FOOTPRINT,
-        isOwned = false
-    ),
-    CosmeticItemInShopDto(
-        itemId = 2,
-        name = "Epic Avatar Frames",
-        description = "Frame your avatar with epic style!",
-        price = 200,
-        rarityType = RarityType.EPIC,
-        cosmeticType = CosmeticType.AVATAR_FRAMES,
-        isOwned = true
-    ),
-    CosmeticItemInShopDto(
-        itemId = 3,
-        name = "Mystical Fog",
-        description = "Surround yourself with mystical fog.",
-        price = 150,
-        rarityType = RarityType.COMMON,
-        cosmeticType = CosmeticType.FOG,
-        isOwned = false
-    ),
-    CosmeticItemInShopDto(
-        itemId = 4,
-        name = "Application Image",
-        description = "Customize your application with this image.",
-        price = 80,
-        rarityType = RarityType.LEGENDARY,
-        cosmeticType = CosmeticType.APPLICATION_IMAGE,
-        isOwned = false
-    )
-)
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShopScreen(
+    viewModel: ShopViewModel = koinViewModel(),
     onDismiss: () -> Unit
 ) {
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
     val selectedCategory = remember { mutableStateOf(categories.first()) }
+
+    val shopState by viewModel.shopState.collectAsState()
+
     val filteredCosmeticItems = remember {
         derivedStateOf {
             if (selectedCategory.value == "Все") {
-                dummyCosmeticItems
+                shopState.shopList
             } else {
-                dummyCosmeticItems.filter { it.cosmeticType.name == selectedCategory.value }
+                shopState.shopList.filter { it.cosmeticType.name == selectedCategory.value }
             }
         }
     }
@@ -149,25 +106,20 @@ fun ShopScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
+
             CategorySelectionRow(
                 categories = categories,
                 selectedCategory = selectedCategory.value,
-                onCategorySelected = { selectedCategory.value = it }
+                onCategorySelected = { category ->
+                    selectedCategory.value = category
+                    viewModel.selectCategory(category)
+                }
             )
+
             CosmeticItemsList(cosmeticItems = filteredCosmeticItems.value)
         }
     }
 }
-
-fun getPageImage(page: Int): Int {
-    return when (page) {
-        0 -> R.drawable.cloud
-        1 -> R.drawable.cloud2
-        2 -> R.drawable.cloud3
-        else -> R.drawable.cloud
-    }
-}
-
 
 @Composable
 fun getIconForCosmeticType(cosmeticType: CosmeticType): Int {

@@ -9,6 +9,7 @@ import com.example.explory.presentation.screen.map.MapViewModel
 import com.example.explory.presentation.screen.profile.ProfileViewModel
 import com.example.explory.presentation.screen.quest.QuestViewModel
 import com.example.explory.presentation.screen.requests.FriendRequestsViewModel
+import com.example.explory.presentation.screen.shop.ShopViewModel
 import com.example.explory.presentation.screen.splash.SplashViewModel
 import com.example.explory.presentation.screen.userstatistic.UserStatisticViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -26,4 +27,5 @@ fun appModule() = module {
     viewModelOf(::QuestViewModel)
     single { ThemeViewModel(get()) }
     viewModelOf(::FriendProfileViewModel)
+    viewModelOf(::ShopViewModel)
 }

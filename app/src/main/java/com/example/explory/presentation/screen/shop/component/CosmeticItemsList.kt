@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.friendprofile.component
+package com.example.explory.presentation.screen.shop.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
+import com.example.explory.presentation.screen.shop.component.CosmeticCard
 
 @Composable
 fun CosmeticItemsList(cosmeticItems: List<CosmeticItemInShopDto>) {
