@@ -89,6 +89,11 @@ class MapViewModel(
 
     init {
         getStartData()
+        loadFriendStatistics()
+        fetchBalance()
+    }
+
+    fun startWebSockets() {
         webSocketClient.connect()
         eventWebSocketClient.connect()
         friendsLocationWebSocketClient.connect()
@@ -96,8 +101,6 @@ class MapViewModel(
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
         observeEventWebSocketMessages()
-        loadFriendStatistics()
-        fetchBalance()
     }
 
     private fun calculateDistance(

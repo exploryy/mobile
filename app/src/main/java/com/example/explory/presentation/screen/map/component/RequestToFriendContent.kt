@@ -37,7 +37,7 @@ fun RequestToFriendContent(
     onDeclineClick: (String) -> Unit
 ) {
     val friendDto =
-        Json.decodeFromString<FriendShortDto>(event.text.dropLast(1).drop(1).replace("\\", ""))
+        Json.decodeFromString<FriendShortDto>(event.text)
     Column(
         Modifier
             .width(DIALOG_WIDTH.dp)
@@ -50,7 +50,7 @@ fun RequestToFriendContent(
             text = "Новая заявка!", style = S24_W600, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(64.dp))
-        Avatar(image = friendDto.avatar, modifier = Modifier.size(75.dp))
+        Avatar(image = friendDto.avatarUrl, modifier = Modifier.size(75.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = friendDto.username, style = S20_W600
@@ -62,7 +62,7 @@ fun RequestToFriendContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = { onDeclineClick(friendDto.id) },
+                onClick = { onDeclineClick(friendDto.userId) },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)
@@ -74,7 +74,7 @@ fun RequestToFriendContent(
                 Text(text = "Отклонить", style = S16_W600)
             }
             Button(
-                onClick = { onAcceptClick(friendDto.id) },
+                onClick = { onAcceptClick(friendDto.userId) },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)
@@ -98,5 +98,5 @@ private fun PreviewRequestToFriendDialog() {
 }
 
 data class FriendShortDto(
-    val id: String, val username: String, val avatar: String
+    val userId: String, val username: String, val avatarUrl: String
 )

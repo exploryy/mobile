@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.explory.R
-import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
+import com.skydoves.flexible.bottomsheet.material.FlexibleBottomSheet
 import com.skydoves.flexible.core.FlexibleSheetSize
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import org.koin.androidx.compose.koinViewModel

@@ -36,7 +36,7 @@ import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
-import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
+import com.skydoves.flexible.bottomsheet.material.FlexibleBottomSheet
 import com.skydoves.flexible.core.FlexibleSheetSize
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 

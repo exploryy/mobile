@@ -18,6 +18,14 @@ fun getLocalMapboxApiKey(): String {
 val mapboxApiKey = getLocalMapboxApiKey()
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\ProjectX\\explory.jks")
+            storePassword = "121212"
+            keyAlias = "key0"
+            keyPassword = "121212"
+        }
+    }
     namespace = "com.example.explory"
     compileSdk = 34
 
@@ -44,6 +52,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

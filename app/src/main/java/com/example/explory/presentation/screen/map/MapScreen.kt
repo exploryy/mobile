@@ -118,6 +118,11 @@ fun MapScreen(
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
 //    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
+    LaunchedEffect(mapState.showMap) {
+        if (mapState.showMap) {
+            viewModel.startWebSockets()
+        }
+    }
 
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
