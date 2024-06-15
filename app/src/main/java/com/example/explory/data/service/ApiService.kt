@@ -1,5 +1,6 @@
 package com.example.explory.data.service
 
+import com.example.explory.data.model.BalanceDto
 import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.location.AreaDto
@@ -14,6 +15,7 @@ import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.model.quest.QuestListDto
 import com.example.explory.data.model.quest.RouteDto
 import com.example.explory.data.model.requests.FriendRequest
+import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.statistic.AchievementDto
 import com.example.explory.data.model.statistic.UserStatisticDto
 import okhttp3.MultipartBody
@@ -187,6 +189,9 @@ interface ApiService {
         @Part("coin_id") coinId: Long
     )
 
+    @GET("/coin/balance")
+    suspend fun getBalance() : BalanceDto
+
     @GET("/user")
     suspend fun getUserList(
         @Query("username") username: String
@@ -200,6 +205,9 @@ interface ApiService {
 
     @GET("/statistic/friend/coordinates")
     suspend fun getFriendStatistic(): List<LocationStatisticDto>
+
+    @GET("/shop")
+    suspend fun getShop() : List<CosmeticItemInShopDto>
 }
 
 

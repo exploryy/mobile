@@ -14,7 +14,6 @@ import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.ColorInt
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -146,16 +146,19 @@ fun MapScreen(
 //        painter.drawToImageBitmap()
 //    }
 
-    val taskBitmap: Bitmap? = remember {
-        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
+    val task = painterResource(id = R.drawable.marker)
+    val taskBitmap: Bitmap = remember(task) {
+        task.drawToImageBitmap().asAndroidBitmap()
     }
 
-    val finishBitmap: Bitmap? = remember {
-        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.finish))
+    val finish = painterResource(id = R.drawable.finish)
+    val finishBitmap: Bitmap = remember(finish) {
+        finish.drawToImageBitmap().asAndroidBitmap()
     }
 
-    val coinBitmap: Bitmap? = remember {
-        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.money))
+    val coin = painterResource(id = R.drawable.money)
+    val coinBitmap: Bitmap = remember(coin) {
+        coin.drawToImageBitmap().asAndroidBitmap()
     }
 
 
@@ -260,6 +263,7 @@ fun MapScreen(
                         iconEmissiveStrength = 0.0,
                         iconImageBitmap = coinBitmap,
                         onClick = {
+                            val coinsCount = mapState.coins.size
                             if (mapState.userPoint != null) {
                                 viewModel.collectCoin(coin, mapState.userPoint!!)
                             }
@@ -435,8 +439,10 @@ fun MapScreen(
                         lineWidth = LineWidth(5.0)
                     )
                 }
-            }
 
+
+
+            }
         }
 
         TopInfoColumn(
@@ -445,22 +451,43 @@ fun MapScreen(
             currentLocationPercent = mapState.currentLocationPercent
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-        IconButton(
-            onClick = { viewModel.updateShowSettingsScreen() },
-            colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-                .clip(CircleShape)
-                .size(48.dp)
-
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.End
         ) {
-            Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = "Settings",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+            IconButton(
+                onClick = { viewModel.updateShowSettingsScreen() },
+                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
 
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+
+            }
+
+            IconButton(
+                onClick = { viewModel.updateShopOpen() },
+                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
+
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Shop,
+                    contentDescription = "Shop",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+
+            }
         }
         ButtonControlRow(
             mapViewportState = mapViewportState
@@ -518,62 +545,54 @@ fun MapScreen(
         mapState.p2pQuest != null -> {
             QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = mapState.p2pQuest!!.commonQuestDto.images.first(),
-                point = mapState.p2pQuest!!.route.points.first(),
                 description = mapState.p2pQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
-                questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId
-                ) "активный" else null,
+                point = mapState.p2pQuest!!.route.points.first(),
                 onButtonClicked = {
-                    if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
-                        viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                    } else {
-                        viewModel.updateP2PQuest(null)
-                        viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                    }
-                })
-        }
-
-        mapState.distanceQuest != null -> {
-            QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
-                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
-                point = PointDto(
-                    mapState.distanceQuest!!.commonQuestDto.longitude,
-                    mapState.distanceQuest!!.commonQuestDto.latitude,
-                    mapState.distanceQuest!!.commonQuestDto.longitude,
-                    mapState.distanceQuest!!.commonQuestDto.latitude
-                ),
-                description = mapState.distanceQuest!!.commonQuestDto.description,
-                difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
-                transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
-                distance = mapState.distanceQuest!!.distance,
-                questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId
-                ) "активный" else null,
-                onButtonClicked = {
-                    if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
-                        viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
-                    } else {
-                        viewModel.updateP2PQuest(null)
-                        viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
-                    }
-                })
+                    viewModel.updateDistanceQuest(null)
+                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                },
+                onBackClicked = { viewModel.updateP2PQuest(null) })
         }
 
         mapState.showSettingsScreen -> {
             SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
         }
 
-        mapState.selectedFriendProfile != null -> {
+        mapState.showFriendProfileScreen && mapState.selectedFriendId != null -> {
             FriendProfileScreen(
-                friendId = mapState.selectedFriendProfile!!.id,
+                friendId = mapState.selectedFriendId!!,
                 onBackClick = { viewModel.closeFriendProfileScreen() }
             )
         }
 
-
+        mapState.distanceQuest != null -> {
+            QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
+                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
+                description = mapState.distanceQuest!!.commonQuestDto.description,
+                difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
+                transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
+                distance = mapState.distanceQuest!!.distance,
+                point = PointDto(
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude,
+                    mapState.distanceQuest!!.commonQuestDto.longitude,
+                    mapState.distanceQuest!!.commonQuestDto.latitude
+                ),
+                onButtonClicked = {
+                    viewModel.updateP2PQuest(null)
+                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                },
+                onBackClicked = { viewModel.updateDistanceQuest(null) })
+        }
+        mapState.isShopOpen -> {
+            ShopScreen(
+                onDismiss = { viewModel.updateShopOpen() }
+            )
+        }
     }
-
     if (mapState.event != null) {
         EventDialog(event = mapState.event!!, onDismissRequest = { viewModel.updateEvent(null) })
     }
@@ -598,8 +617,24 @@ fun Painter.drawToImageBitmap(): ImageBitmap {
     ) {
         draw(intrinsicSize)
     }
-
     return bitmap
+}
+
+
+private fun createDefaultAvatar(userId: String): Bitmap {
+    val defaultAvatarSize = 100
+    val defaultAvatarBitmap = Bitmap.createBitmap(
+        defaultAvatarSize, defaultAvatarSize, Bitmap.Config.ARGB_8888
+    )
+    val canvas = android.graphics.Canvas(defaultAvatarBitmap)
+    val paint = Paint().apply {
+        isAntiAlias = true
+        color = android.graphics.Color.GRAY
+    }
+    val radius = defaultAvatarSize / 2f
+    canvas.drawCircle(radius, radius, radius, paint)
+
+    return defaultAvatarBitmap
 }
 
 private fun drawableToBitmap(
@@ -633,23 +668,6 @@ private fun drawableToBitmap(
         drawable.draw(canvas)
         bitmap
     }
-}
-
-
-private fun createDefaultAvatar(userId: String): Bitmap {
-    val defaultAvatarSize = 100
-    val defaultAvatarBitmap = Bitmap.createBitmap(
-        defaultAvatarSize, defaultAvatarSize, Bitmap.Config.ARGB_8888
-    )
-    val canvas = android.graphics.Canvas(defaultAvatarBitmap)
-    val paint = Paint().apply {
-        isAntiAlias = true
-        color = android.graphics.Color.GRAY
-    }
-    val radius = defaultAvatarSize / 2f
-    canvas.drawCircle(radius, radius, radius, paint)
-
-    return defaultAvatarBitmap
 }
 
 private fun createCircularAvatar(bitmap: Bitmap, targetSize: Int): Bitmap {

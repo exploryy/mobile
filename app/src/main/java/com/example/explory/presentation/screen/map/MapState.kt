@@ -40,8 +40,8 @@ data class MapState(
     val errorQueue: Queue<String> = LinkedList(),
     val currentError: String? = null,
     val event: EventDto? = null,
-
-    ) {
+    val isShopOpen: Boolean = false
+) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })
     }
