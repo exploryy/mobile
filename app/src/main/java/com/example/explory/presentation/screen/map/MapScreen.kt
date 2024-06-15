@@ -439,7 +439,8 @@ fun MapScreen(
         TopInfoColumn(
             modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp),
             currentLocationName = mapState.currentLocationName,
-            currentLocationPercent = mapState.currentLocationPercent
+            currentLocationPercent = mapState.currentLocationPercent,
+            coinCount = mapState.balance
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
         Column(
