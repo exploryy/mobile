@@ -468,6 +468,10 @@ class MapViewModel(
                                 )
                             }
                         }
+
+                        EventType.NEW_QUEST -> {
+                            getQuests()
+                        }
                     }
                 }
             }

@@ -85,6 +85,7 @@ data class EventDto(
 enum class EventType {
     COMPLETE_QUEST,
     REQUEST_TO_FRIEND,
-    CHANGE_MONEY
+    CHANGE_MONEY,
+    NEW_QUEST
 }
 
