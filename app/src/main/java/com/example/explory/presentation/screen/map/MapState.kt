@@ -37,6 +37,7 @@ data class MapState(
     val toastText: String? = null,
     val selectedFriendProfile: FriendProfile? = null,
     val coinCount: Int = 0,
+    val balance: Int = 0,
     val errorQueue: Queue<String> = LinkedList(),
     val currentError: String? = null,
     val event: EventDto? = null,

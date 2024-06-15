@@ -26,6 +26,8 @@ import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
 import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
+import com.example.explory.domain.usecase.AcceptFriendUseCase
+import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
@@ -62,6 +64,8 @@ class MapViewModel(
     private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
     private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
     private val getBalanceUseCase: GetBalanceUseCase,
+    private val acceptFriendUseCase: AcceptFriendUseCase,
+    private val declineFriendUseCase: DeclineFriendUseCase,
     private val locationTracker: LocationTracker,
     private val context: Context
 ) : ViewModel() {
@@ -630,6 +634,26 @@ class MapViewModel(
             delay(4000)
             _mapState.update { it.withNextErrorDequeued().withCurrentError(null) }
             showNextError()
+        }
+    }
+
+    fun acceptFriendRequest(friendId: String) {
+        viewModelScope.launch {
+            try {
+                acceptFriendUseCase.execute(friendId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun declineFriendRequest(friendId: String) {
+        viewModelScope.launch {
+            try {
+                declineFriendUseCase.execute(friendId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

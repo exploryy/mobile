@@ -66,6 +66,7 @@ import com.example.explory.presentation.screen.map.notifications.RequestNotifica
 import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.example.explory.presentation.screen.quest.QuestSheet
 import com.example.explory.presentation.screen.settings.SettingsScreen
+import com.example.explory.presentation.screen.shop.ShopScreen
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.Red
@@ -325,15 +326,13 @@ fun MapScreen(
                 }
 
                 if (mapState.p2pQuest != null) {
-                    PolylineAnnotationGroup(
-                        lineDasharray = listOf(1.0, 1.0),
+                    PolylineAnnotationGroup(lineDasharray = listOf(1.0, 1.0),
                         annotations = mutableListOf<PolylineAnnotationOptions>().apply {
                             val points = mapState.p2pQuest!!.route.points
                             points.forEachIndexed { index, pointDto ->
                                 if (index < points.size - 1) {
                                     add(
-                                        PolylineAnnotationOptions()
-                                            .withLineColor(AccentColor.toArgb())
+                                        PolylineAnnotationOptions().withLineColor(AccentColor.toArgb())
                                             .withLineWidth(5.0).withPoints(
                                                 listOf(
                                                     Point.fromLngLat(
@@ -348,21 +347,18 @@ fun MapScreen(
                                     )
                                 }
                             }
-                            mapViewportState.flyTo(
-                                cameraOptions {
-                                    center(
-                                        Point.fromLngLat(
-                                            mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
-                                            mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
-                                        )
+                            mapViewportState.flyTo(cameraOptions {
+                                center(
+                                    Point.fromLngLat(
+                                        mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
+                                        mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
                                     )
-                                    zoom(13.0)
-                                    pitch(0.0)
-                                },
-                                animationOptions = MapAnimationOptions.mapAnimationOptions {
-                                    duration(2000)
-                                }
-                            )
+                                )
+                                zoom(13.0)
+                                pitch(0.0)
+                            }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+                                duration(2000)
+                            })
                         })
 
                     PointAnnotation(
@@ -385,16 +381,13 @@ fun MapScreen(
                         point.longitude(),
                         mapState.distanceQuest!!.distance.toDouble()
                     )
-                    mapViewportState.flyTo(
-                        cameraOptions {
-                            center(point)
-                            zoom(12.0)
-                            pitch(0.0)
-                        },
-                        animationOptions = MapAnimationOptions.mapAnimationOptions {
-                            duration(2000)
-                        }
-                    )
+                    mapViewportState.flyTo(cameraOptions {
+                        center(point)
+                        zoom(12.0)
+                        pitch(0.0)
+                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+                        duration(2000)
+                    })
 
                     Log.d("MapScreen", "points: $points")
                     PolygonAnnotation(
@@ -415,31 +408,29 @@ fun MapScreen(
                             )
                         )
                     )
-                    mapViewportState.flyTo(
-                        cameraOptions {
-                            center(
-                                Point.fromLngLat(
-                                    mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.second,
-                                    mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.first
-                                )
+                    mapViewportState.flyTo(cameraOptions {
+                        center(
+                            Point.fromLngLat(
+                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.second,
+                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.first
                             )
-                            zoom(14.0)
-                            pitch(0.0)
-                        },
-                        animationOptions = MapAnimationOptions.mapAnimationOptions {
-                            duration(2000)
-                        })
+                        )
+                        zoom(14.0)
+                        pitch(0.0)
+                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+                        duration(2000)
+                    })
                     FillLayer(
                         sourceState = userSourceState,
                         layerId = "user-layer",
                     )
                     LineLayer(
-                        sourceState = userSourceState, layerId = "user-line-layer",
+                        sourceState = userSourceState,
+                        layerId = "user-line-layer",
                         lineColor = LineColor(Red),
                         lineWidth = LineWidth(5.0)
                     )
                 }
-
 
 
             }
@@ -452,8 +443,7 @@ fun MapScreen(
         )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
         Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.End
+            Modifier.fillMaxSize(), horizontalAlignment = Alignment.End
         ) {
             IconButton(
                 onClick = { viewModel.updateShowSettingsScreen() },
@@ -553,19 +543,7 @@ fun MapScreen(
                 onButtonClicked = {
                     viewModel.updateDistanceQuest(null)
                     viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
-                },
-                onBackClicked = { viewModel.updateP2PQuest(null) })
-        }
-
-        mapState.showSettingsScreen -> {
-            SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
-        }
-
-        mapState.showFriendProfileScreen && mapState.selectedFriendId != null -> {
-            FriendProfileScreen(
-                friendId = mapState.selectedFriendId!!,
-                onBackClick = { viewModel.closeFriendProfileScreen() }
-            )
+                })
         }
 
         mapState.distanceQuest != null -> {
@@ -584,17 +562,27 @@ fun MapScreen(
                 onButtonClicked = {
                     viewModel.updateP2PQuest(null)
                     viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
-                },
-                onBackClicked = { viewModel.updateDistanceQuest(null) })
+                })
         }
+
+        mapState.showSettingsScreen -> {
+            SettingsScreen(onBackClick = { viewModel.updateShowSettingsScreen() })
+        }
+
+        mapState.selectedFriendProfile != null -> {
+            FriendProfileScreen(friendId = mapState.selectedFriendProfile!!.id,
+                onBackClick = { viewModel.closeFriendProfileScreen() })
+        }
+
         mapState.isShopOpen -> {
-            ShopScreen(
-                onDismiss = { viewModel.updateShopOpen() }
-            )
+            ShopScreen(onDismiss = { viewModel.updateShopOpen() })
         }
     }
     if (mapState.event != null) {
-        EventDialog(event = mapState.event!!, onDismissRequest = { viewModel.updateEvent(null) })
+        EventDialog(event = mapState.event!!,
+            onDismissRequest = { viewModel.updateEvent(null) },
+            onFriendDecline = { viewModel.declineFriendRequest(it) },
+            onFriendAccept = { viewModel.acceptFriendRequest(it) })
     }
     LaunchedEffect(mapState.toastText) {
         if (mapState.toastText != null) {
@@ -653,17 +641,13 @@ private fun drawableToBitmap(
         val constantState = sourceDrawable.constantState ?: return null
         val drawable = constantState.newDrawable().mutate()
         val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth, drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
+            drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
         )
         tint?.let(drawable::setTint)
         val canvas = android.graphics.Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         canvas.scale(
-            if (flipX) -1f else 1f,
-            if (flipY) -1f else 1f,
-            canvas.width / 2f,
-            canvas.height / 2f
+            if (flipX) -1f else 1f, if (flipY) -1f else 1f, canvas.width / 2f, canvas.height / 2f
         )
         drawable.draw(canvas)
         bitmap

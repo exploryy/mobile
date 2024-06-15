@@ -28,9 +28,16 @@ import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
+import kotlinx.serialization.json.Json
 
 @Composable
-fun RequestToFriendContent(event: EventDto) {
+fun RequestToFriendContent(
+    event: EventDto,
+    onAcceptClick: (String) -> Unit,
+    onDeclineClick: (String) -> Unit
+) {
+    val friendDto =
+        Json.decodeFromString<FriendShortDto>(event.text.dropLast(1).drop(1).replace("\\", ""))
     Column(
         Modifier
             .width(DIALOG_WIDTH.dp)
@@ -40,16 +47,13 @@ fun RequestToFriendContent(event: EventDto) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = event.text,
-            style = S24_W600,
-            textAlign = TextAlign.Center
+            text = "Новая заявка!", style = S24_W600, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(64.dp))
-        Avatar(image = null, modifier = Modifier.size(75.dp))
+        Avatar(image = friendDto.avatar, modifier = Modifier.size(75.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Имя Фамилия",
-            style = S20_W600
+            text = friendDto.username, style = S20_W600
         )
         Spacer(modifier = Modifier.height(64.dp))
         Row(
@@ -58,27 +62,25 @@ fun RequestToFriendContent(event: EventDto) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onDeclineClick(friendDto.id) },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = White,
-                    containerColor = Black
+                    contentColor = White, containerColor = Black
                 )
             ) {
                 Text(text = "Отклонить", style = S16_W600)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onAcceptClick(friendDto.id) },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = Black,
-                    containerColor = White
+                    contentColor = Black, containerColor = White
                 )
             ) {
                 Text(text = "Принять", style = S16_W600)
@@ -90,11 +92,11 @@ fun RequestToFriendContent(event: EventDto) {
 @Preview
 @Composable
 private fun PreviewRequestToFriendDialog() {
-    EventDialog(
-        event = EventDto(
-            text = "Новая заявка",
-            type = EventType.REQUEST_TO_FRIEND
-        ),
-        onDismissRequest = {}
-    )
+    EventDialog(event = EventDto(
+        text = "Новая заявка", type = EventType.REQUEST_TO_FRIEND
+    ), onDismissRequest = {}, onFriendAccept = {}, onFriendDecline = {})
 }
+
+data class FriendShortDto(
+    val id: String, val username: String, val avatar: String
+)

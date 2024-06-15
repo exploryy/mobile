@@ -37,7 +37,7 @@ import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
 
 @Composable
-fun CompleteQuestContent(event: EventDto) {
+fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
     val progress by animateLottieCompositionAsState(
         composition,
@@ -79,7 +79,7 @@ fun CompleteQuestContent(event: EventDto) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onDismiss,
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +108,9 @@ private fun PreviewQuestCompletedDialog() {
                 text = "Квест завершён!",
                 type = EventType.COMPLETE_QUEST
             ),
-            onDismissRequest = {}
+            onDismissRequest = {},
+            onFriendAccept = {},
+            onFriendDecline = {}
         )
     }
 }

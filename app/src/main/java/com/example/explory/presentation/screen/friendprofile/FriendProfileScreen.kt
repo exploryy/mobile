@@ -34,7 +34,6 @@ import com.skydoves.flexible.core.FlexibleSheetSize
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendProfileScreen(
     viewModel: FriendProfileViewModel = koinViewModel(),
@@ -44,7 +43,7 @@ fun FriendProfileScreen(
     val sheetState = rememberFlexibleBottomSheetState(
         flexibleSheetSize = FlexibleSheetSize(
             fullyExpanded = 0.9f,
-            intermediatelyExpanded = 0.5f,
+            intermediatelyExpanded = 0.6f,
             slightlyExpanded = 0.2f,
         ),
         isModal = false,
