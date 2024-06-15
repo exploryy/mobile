@@ -6,7 +6,6 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
@@ -140,9 +138,9 @@ fun getRarityBrush(rarityType: RarityType): Brush {
 
     val colors = when (rarityType) {
         RarityType.COMMON -> listOf(Color.LightGray.copy(alpha = 0.8f), Color.Gray.copy(alpha = 0.8f))
-        RarityType.RARE -> listOf(Color.Green.copy(alpha = 0.8f), Color.Blue.copy(alpha = 0.2f))
-        RarityType.EPIC -> listOf(Color.Magenta.copy(alpha = 0.8f), Color.Magenta.copy(alpha = 0.4f))
-        RarityType.LEGENDARY -> listOf(Color.Yellow.copy(alpha = 0.8f), Color.Yellow.copy(alpha = 0.4f))
+        RarityType.RARE -> listOf(Color.Green.copy(alpha = 0.8f), Color.Green.copy(alpha = 0.4f))
+        RarityType.EPIC -> listOf(Color.Magenta.copy(alpha = 0.7f), Color.Magenta.copy(alpha = 0.3f))
+        RarityType.LEGENDARY -> listOf(Color.Yellow.copy(alpha = 0.8f), Color.Yellow.copy(alpha = 0.5f))
     }
 
     val animatedColors = infiniteTransition.animateColor(
