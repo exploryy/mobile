@@ -208,6 +208,9 @@ interface ApiService {
 
     @GET("/shop")
     suspend fun getShop() : List<CosmeticItemInShopDto>
+
+    @POST("/shop/{item_id}/buy")
+    suspend fun buyItem(@Path("item_id") itemId: Long)
 }
 
 

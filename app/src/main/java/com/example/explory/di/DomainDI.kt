@@ -3,6 +3,7 @@ package com.example.explory.di
 import com.example.explory.domain.usecase.AcceptFriendUseCase
 import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
+import com.example.explory.domain.usecase.BuyItemUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
@@ -54,4 +55,5 @@ fun domainModule() = module {
     factoryOf(::GetFriendProfileUseCase)
     factoryOf(::GetBalanceUseCase)
     factoryOf(::GetShopUseCase)
+    factoryOf(::BuyItemUseCase)
 }

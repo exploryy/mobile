@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,20 +38,27 @@ import com.example.explory.data.model.shop.RarityType
 @Composable
 fun CosmeticCard(
     cosmeticItem: CosmeticItemInShopDto,
+    onClick: (CosmeticItemInShopDto) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = if (!cosmeticItem.isOwned) {
              modifier
-                 .padding(8.dp)
+                .padding(8.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(getRarityBrush(cosmeticItem.rarityType))
+                 .let {
+                     if (cosmeticItem.isOwned) it else it.clickable { onClick(cosmeticItem) }
+                 }
         }
         else {
             modifier
                 .padding(8.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.Gray)
+                .let {
+                    if (cosmeticItem.isOwned) it else it.clickable { onClick(cosmeticItem) }
+                }
         }
     ) {
         Card(
@@ -102,11 +110,6 @@ fun CosmeticCard(
                         text = "Цена: ${cosmeticItem.price} монеток",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Редкость: ${cosmeticItem.rarityType.name}",
-                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

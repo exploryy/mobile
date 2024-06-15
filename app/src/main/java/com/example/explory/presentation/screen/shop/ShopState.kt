@@ -6,5 +6,6 @@ data class ShopState(
     val shopList: List<CosmeticItemInShopDto> = emptyList(),
     val selectedItem: CosmeticItemInShopDto? = null,
     val selectedCategory: String = "Все",
-    val balance: Int = 0
+    val balance: Int = 0,
+    val isDialogVisible: Boolean = false
 )

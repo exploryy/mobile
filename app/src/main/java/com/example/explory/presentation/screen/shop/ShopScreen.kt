@@ -17,16 +17,19 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.explory.R
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.shop.CosmeticType
@@ -43,6 +46,23 @@ fun ShopScreen(
     viewModel: ShopViewModel = koinViewModel(),
     onDismiss: () -> Unit
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                viewModel.onCleared()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
 
     val shopState by viewModel.shopState.collectAsState()
@@ -116,7 +136,23 @@ fun ShopScreen(
                 }
             )
 
-            CosmeticItemsList(cosmeticItems = filteredCosmeticItems.value)
+            CosmeticItemsList(
+                cosmeticItems = filteredCosmeticItems.value,
+                onItemClick = { viewModel.selectItem(it) }
+            )
+        }
+    }
+
+    if (shopState.isDialogVisible) {
+        shopState.selectedItem?.let { item ->
+            BuyItemDialog(
+                onDismiss = { viewModel.dismissDialog() },
+                onBuyClick = {
+                    viewModel.buyItem(item)
+                    viewModel.dismissDialog()
+                },
+                cosmeticItem = item
+            )
         }
     }
 }
