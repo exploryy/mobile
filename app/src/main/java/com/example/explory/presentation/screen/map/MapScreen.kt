@@ -58,6 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
+import com.example.explory.presentation.screen.inventory.InventoryScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.EventDialog
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
@@ -473,7 +474,7 @@ fun MapScreen(
                 onClick = { viewModel.updateShopOpen() },
                 colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
-                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .padding(top = 50.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                     .clip(CircleShape)
                     .size(48.dp)
 
@@ -487,10 +488,10 @@ fun MapScreen(
             }
 
             IconButton(
-                onClick = {  },
+                onClick = { viewModel.updateInventoryOpenScreen() },
                 colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
-                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .clip(CircleShape)
                     .size(48.dp)
 
@@ -612,6 +613,10 @@ fun MapScreen(
 
         mapState.isShopOpen -> {
             ShopScreen(onDismiss = { viewModel.updateShopOpen() })
+        }
+
+        mapState.isInventoryOpen -> {
+            InventoryScreen(onDismiss = { viewModel.updateInventoryOpenScreen() })
         }
     }
     if (mapState.event != null) {

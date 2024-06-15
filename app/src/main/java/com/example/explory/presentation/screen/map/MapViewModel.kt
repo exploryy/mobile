@@ -626,6 +626,10 @@ class MapViewModel(
         _mapState.update { it.copy(event = event) }
     }
 
+    fun updateInventoryOpenScreen() {
+        _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
+    }
+
     fun setError(message: String?) {
         if (message != null) {
             _mapState.update { it.withErrorEnqueued(message) }

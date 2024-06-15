@@ -10,5 +10,6 @@ data class CosmeticItemInInventoryDto(
     val price: Int,
     val rarityType: RarityType,
     val cosmeticType: CosmeticType,
-    val isEquipped: Boolean
+    val isEquipped: Boolean,
+    val url: String
 )

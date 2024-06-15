@@ -25,7 +25,7 @@ class InventoryViewModel(
         fetchInventory()
     }
 
-    private fun fetchInventory() {
+    fun fetchInventory() {
         viewModelScope.launch {
             _inventoryState.update { it.copy(isLoading = true) }
             try {

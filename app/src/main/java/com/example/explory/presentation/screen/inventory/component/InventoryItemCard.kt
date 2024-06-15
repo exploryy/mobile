@@ -48,7 +48,7 @@ fun InventoryItemCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = item.itemId,
+                model = item.url,
                 contentDescription = null,
                 modifier = Modifier
                     .size(96.dp)
