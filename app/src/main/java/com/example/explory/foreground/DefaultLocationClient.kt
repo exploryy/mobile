@@ -39,7 +39,7 @@ class DefaultLocationClient(
                 LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 10000)
                     .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(1000)
                     .setMinUpdateDistanceMeters(5f)
-                    .setMaxUpdateDelayMillis(10000).build()
+                    .setMaxUpdateDelayMillis(100000).build()
 
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {

@@ -93,7 +93,7 @@ class MapViewModel(
         loadFriendStatistics()
     }
 
-    fun distanceToUser(
+    private fun calculateDistance(
         firstLat: Double,
         firstLng: Double,
         secondLat: Double,
@@ -114,7 +114,7 @@ class MapViewModel(
     fun collectCoin(coin: CoinDto, userLocation: Point) {
         viewModelScope.launch {
             try {
-                if (distanceToUser(
+                if (calculateDistance(
                         coin.latitude.toDouble(),
                         coin.longitude.toDouble(),
                         userLocation.latitude(),
@@ -225,18 +225,19 @@ class MapViewModel(
                             onCurrentLocationCityChanged(addresses[0].countryName)
                     }
 
-                val currentTime = System.currentTimeMillis()
+//                val currentTime = System.currentTimeMillis()
                 val locationRequest = LocationRequest(
                     longitude = location.longitude.toString(),
                     latitude = location.latitude.toString(),
                     figureType = "CIRCLE"
                 )
 
-                if (shouldSendLocation(locationRequest, currentTime)) {
-                    sendLocationToServer(locationRequest)
-                    lastSentLocation = locationRequest
-                    lastSentTime = currentTime
-                }
+//                if (shouldSendLocation(locationRequest, currentTime)) {
+//                    sendLocationToServer(locationRequest)
+//                    lastSentLocation = locationRequest
+//                    lastSentTime = currentTime
+//                }
+                sendLocationToServer(locationRequest)
             }
             locationTracker.startTracking()
         }
@@ -251,22 +252,15 @@ class MapViewModel(
             return true
         }
 
-        val distance = calculateDistance(lastSentLocation!!, locationRequest)
+        val distance = calculateDistance(
+            lastSentLocation!!.latitude.toDouble(),
+            lastSentLocation!!.longitude.toDouble(),
+            locationRequest.latitude.toDouble(),
+            locationRequest.longitude.toDouble()
+        )
         val timeElapsed = currentTime - lastSentTime
 
         return distance >= minDistanceChange || timeElapsed >= minTimeInterval
-    }
-
-    private fun calculateDistance(loc1: LocationRequest, loc2: LocationRequest): Float {
-        val results = FloatArray(1)
-        android.location.Location.distanceBetween(
-            loc1.latitude.toDouble(),
-            loc1.longitude.toDouble(),
-            loc2.latitude.toDouble(),
-            loc2.longitude.toDouble(),
-            results
-        )
-        return results[0]
     }
 
     private fun getStartData() {
