@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.explory.data.model.profile.FriendProfileDto
 import com.example.explory.data.websocket.EventDto
 import com.example.explory.data.websocket.EventType
 import com.example.explory.ui.theme.Black
@@ -28,16 +30,13 @@ import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
-import kotlinx.serialization.json.Json
 
 @Composable
 fun RequestToFriendContent(
-    event: EventDto,
+    user: FriendProfileDto?,
     onAcceptClick: (String) -> Unit,
     onDeclineClick: (String) -> Unit
 ) {
-    val friendDto =
-        Json.decodeFromString<FriendShortDto>(event.text)
     Column(
         Modifier
             .width(DIALOG_WIDTH.dp)
@@ -47,14 +46,18 @@ fun RequestToFriendContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Новая заявка!", style = S24_W600, textAlign = TextAlign.Center
+            text = "Новая заявка!", style = S24_W600, textAlign = TextAlign.Center, color = Black
         )
         Spacer(modifier = Modifier.height(64.dp))
-        Avatar(image = friendDto.avatarUrl, modifier = Modifier.size(75.dp))
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = friendDto.username, style = S20_W600
-        )
+        if (user == null) {
+            CircularProgressIndicator()
+        } else {
+            Avatar(image = user.photoUrl, modifier = Modifier.size(75.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = user.username, style = S20_W600, color = Black
+            )
+        }
         Spacer(modifier = Modifier.height(64.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -62,7 +65,11 @@ fun RequestToFriendContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = { onDeclineClick(friendDto.userId) },
+                onClick = {
+                    if (user != null) {
+                        onDeclineClick(user.userId)
+                    }
+                },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)
@@ -74,7 +81,11 @@ fun RequestToFriendContent(
                 Text(text = "Отклонить", style = S16_W600)
             }
             Button(
-                onClick = { onAcceptClick(friendDto.userId) },
+                onClick = {
+                    if (user != null) {
+                        onAcceptClick(user.userId)
+                    }
+                },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .weight(1f)

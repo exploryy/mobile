@@ -545,10 +545,16 @@ fun MapScreen(
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
+                questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId
+                ) "активный" else null,
                 point = mapState.p2pQuest!!.route.points.first(),
                 onButtonClicked = {
-                    viewModel.updateDistanceQuest(null)
-                    viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                    if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
+                        viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                    } else {
+                        viewModel.updateDistanceQuest(null)
+                        viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                    }
                 })
         }
 
@@ -559,6 +565,8 @@ fun MapScreen(
                 difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
                 distance = mapState.distanceQuest!!.distance,
+                questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId
+                ) "активный" else null,
                 point = PointDto(
                     mapState.distanceQuest!!.commonQuestDto.longitude,
                     mapState.distanceQuest!!.commonQuestDto.latitude,
@@ -566,8 +574,12 @@ fun MapScreen(
                     mapState.distanceQuest!!.commonQuestDto.latitude
                 ),
                 onButtonClicked = {
-                    viewModel.updateP2PQuest(null)
-                    viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
+                        viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    } else {
+                        viewModel.updateP2PQuest(null)
+                        viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                    }
                 })
         }
 

@@ -103,6 +103,10 @@ class MapViewModel(
         observeEventWebSocketMessages()
     }
 
+    fun getFriendInfo(friendId: String) {
+
+    }
+
     private fun calculateDistance(
         firstLat: Double,
         firstLng: Double,
@@ -421,10 +425,13 @@ class MapViewModel(
             try {
                 val friendStats = getFriendStatisticUseCase.execute()
                 val friendLocations = friendStats.associate {
-                    it.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
+                    it.profileDto.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
                 }
                 val friendAvatars = friendStats.associate { friendStat ->
-                    friendStat.userId to Pair(friendStat.name, loadAvatar(friendStat.photoUrl))
+                    friendStat.profileDto.userId to Pair(
+                        friendStat.profileDto.username,
+                        loadAvatar(friendStat.profileDto.avatarUrl)
+                    )
                 }
                 _mapState.update { state ->
                     state.copy(
@@ -442,7 +449,6 @@ class MapViewModel(
         viewModelScope.launch {
             eventWebSocketClient.events.collect { event ->
                 event.let {
-                    Log.d("MapViewModel", "Got new event: $it")
                     when (it.type) {
                         EventType.COMPLETE_QUEST -> {
                             _mapState.update { state -> state.copy(event = it) }
@@ -455,7 +461,12 @@ class MapViewModel(
                         }
 
                         EventType.CHANGE_MONEY -> {
-                            _mapState.update { state -> state.copy(event = it) }
+                            _mapState.update { state ->
+                                state.copy(
+                                    event = it,
+                                    balance = it.text.toInt()
+                                )
+                            }
                         }
                     }
                 }

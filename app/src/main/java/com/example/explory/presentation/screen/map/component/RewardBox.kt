@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.White
 
@@ -41,7 +42,8 @@ fun RewardBox(modifier: Modifier = Modifier, count: Int, icon: Int) {
             )
             Text(
                 text = count.toString(),
-                style = S16_W600
+                style = S16_W600,
+                color = Black
             )
         }
     }

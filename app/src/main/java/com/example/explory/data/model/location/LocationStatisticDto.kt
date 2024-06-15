@@ -1,13 +1,14 @@
 package com.example.explory.data.model.location
 
+import com.example.explory.data.model.profile.ProfileDto
+
 data class LocationStatisticDto(
-    val name: String,
-    val email: String,
-    val userId: String,
+    val profileDto: ProfileDto,
     val previousLatitude: String,
     val previousLongitude: String,
     val experience: String,
     val distance: String,
     val level: String,
-    val photoUrl: String
 )
+
+
