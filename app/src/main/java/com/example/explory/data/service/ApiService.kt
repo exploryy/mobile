@@ -118,7 +118,7 @@ interface ApiService {
         @Path("quest_id") questId: String
     )
 
-    @POST("/quest/{quest_id}/cancel")
+    @DELETE("/quest/{quest_id}/cancel")
     suspend fun cancelQuest(
         @Path("quest_id") questId: String
     )
