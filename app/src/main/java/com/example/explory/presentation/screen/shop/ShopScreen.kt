@@ -116,28 +116,8 @@ fun ShopScreen(
                 }
             )
 
-            CosmeticItemsList(cosmeticItems =  filteredCosmeticItems.value)
+            CosmeticItemsList(cosmeticItems = filteredCosmeticItems.value)
         }
-    }
-}
-
-@Composable
-fun getIconForCosmeticType(cosmeticType: CosmeticType): Int {
-    return when (cosmeticType) {
-        CosmeticType.FOOTPRINT -> R.drawable.cloud
-        CosmeticType.AVATAR_FRAMES -> R.drawable.cloud
-        CosmeticType.APPLICATION_IMAGE -> R.drawable.cloud
-        CosmeticType.FOG -> R.drawable.cloud
-    }
-}
-
-@Composable
-fun getRarityColor(rarityType: RarityType): Color {
-    return when (rarityType) {
-        RarityType.COMMON -> Color.LightGray
-        RarityType.RARE -> Color.Green
-        RarityType.EPIC -> Color.Magenta
-        RarityType.LEGENDARY -> Color.Yellow
     }
 }
 
@@ -151,7 +131,9 @@ val dummyCosmeticItems = listOf(
         price = 100,
         rarityType = RarityType.RARE,
         cosmeticType = CosmeticType.FOOTPRINT,
-        isOwned = false
+        isOwned = false,
+        sellable = true,
+        url = "string"
     ),
     CosmeticItemInShopDto(
         itemId = 2,
@@ -160,7 +142,9 @@ val dummyCosmeticItems = listOf(
         price = 200,
         rarityType = RarityType.EPIC,
         cosmeticType = CosmeticType.AVATAR_FRAMES,
-        isOwned = true
+        isOwned = true,
+        sellable = true,
+        url = "string"
     ),
     CosmeticItemInShopDto(
         itemId = 3,
@@ -169,7 +153,9 @@ val dummyCosmeticItems = listOf(
         price = 150,
         rarityType = RarityType.COMMON,
         cosmeticType = CosmeticType.FOG,
-        isOwned = false
+        isOwned = false,
+        sellable = true,
+        url = "string"
     ),
     CosmeticItemInShopDto(
         itemId = 4,
@@ -178,6 +164,8 @@ val dummyCosmeticItems = listOf(
         price = 80,
         rarityType = RarityType.LEGENDARY,
         cosmeticType = CosmeticType.APPLICATION_IMAGE,
-        isOwned = false
+        isOwned = false,
+        sellable = true,
+        url = "string"
     )
 )

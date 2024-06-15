@@ -7,5 +7,7 @@ data class CosmeticItemInShopDto(
     val price: Int,
     val rarityType: RarityType,
     val cosmeticType: CosmeticType,
-    val isOwned: Boolean
+    val isOwned: Boolean,
+    val sellable: Boolean,
+    val url: String
 )
