@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.Button
@@ -475,6 +476,23 @@ fun MapScreen(
                 Icon(
                     imageVector = Icons.Filled.Shop,
                     contentDescription = "Shop",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+
+            }
+
+            IconButton(
+                onClick = {  },
+                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
+
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Backpack,
+                    contentDescription = "Inventory",
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
 
