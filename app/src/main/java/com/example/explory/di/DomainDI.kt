@@ -3,15 +3,18 @@ package com.example.explory.di
 import com.example.explory.domain.usecase.AcceptFriendUseCase
 import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
+import com.example.explory.domain.usecase.BuyItemUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
+import com.example.explory.domain.usecase.EquipItemUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
+import com.example.explory.domain.usecase.GetInventoryUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
@@ -25,6 +28,8 @@ import com.example.explory.domain.usecase.PostRegistrationUseCase
 import com.example.explory.domain.usecase.RefreshTokenUseCase
 import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
 import com.example.explory.domain.usecase.RemoveFriendUseCase
+import com.example.explory.domain.usecase.SellItemUseCase
+import com.example.explory.domain.usecase.UnEquipItemUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -54,4 +59,10 @@ fun domainModule() = module {
     factoryOf(::GetFriendProfileUseCase)
     factoryOf(::GetBalanceUseCase)
     factoryOf(::GetShopUseCase)
+    factoryOf(::BuyItemUseCase)
+    factoryOf(::EquipItemUseCase)
+    factoryOf(::UnEquipItemUseCase)
+    factoryOf(::GetInventoryUseCase)
+    factoryOf(::BuyItemUseCase)
+    factoryOf(::SellItemUseCase)
 }

@@ -6,6 +6,7 @@ import com.example.explory.data.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.FriendRepository
+import com.example.explory.data.repository.InventoryRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.ProfileRepository
 import com.example.explory.data.repository.QuestRepository
@@ -42,6 +43,7 @@ fun dataModule() = module {
     singleOf(::QuestRepository)
     singleOf(::RegisterRepository)
     singleOf(::ShopRepository)
+    singleOf(::InventoryRepository)
     singleOf(::LocalStorage)
     singleOf(::ThemePreferenceManager)
     singleOf(::LocationTracker)

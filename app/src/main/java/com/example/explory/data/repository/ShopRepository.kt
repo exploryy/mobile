@@ -7,4 +7,8 @@ class ShopRepository(private val apiService: ApiService) {
     suspend fun getShop() : List<CosmeticItemInShopDto> {
         return apiService.getShop()
     }
+
+    suspend fun buyItem(itemId: Long) {
+        apiService.buyItem(itemId)
+    }
 }

@@ -6,7 +6,6 @@ import com.example.explory.presentation.screen.common.ThemeViewModel
 import com.example.explory.presentation.screen.friendprofile.FriendProfileViewModel
 import com.example.explory.presentation.screen.friends.FriendViewModel
 import com.example.explory.presentation.screen.map.MapViewModel
-import com.example.explory.presentation.screen.map.component.EventViewModel
 import com.example.explory.presentation.screen.profile.ProfileViewModel
 import com.example.explory.presentation.screen.quest.QuestViewModel
 import com.example.explory.presentation.screen.requests.FriendRequestsViewModel
@@ -29,5 +28,7 @@ fun appModule() = module {
     single { ThemeViewModel(get()) }
     viewModelOf(::FriendProfileViewModel)
     viewModelOf(::ShopViewModel)
-    viewModelOf(::EventViewModel)
+    viewModelOf(::InventoryViewModel)
+    viewModelOf(com.example.explory.presentation.screen.map.component::EventViewModel)
+
 }
