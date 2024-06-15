@@ -16,7 +16,7 @@ class MapLocationProvider(private val client: LocationClient) : LocationProvider
     override fun startLocationUpdates(callback: (Location) -> Unit) {
         this.callback = callback
         try {
-            client.getLocationUpdates(5000L).onEach {
+            client.getLocationUpdates(1000L).onEach {
                 callback(it)
             }.launchIn(serviceScope)
         } catch (e: SecurityException) {

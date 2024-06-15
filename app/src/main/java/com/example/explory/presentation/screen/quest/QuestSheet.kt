@@ -31,11 +31,11 @@ import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGray
+import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
-import com.example.explory.ui.theme.Yellow
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
 import com.skydoves.flexible.core.FlexibleSheetSize
 import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
@@ -93,14 +93,14 @@ fun QuestSheet(
                         .size(64.dp)
                         .clip(CircleShape)
                 )
-                Spacer(modifier = Modifier.width(24.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = name,
                     style = S24_W600,
                 )
                 if (questStatus != null) {
                     Spacer(modifier = Modifier.width(8.dp))
-                    InfoBox(text = questStatus, containerColor = Yellow)
+                    InfoBox(text = questStatus, containerColor = Green)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))

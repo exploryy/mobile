@@ -441,10 +441,16 @@ class MapViewModel(
                     when (it.type) {
                         EventType.COMPLETE_QUEST -> {
                             _mapState.update { state -> state.copy(event = it) }
-                            if (it.type == EventType.COMPLETE_QUEST) {
-                                updateP2PQuest(null)
-                                updateDistanceQuest(null)
-                            }
+                            updateP2PQuest(null)
+                            updateDistanceQuest(null)
+                        }
+
+                        EventType.REQUEST_TO_FRIEND -> {
+                            _mapState.update { state -> state.copy(event = it) }
+                        }
+
+                        EventType.CHANGE_MONEY -> {
+                            _mapState.update { state -> state.copy(event = it) }
                         }
                     }
                 }

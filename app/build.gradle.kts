@@ -100,6 +100,9 @@ dependencies {
 
     implementation(libs.flexible.bottomsheet.material3)
 
+    implementation(libs.lottie.compose)
+
+
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.constraintlayout)

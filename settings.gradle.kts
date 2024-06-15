@@ -7,6 +7,7 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
+
         mavenCentral()
         gradlePluginPortal()
     }
@@ -14,6 +15,9 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        }
         maven {
             url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
             // Do not change the username below. It should always be "mapbox" (not your username).
