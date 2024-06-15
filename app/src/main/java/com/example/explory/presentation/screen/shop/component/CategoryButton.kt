@@ -20,8 +20,20 @@ fun CategoryButton(category: String, isSelected: Boolean, onClick: () -> Unit) {
             .padding(horizontal = 4.dp)
     ) {
         Text(
-            text = category,
+            text = getTranslateCategoryName(category),
             color = if (isSelected) Color.White else Color.LightGray
         )
+    }
+}
+
+@Composable
+fun getTranslateCategoryName(name: String): String {
+    return when (name) {
+        "Все" -> "Все"
+        "FOOTPRINT" -> "Следы"
+        "AVATAR_FRAMES" -> "Рамки аватара"
+        "APPLICATION_IMAGE" -> "Иконки приложения"
+        "FOG" -> "Дым"
+        else -> "Unknown"
     }
 }

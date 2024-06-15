@@ -31,47 +31,55 @@ import com.example.explory.presentation.screen.shop.getIconForCosmeticType
 import com.example.explory.presentation.screen.shop.getRarityColor
 
 @Composable
-fun CosmeticCard(cosmeticItem: CosmeticItemInShopDto, modifier: Modifier = Modifier) {
+fun CosmeticCard(
+    cosmeticItem: CosmeticItemInShopDto,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.DarkGray)
-            .wrapContentSize()
     ) {
         Card(
             modifier = Modifier
+                .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
                 .background(color = Color.DarkGray)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = getIconForCosmeticType(cosmeticItem.cosmeticType)),
-                    contentDescription = null,
-                    modifier = Modifier.size(96.dp),
-                    contentScale = ContentScale.Fit
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = cosmeticItem.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Цена: ${cosmeticItem.price} монеток",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Редкость: ${cosmeticItem.rarityType.name}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = getRarityColor(cosmeticItem.rarityType)
-                )
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = getIconForCosmeticType(cosmeticItem.cosmeticType)),
+                        contentDescription = null,
+                        modifier = Modifier.size(96.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = cosmeticItem.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Цена: ${cosmeticItem.price} монеток",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Редкость: ${cosmeticItem.rarityType.name}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = getRarityColor(cosmeticItem.rarityType)
+                    )
+                }
             }
         }
 

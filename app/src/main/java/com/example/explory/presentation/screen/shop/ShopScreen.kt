@@ -65,7 +65,6 @@ fun ShopScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxSize()
         ) {
             Row(
@@ -73,13 +72,14 @@ fun ShopScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(16.dp)
             ) {
                 Text(
                     text = "Магазин",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Row {
                     Image(
                         painter = painterResource(id = R.drawable.money),
@@ -103,7 +103,7 @@ fun ShopScreen(
                 text = "Категории товаров",
                 color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -116,7 +116,7 @@ fun ShopScreen(
                 }
             )
 
-            CosmeticItemsList(cosmeticItems = filteredCosmeticItems.value)
+            CosmeticItemsList(cosmeticItems =  filteredCosmeticItems.value)
         }
     }
 }

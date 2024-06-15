@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
@@ -26,6 +27,10 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HorizontalPagerImages() {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val pagerHeight = screenHeight * 0.45f
+
     val pagerState = rememberPagerState(pageCount = {3})
 
     LaunchedEffect(Unit) {
@@ -50,14 +55,13 @@ fun HorizontalPagerImages() {
                 state = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(pagerHeight)
             ) { page ->
                 Image(
                     painter = painterResource(id = getPageImage(page)),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
@@ -72,9 +76,9 @@ fun HorizontalPagerImages() {
 
 fun getPageImage(page: Int): Int {
     return when (page) {
-        0 -> R.drawable.cloud
-        1 -> R.drawable.cloud2
-        2 -> R.drawable.cloud3
-        else -> R.drawable.cloud
+        0 -> R.drawable.shop1
+        1 -> R.drawable.shop2
+        2 -> R.drawable.shop3
+        else -> R.drawable.shop1
     }
 }
