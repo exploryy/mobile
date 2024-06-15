@@ -46,6 +46,7 @@ fun EventDialog(
             }
 
             EventType.CHANGE_MONEY -> {}
+            EventType.NEW_QUEST -> {}
         }
     }
 }
