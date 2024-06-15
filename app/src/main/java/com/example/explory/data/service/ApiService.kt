@@ -3,6 +3,7 @@ package com.example.explory.data.service
 import com.example.explory.data.model.BalanceDto
 import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.friend.FriendsResponse
+import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.location.AreaDto
 import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.location.PolygonDto
@@ -211,6 +212,19 @@ interface ApiService {
 
     @POST("/shop/{item_id}/buy")
     suspend fun buyItem(@Path("item_id") itemId: Long)
+
+    //inventory
+    @POST("/inventory/{item_id}/equip")
+    suspend fun equipItem(@Path("item_id") itemId: Long)
+
+    @POST("/inventory/{item_id}/unequip")
+    suspend fun unEquipItem(@Path("item_id") itemId: Long)
+
+    @GET("/inventory")
+    suspend fun getInventory() : List<CosmeticItemInInventoryDto>
+
+    @DELETE("/inventory/{item_id}/sell")
+    suspend fun sellItem(@Path("item_id") itemId: Long)
 }
 
 
