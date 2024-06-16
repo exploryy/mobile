@@ -642,8 +642,14 @@ fun MapScreen(
         }
 
         mapState.distanceQuest != null -> {
+            val imageUrl =
+                if (mapState.distanceQuest!!.commonQuestDto.images.isEmpty())
+                    null
+                else
+                    mapState.distanceQuest!!.commonQuestDto.images.first()
+
             QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
-                image = mapState.distanceQuest!!.commonQuestDto.images.first(),
+                image = imageUrl,
                 description = mapState.distanceQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
