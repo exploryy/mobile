@@ -52,10 +52,14 @@ fun RequestToFriendContent(
         if (user == null) {
             CircularProgressIndicator()
         } else {
-            Avatar(image = user.photoUrl, modifier = Modifier.size(75.dp))
+            Avatar(
+                image = user.profileDto.avatarUrl,
+                border = user.profileDto.inventoryDto.avatarFrames,
+                modifier = Modifier.size(75.dp)
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = user.username, style = S20_W600, color = Black
+                text = user.profileDto.username, style = S20_W600, color = Black
             )
         }
         Spacer(modifier = Modifier.height(64.dp))
@@ -67,7 +71,7 @@ fun RequestToFriendContent(
             Button(
                 onClick = {
                     if (user != null) {
-                        onDeclineClick(user.userId)
+                        onDeclineClick(user.profileDto.userId)
                     }
                 },
                 shape = RoundedCornerShape(8.dp),
@@ -83,7 +87,7 @@ fun RequestToFriendContent(
             Button(
                 onClick = {
                     if (user != null) {
-                        onAcceptClick(user.userId)
+                        onAcceptClick(user.profileDto.userId)
                     }
                 },
                 shape = RoundedCornerShape(8.dp),

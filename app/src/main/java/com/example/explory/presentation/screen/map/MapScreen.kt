@@ -341,6 +341,7 @@ fun MapScreen(
                     val point = Point.fromLngLat(location.second, location.first)
                     val friendAvatar = mapState.friendAvatars[userId]?.second
                     val friendName = mapState.friendAvatars[userId]?.first
+                    
 //                    val infiniteTransition = rememberInfiniteTransition(label = "")
 //                    val animatedSize = infiniteTransition.animateFloat(
 //                        initialValue = 0.9f,
@@ -615,8 +616,14 @@ fun MapScreen(
         }
 
         mapState.p2pQuest != null -> {
+            val imageUrl =
+                if (mapState.p2pQuest!!.commonQuestDto.images.isEmpty())
+                    null
+                else
+                    mapState.p2pQuest!!.commonQuestDto.images.first()
+
             QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
-                image = mapState.p2pQuest!!.commonQuestDto.images.first(),
+                image = imageUrl,
                 description = mapState.p2pQuest!!.commonQuestDto.description,
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
