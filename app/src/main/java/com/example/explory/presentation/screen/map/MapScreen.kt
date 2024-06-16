@@ -182,6 +182,32 @@ fun MapScreen(
         fog1.drawToImageBitmap()
     }
 
+    val fogGrass = painterResource(id = R.drawable.grass)
+    val fogGrassBitmap: ImageBitmap = remember(fogGrass) {
+        fogGrass.drawToImageBitmap()
+    }
+
+//    val fogBitmap = viewModel.loadImage(mapState.currentUserFog?.url)
+//    val fogImageBitmap: ImageBitmap? = remember(fogBitmap) {
+//        fogBitmap?.asImageBitmap()
+//    }
+
+    val fogWater = painterResource(id = R.drawable.water)
+    val fogWaterBitmap: ImageBitmap = remember(fogWater) {
+        fogWater.drawToImageBitmap()
+    }
+
+    val fogSnow = painterResource(id = R.drawable.snow)
+    val fogSnowBitmap: ImageBitmap = remember(fogSnow) {
+        fogSnow.drawToImageBitmap()
+    }
+
+    val fogCloud = painterResource(id = R.drawable.cloud3)
+    val fogCloudBitmap: ImageBitmap = remember(fogCloud) {
+        fogCloud.drawToImageBitmap()
+    }
+
+
     Box(Modifier.fillMaxSize()) {
         RequestLocationPermission(requestCount = mapState.permissionRequestCount,
             onPermissionDenied = {
@@ -211,6 +237,16 @@ fun MapScreen(
             }, style = {
                 MapboxStandardStyle(
                     topSlot = {
+                        fun getImageBitmapById(id: Long): ImageBitmap {
+                            return when (id){
+                                2L -> fogGrassBitmap
+                                5L -> fogWaterBitmap
+                                6L -> fogCloudBitmap
+                                7L -> fogSnowBitmap
+                                else -> fogGrassBitmap
+                            }
+                        }
+
                         if (mapState.currentUserFog == null) {
                             FillLayer(
                                 sourceState = withHolesSourceState,

@@ -97,7 +97,7 @@ fun CosmeticCard(
                         modifier = Modifier
                             .size(96.dp)
                             .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Fit
+                        contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(

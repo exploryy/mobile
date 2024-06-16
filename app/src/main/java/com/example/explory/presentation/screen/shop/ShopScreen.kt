@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -62,6 +63,9 @@ fun ShopScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchShopItems()
+    }
 
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
 

@@ -29,7 +29,7 @@ class ShopViewModel(
         fetchBalance()
     }
 
-    private fun fetchShopItems() {
+    fun fetchShopItems() {
         viewModelScope.launch {
             try {
                 val items = getShopUseCase.execute()
