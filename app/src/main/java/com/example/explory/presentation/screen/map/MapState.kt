@@ -1,6 +1,7 @@
 package com.example.explory.presentation.screen.map
 
 import android.graphics.Bitmap
+import com.example.explory.data.model.BalanceDto
 import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.quest.CompletedQuestDto
@@ -8,6 +9,7 @@ import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.websocket.EventDto
+import com.example.explory.domain.model.FriendProfile
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
@@ -16,7 +18,6 @@ import java.util.Queue
 
 data class MapState(
     val uiState: UiState = UiState.Default,
-    val polygons: List<List<List<List<Double>>>>? = null,
     val innerPoints: List<LineString> = emptyList(),
     val completedQuests: List<CompletedQuestDto> = emptyList(),
     val activeQuest: QuestDto? = null,
@@ -37,8 +38,7 @@ data class MapState(
     val userPoint: Point? = null,
     val toastText: String? = null,
     val selectedFriendProfile: FriendProfile? = null,
-    val coinCount: Int = 0,
-    val balance: Int = 0,
+    val userBalance: BalanceDto? = null,
     val errorQueue: Queue<String> = LinkedList(),
     val currentError: String? = null,
     val event: EventDto? = null,
@@ -59,7 +59,3 @@ data class MapState(
     }
 }
 
-data class FriendProfile(
-    val id: String,
-    val polygons: List<List<Point>>
-)

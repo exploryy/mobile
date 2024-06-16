@@ -26,6 +26,7 @@ import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
 import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
+import com.example.explory.domain.model.FriendProfile
 import com.example.explory.domain.usecase.AcceptFriendUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
@@ -156,7 +157,6 @@ class MapViewModel(
                 _mapState.update { it ->
                     it.copy(
                         coins = it.coins.filter { it.coinId != coin.coinId },
-                        coinCount = it.coinCount + 1,
                         toastText = "Монета собрана"
                     )
                 }
@@ -495,14 +495,26 @@ class MapViewModel(
                         EventType.CHANGE_MONEY -> {
                             _mapState.update { state ->
                                 state.copy(
-                                    event = it,
-                                    balance = it.text.toInt()
+                                    userBalance = state.userBalance?.copy(balance = it.text.toInt())
                                 )
                             }
                         }
 
                         EventType.NEW_QUEST -> {
                             getQuests(addNew = true)
+                        }
+
+                        EventType.UPDATE_LEVEL -> _mapState.update { state ->
+                            fetchBalance()
+                            state.copy(
+                                userBalance = state.userBalance?.copy(level = it.text.toInt())
+                            )
+                        }
+
+                        EventType.UPDATE_EXPERIENCE -> _mapState.update { state ->
+                            state.copy(
+                                userBalance = state.userBalance?.copy(experience = it.text.toInt())
+                            )
                         }
                     }
                 }
@@ -556,11 +568,11 @@ class MapViewModel(
         }
     }
 
-    fun fetchBalance() {
+    private fun fetchBalance() {
         viewModelScope.launch {
             try {
                 val result = getBalanceUseCase.execute()
-                _mapState.update { it.copy(balance = result.balance) }
+                _mapState.update { it.copy(userBalance = result) }
             } catch (e: Exception) {
                 Log.e("BalanceViewModel", "Failed to fetch balance", e)
             }

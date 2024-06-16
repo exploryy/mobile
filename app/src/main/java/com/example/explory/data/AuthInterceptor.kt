@@ -13,18 +13,15 @@ class AuthInterceptor(
     private val localStorage: LocalStorage, private val refreshTokenUseCase: RefreshTokenUseCase
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        Log.d("AuthInterceptor", "Intercepting request")
         var accessToken: String?
         var request = chain.request()
         val builder = request.newBuilder()
         if (request.header(AUTHORIZATION_HEADER) == null) {
             accessToken = localStorage.fetchToken(TokenType.ACCESS)
             if (accessToken != null) {
-                Log.d("AuthInterceptor", "Access token is not null")
                 if (localStorage.isAccessTokenExpired() && !request.url.encodedPath
                         .contains("openid-connect/token")
                 ) {
-                    Log.d("AuthInterceptor", "Access token expired, refreshing token")
                     val refreshToken = localStorage.fetchToken(TokenType.REFRESH)
                     if (refreshToken != null) {
                         try {
@@ -32,7 +29,6 @@ class AuthInterceptor(
                                 refreshTokenUseCase.execute(refreshToken)
                             }
                             accessToken = newTokens.access_token
-                            Log.d("AuthInterceptor", "Access token refreshed")
                             localStorage.saveToken(
                                 accessToken, newTokens.expires_in, TokenType.ACCESS
                             )
@@ -42,7 +38,7 @@ class AuthInterceptor(
                                 TokenType.REFRESH
                             )
                         } catch (e: Exception) {
-                            Log.e("AuthInterceptor", "Error refreshing token",e)
+                            Log.e("AuthInterceptor", "Error refreshing token", e)
                         }
                     }
                 }

@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
         MapboxOptions.accessToken = BuildConfig.MAPBOX_API_KEY
         setContent {
             ExploryTheme(themeViewModel = themeViewModel) {

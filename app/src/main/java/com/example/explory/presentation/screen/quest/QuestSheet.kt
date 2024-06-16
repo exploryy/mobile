@@ -49,7 +49,7 @@ fun QuestSheet(
     description: String,
     difficulty: String,
     transportType: String,
-    distance: Long,
+    distance: Double,
     onButtonClicked: () -> Unit,
     questStatus: String? = null
 ) {

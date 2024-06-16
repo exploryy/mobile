@@ -26,7 +26,7 @@ fun DistanceQuestScreen(
     description: String,
     difficulty: String,
     transportType: String,
-    distance: Long,
+    distance: Double,
     image: String?,
     onNavigateBack: () -> Unit
 ) {

@@ -15,10 +15,13 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.ColorInt
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -99,6 +102,7 @@ import com.mapbox.maps.extension.compose.style.layers.generated.LineWidth
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
+import com.mapbox.maps.extension.style.layers.properties.generated.LineJoin
 import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
@@ -207,7 +211,7 @@ fun MapScreen(
             }, style = {
                 MapboxStandardStyle(
                     topSlot = {
-                        if (mapState.currentUserFog == null){
+                        if (mapState.currentUserFog == null) {
                             FillLayer(
                                 sourceState = withHolesSourceState,
                                 layerId = OPENED_WORLD_LAYER,
@@ -357,7 +361,9 @@ fun MapScreen(
                                 if (index < points.size - 1) {
                                     add(
                                         PolylineAnnotationOptions().withLineColor(AccentColor.toArgb())
-                                            .withLineWidth(5.0).withPoints(
+                                            .withLineWidth(5.0)
+                                            .withLineJoin(LineJoin.ROUND)
+                                            .withPoints(
                                                 listOf(
                                                     Point.fromLngLat(
                                                         pointDto.longitude.toDouble(),
@@ -459,66 +465,69 @@ fun MapScreen(
 
             }
         }
-
-        TopInfoColumn(
-            modifier = Modifier.padding(vertical = 50.dp, horizontal = 20.dp),
-            currentLocationName = mapState.currentLocationName,
-            currentLocationPercent = mapState.currentLocationPercent,
-            coinCount = mapState.balance
-        )
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-        Column(
-            Modifier.fillMaxSize(), horizontalAlignment = Alignment.End
-        ) {
-            IconButton(
-                onClick = { viewModel.updateShowSettingsScreen() },
-                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-                modifier = Modifier
-                    .padding(top = 50.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
-                    .clip(CircleShape)
-                    .size(48.dp)
-
+        Column {
+            TopInfoColumn(
+                modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
+                currentLocationName = mapState.currentLocationName,
+                currentLocationPercent = mapState.currentLocationPercent,
+                coinCount = mapState.userBalance?.balance ?: 0,
+                currentLevel = mapState.userBalance?.level ?: 0,
+                exp = mapState.userBalance?.experience ?: 0,
+                expToNextLevel = mapState.userBalance?.totalExperienceInLevel ?: 100
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                Modifier.padding(start = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                IconButton(
+                    onClick = { viewModel.updateShowSettingsScreen() },
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(48.dp)
 
-            }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
 
-            IconButton(
-                onClick = { viewModel.updateShopOpen() },
-                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-                modifier = Modifier
-                    .padding(top = 50.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                    .clip(CircleShape)
-                    .size(48.dp)
+                }
 
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Shop,
-                    contentDescription = "Shop",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                IconButton(
+                    onClick = { viewModel.updateShopOpen() },
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(48.dp)
 
-            }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Shop,
+                        contentDescription = "Shop",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
 
-            IconButton(
-                onClick = { viewModel.updateInventoryOpenScreen() },
-                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-                modifier = Modifier
-                    .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
-                    .clip(CircleShape)
-                    .size(48.dp)
+                }
 
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Backpack,
-                    contentDescription = "Inventory",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                IconButton(
+                    onClick = { viewModel.updateInventoryOpenScreen() },
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(48.dp)
 
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Backpack,
+                        contentDescription = "Inventory",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+
+                }
             }
         }
         ButtonControlRow(
