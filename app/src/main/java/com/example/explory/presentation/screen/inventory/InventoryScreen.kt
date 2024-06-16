@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.inventory.component.InventoryItemCard
-import com.example.explory.presentation.screen.shop.component.getTranslateCategoryName
+import com.example.explory.presentation.screen.inventory.component.InventoryItemDialog
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -126,6 +127,7 @@ fun InventoryScreen(
                                             onEquipClick = { viewModel.equipItem(item.itemId) },
                                             onUnEquipClick = { viewModel.unEquipItem(item.itemId) },
                                             onSellClick = { viewModel.sellItem(item.itemId) },
+                                            onCardClick = { viewModel.openItemDialog(item) },
                                             modifier = Modifier.weight(1f)
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
@@ -139,6 +141,16 @@ fun InventoryScreen(
                     }
                 }
             }
+        }
+
+        if (inventoryState.isOpenDescriptionDialog && inventoryState.selectedItem != null) {
+            InventoryItemDialog(
+                onDismiss = { viewModel.closeItemDialog() },
+                cosmeticItem = inventoryState.selectedItem!!,
+                onEquipClick = { viewModel.equipItem(it) },
+                onUnEquipClick = { viewModel.unEquipItem(it) },
+                onSellClick = { viewModel.sellItem(it) }
+            )
         }
     }
 }

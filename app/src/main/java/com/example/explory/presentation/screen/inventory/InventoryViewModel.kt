@@ -48,6 +48,7 @@ class InventoryViewModel(
             try {
                 equipItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
                 Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
@@ -61,6 +62,7 @@ class InventoryViewModel(
             try {
                 unEquipItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
                 Toast.makeText(context, "Предмет снят", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
@@ -74,14 +76,19 @@ class InventoryViewModel(
             try {
                 sellItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }
     }
 
-    fun selectItem(item: CosmeticItemInInventoryDto) {
-        _inventoryState.update { it.copy(selectedItem = item) }
+    fun openItemDialog(item: CosmeticItemInInventoryDto) {
+        _inventoryState.update { it.copy(isOpenDescriptionDialog = true, selectedItem = item) }
+    }
+
+    fun closeItemDialog() {
+        _inventoryState.update { it.copy(isOpenDescriptionDialog = false, selectedItem = null) }
     }
 
     public override fun onCleared() {
