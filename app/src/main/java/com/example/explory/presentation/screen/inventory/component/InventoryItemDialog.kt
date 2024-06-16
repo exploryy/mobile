@@ -30,7 +30,6 @@ import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.presentation.screen.common.getRarityColor
 import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.common.getTranslateRareName
-import com.example.explory.presentation.screen.shop.item
 import com.example.explory.ui.theme.DarkGreen
 
 @Composable
@@ -136,7 +135,7 @@ fun InventoryItemDialog(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         TextButton(
-                            onClick = { onSellClick(item.itemId) },
+                            onClick = { onSellClick(cosmeticItem.itemId) },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = Color.Red
                             )
@@ -164,7 +163,7 @@ fun InventoryItemDialog(
 
                     if (cosmeticItem.isEquipped) {
                         TextButton(
-                            onClick = { onUnEquipClick(item.itemId) },
+                            onClick = { onUnEquipClick(cosmeticItem.itemId) },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = Color.Gray
                             )
@@ -174,7 +173,7 @@ fun InventoryItemDialog(
                     }
                     else {
                         TextButton(
-                            onClick = { onEquipClick(item.itemId) },
+                            onClick = { onEquipClick(cosmeticItem.itemId) },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = DarkGreen
                             )

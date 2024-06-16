@@ -2,6 +2,7 @@ package com.example.explory.presentation.screen.map
 
 import android.graphics.Bitmap
 import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.quest.CompletedQuestDto
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
@@ -42,7 +43,8 @@ data class MapState(
     val currentError: String? = null,
     val event: EventDto? = null,
     val isShopOpen: Boolean = false,
-    val isInventoryOpen: Boolean = false
+    val isInventoryOpen: Boolean = false,
+    val currentUserFog: CosmeticItemInInventoryDto? = null
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })
