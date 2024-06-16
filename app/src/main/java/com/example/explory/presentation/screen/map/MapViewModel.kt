@@ -32,6 +32,7 @@ import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
+import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Green
@@ -67,6 +68,7 @@ class MapViewModel(
     private val acceptFriendUseCase: AcceptFriendUseCase,
     private val declineFriendUseCase: DeclineFriendUseCase,
     private val locationTracker: LocationTracker,
+    private val getProfileUseCase: GetProfileUseCase,
     private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
@@ -91,6 +93,7 @@ class MapViewModel(
         getStartData()
         loadFriendStatistics()
         fetchBalance()
+        fetchProfile()
     }
 
     fun startWebSockets() {
@@ -123,6 +126,17 @@ class MapViewModel(
         )
         Log.d("MapViewModel", "Distance to user: ${results[0]}")
         return results[0].toDouble()
+    }
+
+    private fun fetchProfile() {
+        viewModelScope.launch {
+            try {
+                val profile = getProfileUseCase.execute()
+                _mapState.update { it.copy(currentUserFog = profile.inventoryDto.fog) }
+            } catch (e: Exception) {
+                _mapState.update { it.copy(currentUserFog = null) }
+            }
+        }
     }
 
     fun collectCoin(coin: CoinDto, userLocation: Point) {
@@ -649,6 +663,7 @@ class MapViewModel(
     }
 
     fun updateInventoryOpenScreen() {
+        fetchProfile()
         _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
     }
 

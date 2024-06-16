@@ -1,4 +1,4 @@
-package com.example.explory.presentation.screen.shop
+package com.example.explory.presentation.screen.inventory.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,24 +22,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
-import com.example.explory.data.model.shop.CosmeticItemInShopDto
-import com.example.explory.data.model.shop.CosmeticType
-import com.example.explory.data.model.shop.RarityType
+import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.presentation.screen.common.getRarityColor
 import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.common.getTranslateRareName
 import com.example.explory.ui.theme.DarkGreen
 
 @Composable
-fun BuyItemDialog(
+fun InventoryItemDialog(
     onDismiss: () -> Unit,
-    onBuyClick: () -> Unit,
-    cosmeticItem: CosmeticItemInShopDto
+    cosmeticItem: CosmeticItemInInventoryDto,
+    onEquipClick: (Long) -> Unit,
+    onUnEquipClick: (Long) -> Unit,
+    onSellClick: (Long) -> Unit,
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -61,7 +60,7 @@ fun BuyItemDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Описание товара",
+                    text = "Описание предмета",
                     style = MaterialTheme.typography.headlineSmall
                 )
 
@@ -108,7 +107,7 @@ fun BuyItemDialog(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Цена: ${cosmeticItem.price} монеток",
+                            text = "Цена продажи: ${cosmeticItem.price} монеток",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -133,6 +132,16 @@ fun BuyItemDialog(
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End
                         )
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        TextButton(
+                            onClick = { onSellClick(cosmeticItem.itemId) },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = Color.Red
+                            )
+                        ) {
+                            Text("Продать")
+                        }
                     }
                 }
 
@@ -151,39 +160,29 @@ fun BuyItemDialog(
                         Text("Закрыть")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
-                        onClick = onBuyClick,
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = DarkGreen
-                        )
-                    ) {
-                        Text("Купить")
+
+                    if (cosmeticItem.isEquipped) {
+                        TextButton(
+                            onClick = { onUnEquipClick(cosmeticItem.itemId) },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = Color.Gray
+                            )
+                        ) {
+                            Text("Снять")
+                        }
+                    }
+                    else {
+                        TextButton(
+                            onClick = { onEquipClick(cosmeticItem.itemId) },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = DarkGreen
+                            )
+                        ) {
+                            Text("Экипировать")
+                        }
                     }
                 }
             }
         }
     }
 }
-
-@Preview
-@Composable
-fun BuyItemDialogPreview(){
-    BuyItemDialog(
-        onDismiss = { },
-        onBuyClick = { },
-        cosmeticItem = item
-    )
-}
-
-val item = CosmeticItemInShopDto(
-    itemId = 1,
-    name = "Cool Footprint",
-    description = "Leave cool footprints wherever you go!",
-    price = 100,
-    rarityType = RarityType.LEGENDARY,
-    cosmeticType = CosmeticType.FOOTPRINT,
-    isOwned = false,
-    sellable = true,
-    url = "string"
-)
-

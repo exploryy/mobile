@@ -1,5 +1,8 @@
 package com.example.explory.presentation.screen.inventory
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
@@ -12,11 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@SuppressLint("StaticFieldLeak")
 class InventoryViewModel(
     private val getInventoryUseCase: GetInventoryUseCase,
     private val equipItemUseCase: EquipItemUseCase,
     private val unEquipItemUseCase: UnEquipItemUseCase,
-    private val sellItemUseCase: SellItemUseCase
+    private val sellItemUseCase: SellItemUseCase,
+    private val context: Context
 ) : ViewModel() {
     private val _inventoryState = MutableStateFlow(InventoryState())
     val inventoryState: StateFlow<InventoryState> = _inventoryState
@@ -43,6 +48,8 @@ class InventoryViewModel(
             try {
                 equipItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
+                Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
@@ -55,6 +62,8 @@ class InventoryViewModel(
             try {
                 unEquipItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
+                Toast.makeText(context, "Предмет снят", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
@@ -67,14 +76,19 @@ class InventoryViewModel(
             try {
                 sellItemUseCase.execute(itemId)
                 fetchInventory()
+                closeItemDialog()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }
     }
 
-    fun selectItem(item: CosmeticItemInInventoryDto) {
-        _inventoryState.update { it.copy(selectedItem = item) }
+    fun openItemDialog(item: CosmeticItemInInventoryDto) {
+        _inventoryState.update { it.copy(isOpenDescriptionDialog = true, selectedItem = item) }
+    }
+
+    fun closeItemDialog() {
+        _inventoryState.update { it.copy(isOpenDescriptionDialog = false, selectedItem = null) }
     }
 
     public override fun onCleared() {

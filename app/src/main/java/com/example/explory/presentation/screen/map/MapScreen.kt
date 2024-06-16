@@ -72,6 +72,7 @@ import com.example.explory.presentation.screen.settings.SettingsScreen
 import com.example.explory.presentation.screen.shop.ShopScreen
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.DarkGreen
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
@@ -87,9 +88,11 @@ import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
+import com.mapbox.maps.extension.compose.style.StyleImage
 import com.mapbox.maps.extension.compose.style.layers.generated.FillAntialias
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
+import com.mapbox.maps.extension.compose.style.layers.generated.FillPattern
 import com.mapbox.maps.extension.compose.style.layers.generated.LineColor
 import com.mapbox.maps.extension.compose.style.layers.generated.LineLayer
 import com.mapbox.maps.extension.compose.style.layers.generated.LineWidth
@@ -170,6 +173,10 @@ fun MapScreen(
         coin.drawToImageBitmap().asAndroidBitmap()
     }
 
+    val fog1 = painterResource(id = R.drawable.grass)
+    val fogBitmap1: ImageBitmap = remember(fog1) {
+        fog1.drawToImageBitmap()
+    }
 
     Box(Modifier.fillMaxSize()) {
         RequestLocationPermission(requestCount = mapState.permissionRequestCount,
@@ -200,13 +207,29 @@ fun MapScreen(
             }, style = {
                 MapboxStandardStyle(
                     topSlot = {
-                        FillLayer(
-                            sourceState = withHolesSourceState,
-                            layerId = OPENED_WORLD_LAYER,
-                            fillColor = FillColor(Color(0xFF000000)),
+                        if (mapState.currentUserFog == null){
+                            FillLayer(
+                                sourceState = withHolesSourceState,
+                                layerId = OPENED_WORLD_LAYER,
+                                fillColor = FillColor(Color(0xFF000000)),
 //                                fillPattern = FillPattern(StyleImage("fog", imageBitmap)),
-                            fillAntialias = FillAntialias(true),
-                        )
+                                fillAntialias = FillAntialias(true),
+                            )
+                        } else {
+                            FillLayer(
+                                sourceState = withHolesSourceState,
+                                layerId = OPENED_WORLD_LAYER,
+                                fillColor = FillColor(DarkGreen),
+                                fillPattern = FillPattern(
+                                    StyleImage(
+                                        "fog",
+                                        fogBitmap1
+                                    )
+                                ),
+                                fillAntialias = FillAntialias(true),
+                            )
+                        }
+
                     },
 //                        lightPreset = if (isDarkTheme) LightPreset.DUSK else LightPreset.DAY
                 )

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.explory.presentation.screen.common.getTranslateCategoryName
 
 @Composable
 fun CategoryButton(category: String, isSelected: Boolean, onClick: () -> Unit) {
@@ -23,17 +24,5 @@ fun CategoryButton(category: String, isSelected: Boolean, onClick: () -> Unit) {
             text = getTranslateCategoryName(category),
             color = if (isSelected) Color.White else Color.LightGray
         )
-    }
-}
-
-@Composable
-fun getTranslateCategoryName(name: String): String {
-    return when (name) {
-        "Все" -> "Все"
-        "FOOTPRINT" -> "Следы"
-        "AVATAR_FRAMES" -> "Рамки аватара"
-        "APPLICATION_IMAGE" -> "Иконки приложения"
-        "FOG" -> "Дым"
-        else -> "Unknown"
     }
 }

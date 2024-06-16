@@ -6,5 +6,6 @@ data class InventoryState(
     val inventoryList: List<CosmeticItemInInventoryDto> = emptyList(),
     val selectedItem: CosmeticItemInInventoryDto? = null,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val isOpenDescriptionDialog: Boolean = false
 )
