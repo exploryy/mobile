@@ -14,6 +14,7 @@ import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.ColorInt
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -154,9 +155,9 @@ fun MapScreen(
 //        painter.drawToImageBitmap()
 //    }
 
-    val task = painterResource(id = R.drawable.marker)
-    val taskBitmap: Bitmap = remember(task) {
-        task.drawToImageBitmap().asAndroidBitmap()
+//    val task = painterResource(id = R.drawable.marker)
+    val taskBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
     }
 
     val finish = painterResource(id = R.drawable.finish)
@@ -271,15 +272,9 @@ fun MapScreen(
                         iconEmissiveStrength = 0.0,
                         iconImageBitmap = coinBitmap,
                         onClick = {
-                            val coinsCount = mapState.coins.size
                             if (mapState.userPoint != null) {
                                 viewModel.collectCoin(coin, mapState.userPoint!!)
                             }
-//                            if (mapState.coins.size == coinsCount - 1) {
-//                                Toast.makeText(context, "Монетка собрана!", LENGTH_SHORT).show()
-//                            } else {
-//                                Toast.makeText(context, "Вы слишком далеко", LENGTH_SHORT).show()
-//                            }
                             true
                         })
                 }
@@ -288,7 +283,6 @@ fun MapScreen(
                     val point = Point.fromLngLat(location.second, location.first)
                     val friendAvatar = mapState.friendAvatars[userId]?.second
                     val friendName = mapState.friendAvatars[userId]?.first
-
 //                    val infiniteTransition = rememberInfiniteTransition(label = "")
 //                    val animatedSize = infiniteTransition.animateFloat(
 //                        initialValue = 0.9f,

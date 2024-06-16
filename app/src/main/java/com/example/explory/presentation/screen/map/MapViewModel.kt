@@ -244,7 +244,8 @@ class MapViewModel(
                 val locationRequest = LocationRequest(
                     longitude = location.longitude.toString(),
                     latitude = location.latitude.toString(),
-                    figureType = "CIRCLE"
+                    figureType = "CIRCLE",
+                    place = _mapState.value.currentLocationName
                 )
 
 //                if (shouldSendLocation(locationRequest, currentTime)) {
@@ -285,7 +286,7 @@ class MapViewModel(
         }
     }
 
-    private suspend fun getQuests() {
+    private suspend fun getQuests(addNew: Boolean = false) {
         try {
             val quests = getQuestsUseCase.execute()
             if (quests.active.isNotEmpty()) {
@@ -303,13 +304,30 @@ class MapViewModel(
                     }
                 }
             }
-            _mapState.update {
-                it.copy(
-                    notCompletedQuests = quests.notCompleted,
-                    completedQuests = quests.completed,
-                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
-                )
+            if (addNew) {
+                _mapState.update {
+                    it.copy(
+                        notCompletedQuests = it.notCompletedQuests + quests.notCompleted,
+                        completedQuests = it.completedQuests + quests.completed,
+                        activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
+                    )
+                }
+            } else {
+                _mapState.update {
+                    it.copy(
+                        notCompletedQuests = quests.notCompleted,
+                        completedQuests = quests.completed,
+                        activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
+                    )
+                }
             }
+//            _mapState.update {
+//                it.copy(
+//                    notCompletedQuests = quests.notCompleted,
+//                    completedQuests = quests.completed,
+//                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
+//                )
+//            }
         } catch (e: Exception) {
             Log.e("MapViewModel", "Error getting quests", e)
         }
@@ -470,7 +488,7 @@ class MapViewModel(
                         }
 
                         EventType.NEW_QUEST -> {
-                            getQuests()
+                            getQuests(addNew = true)
                         }
                     }
                 }

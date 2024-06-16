@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class LocationRequest(
     val longitude: String,
     val latitude: String,
-    val figureType: String
+    val figureType: String,
+    val place: String
 )

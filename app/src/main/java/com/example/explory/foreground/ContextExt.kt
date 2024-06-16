@@ -22,12 +22,8 @@ fun Context.hasLocationPermission(): Boolean {
 fun Context.hasNotificationPermission(): Boolean {
     return ContextCompat.checkSelfPermission(
         this,
-        Manifest.permission.ACCESS_NOTIFICATION_POLICY
-    ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+        Manifest.permission.POST_NOTIFICATIONS
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
 

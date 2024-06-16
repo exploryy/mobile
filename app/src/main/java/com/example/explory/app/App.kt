@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import com.example.explory.di.appModule
 import com.example.explory.di.dataModule
 import com.example.explory.di.domainModule
@@ -21,11 +22,15 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Log.d("App", "Checking notification permission")
+                Log.d("App", "Permission status: ${this.hasNotificationPermission()}")
                 this.hasNotificationPermission()
             } else {
+                Log.d("App", "Checking old notification permission")
                 this.hasOldNotificationPermission()
             }
         ) {
+            Log.d("App", "Starting location service")
             val channel = NotificationChannel(
                 "location",
                 "Location",
@@ -43,6 +48,7 @@ class App : Application() {
                 }
             }
         }
+        Log.d("App", "Starting Koin")
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
