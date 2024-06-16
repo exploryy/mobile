@@ -623,6 +623,7 @@ class MapViewModel(
 
     fun updateShopOpen() {
         _mapState.update { it.copy(isShopOpen = !it.isShopOpen) }
+        fetchBalance()
     }
 
     fun onFriendMarkerClicked(friendId: String) {

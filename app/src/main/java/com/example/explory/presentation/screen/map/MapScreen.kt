@@ -173,9 +173,24 @@ fun MapScreen(
         coin.drawToImageBitmap().asAndroidBitmap()
     }
 
-    val fog1 = painterResource(id = R.drawable.grass)
-    val fogBitmap1: ImageBitmap = remember(fog1) {
-        fog1.drawToImageBitmap()
+    val fogGrass = painterResource(id = R.drawable.grass)
+    val fogGrassBitmap: ImageBitmap = remember(fogGrass) {
+        fogGrass.drawToImageBitmap()
+    }
+
+    val fogWater = painterResource(id = R.drawable.water)
+    val fogWaterBitmap: ImageBitmap = remember(fogWater) {
+        fogWater.drawToImageBitmap()
+    }
+
+    val fogSnow = painterResource(id = R.drawable.snow)
+    val fogSnowBitmap: ImageBitmap = remember(fogSnow) {
+        fogGrass.drawToImageBitmap()
+    }
+
+    val fogCloud = painterResource(id = R.drawable.cloud3)
+    val fogCloudBitmap: ImageBitmap = remember(fogCloud) {
+        fogGrass.drawToImageBitmap()
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -223,7 +238,7 @@ fun MapScreen(
                                 fillPattern = FillPattern(
                                     StyleImage(
                                         "fog",
-                                        fogBitmap1
+                                        fogGrassBitmap
                                     )
                                 ),
                                 fillAntialias = FillAntialias(true),

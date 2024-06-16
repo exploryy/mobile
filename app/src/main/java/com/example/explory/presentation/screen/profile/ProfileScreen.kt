@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -30,15 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import com.example.explory.R
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.friends.FriendsScreen
+import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
 import com.example.explory.ui.theme.BlackButtonColor
@@ -93,26 +89,13 @@ fun ProfileScreen(
                         .size(100.dp)
                         .background(Color.DarkGray, shape = CircleShape)
                 ) {
-                    if (imageUrl != null) {
-                        AsyncImage(
-                            model = imageUrl,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(100.dp)
-                                .align(Alignment.Center)
-                                .clip(CircleShape)
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(R.drawable.picture),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(64.dp)
-                                .align(Alignment.Center),
-                            tint = Color.White
-                        )
-                    }
+                    Avatar(
+                        image = imageUrl,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .align(Alignment.Center)
+                            .clip(CircleShape)
+                    )
                 }
 
                 Column(

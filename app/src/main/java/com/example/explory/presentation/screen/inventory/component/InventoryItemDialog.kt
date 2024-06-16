@@ -20,13 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
+import com.example.explory.presentation.screen.common.RoundedSquareAvatar
 import com.example.explory.presentation.screen.common.getRarityColor
 import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.common.getTranslateRareName
@@ -66,13 +65,11 @@ fun InventoryItemDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                AsyncImage(
-                    model = cosmeticItem.url,
-                    contentDescription = null,
+                RoundedSquareAvatar(
+                    image = cosmeticItem.url,
                     modifier = Modifier
                         .size(96.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Fit
+                        .clip(RoundedCornerShape(8.dp))
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
