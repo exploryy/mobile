@@ -177,11 +177,6 @@ fun MapScreen(
         coin.drawToImageBitmap().asAndroidBitmap()
     }
 
-    val fog1 = painterResource(id = R.drawable.grass)
-    val fogBitmap1: ImageBitmap = remember(fog1) {
-        fog1.drawToImageBitmap()
-    }
-
     val fogGrass = painterResource(id = R.drawable.grass)
     val fogGrassBitmap: ImageBitmap = remember(fogGrass) {
         fogGrass.drawToImageBitmap()
@@ -263,7 +258,7 @@ fun MapScreen(
                                 fillPattern = FillPattern(
                                     StyleImage(
                                         "fog",
-                                        fogBitmap1
+                                        getImageBitmapById(mapState.currentUserFog!!.itemId)
                                     )
                                 ),
                                 fillAntialias = FillAntialias(true),
