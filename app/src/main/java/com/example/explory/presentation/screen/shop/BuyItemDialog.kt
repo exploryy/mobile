@@ -1,6 +1,5 @@
 package com.example.explory.presentation.screen.shop
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,7 +56,6 @@ fun BuyItemDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Log.d("WHAAAT", item.url)
                 Text(
                     text = "Описание товара",
                     style = MaterialTheme.typography.headlineSmall
@@ -66,7 +64,7 @@ fun BuyItemDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 AsyncImage(
-                    model = item.url,
+                    model = cosmeticItem.url,
                     contentDescription = null,
                     modifier = Modifier
                         .size(96.dp)
