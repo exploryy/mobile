@@ -40,13 +40,11 @@ import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.util.Locale
 import kotlin.math.cos
@@ -462,7 +460,7 @@ class MapViewModel(
                 val friendAvatars = friendStats.associate { friendStat ->
                     friendStat.profileDto.userId to Pair(
                         friendStat.profileDto.username,
-                        loadAvatar(friendStat.profileDto.avatarUrl)
+                        loadImage(friendStat.profileDto.avatarUrl)
                     )
                 }
                 _mapState.update { state ->
@@ -511,22 +509,20 @@ class MapViewModel(
     }
 
 
-    private suspend fun loadAvatar(avatarUrl: String?): Bitmap? {
+    fun loadImage(imageUrl: String?): Bitmap? {
         return try {
-            if (avatarUrl.isNullOrEmpty()) {
+            if (imageUrl.isNullOrEmpty()) {
                 null
             } else {
-                withContext(Dispatchers.IO) {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(avatarUrl)
-                        .submit()
-                        .get()
-                }
+                Glide.with(context)
+                    .asBitmap()
+                    .load(imageUrl)
+                    .submit()
+                    .get()
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            Log.d("FileNotFoundException", "File not found: $avatarUrl")
+            Log.d("FileNotFoundException", "File not found: $imageUrl")
             val defaultImageResource = R.drawable.picture
             BitmapFactory.decodeResource(context.resources, defaultImageResource)
         } catch (e: Exception) {

@@ -178,6 +178,11 @@ fun MapScreen(
         fogGrass.drawToImageBitmap()
     }
 
+//    val fogBitmap = viewModel.loadImage(mapState.currentUserFog?.url)
+//    val fogImageBitmap: ImageBitmap? = remember(fogBitmap) {
+//        fogBitmap?.asImageBitmap()
+//    }
+
     val fogWater = painterResource(id = R.drawable.water)
     val fogWaterBitmap: ImageBitmap = remember(fogWater) {
         fogWater.drawToImageBitmap()
@@ -185,12 +190,12 @@ fun MapScreen(
 
     val fogSnow = painterResource(id = R.drawable.snow)
     val fogSnowBitmap: ImageBitmap = remember(fogSnow) {
-        fogGrass.drawToImageBitmap()
+        fogSnow.drawToImageBitmap()
     }
 
     val fogCloud = painterResource(id = R.drawable.cloud3)
     val fogCloudBitmap: ImageBitmap = remember(fogCloud) {
-        fogGrass.drawToImageBitmap()
+        fogCloud.drawToImageBitmap()
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -222,6 +227,16 @@ fun MapScreen(
             }, style = {
                 MapboxStandardStyle(
                     topSlot = {
+                        fun getImageBitmapById(id: Long): ImageBitmap {
+                            return when (id){
+                                2L -> fogGrassBitmap
+                                5L -> fogWaterBitmap
+                                6L -> fogCloudBitmap
+                                7L -> fogSnowBitmap
+                                else -> fogGrassBitmap
+                            }
+                        }
+
                         if (mapState.currentUserFog == null){
                             FillLayer(
                                 sourceState = withHolesSourceState,
@@ -235,12 +250,8 @@ fun MapScreen(
                                 sourceState = withHolesSourceState,
                                 layerId = OPENED_WORLD_LAYER,
                                 fillColor = FillColor(DarkGreen),
-                                fillPattern = FillPattern(
-                                    StyleImage(
-                                        "fog",
-                                        fogGrassBitmap
-                                    )
-                                ),
+                                fillPattern = FillPattern(StyleImage("fog",
+                                    getImageBitmapById(mapState.currentUserFog!!.itemId))),
                                 fillAntialias = FillAntialias(true),
                             )
                         }
@@ -682,6 +693,7 @@ fun Painter.drawToImageBitmap(): ImageBitmap {
 }
 
 
+
 private fun createDefaultAvatar(userId: String): Bitmap {
     val defaultAvatarSize = 100
     val defaultAvatarBitmap = Bitmap.createBitmap(
@@ -747,3 +759,5 @@ private fun createCircularAvatar(bitmap: Bitmap, targetSize: Int): Bitmap {
 
     return circleBitmap
 }
+
+

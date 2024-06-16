@@ -11,7 +11,8 @@ object FriendMapper {
             name = profileDto.username,
             email = profileDto.email,
             avatar = profileDto.avatarUrl,
-            isBestFriend = isBestFriend
+            isBestFriend = isBestFriend,
+            inventoryDto = profileDto.inventoryDto
         )
     }
 

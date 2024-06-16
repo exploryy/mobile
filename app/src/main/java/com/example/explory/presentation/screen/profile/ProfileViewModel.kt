@@ -6,12 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.profile.ProfileMultipart
 import com.example.explory.data.model.profile.ProfileRequest
-import com.example.explory.data.model.profile.toProfile
+import com.example.explory.data.websocket.LocationWebSocketClient
 import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.LogoutUseCase
-import com.example.explory.data.websocket.LocationWebSocketClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,8 +36,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             _profileState.value = ProfileState(isLoading = true)
             try {
-                val profileDto = getProfileUseCase.execute()
-                val profile = profileDto.toProfile()
+                val profile = getProfileUseCase.execute()
                 _profileState.value = ProfileState(profile = profile)
             } catch (e: Exception) {
                 _profileState.value = ProfileState(error = e.message)
@@ -71,12 +69,12 @@ class ProfileViewModel(
 
     fun editProfile(profile: ProfileRequest) {
         val newUsername =
-            if (!profile.username.equals(_profileState.value.profile?.name)) profile.username else null
+            if (!profile.username.equals(_profileState.value.profile?.username)) profile.username else null
         val newEmail =
             if (!profile.email.equals(_profileState.value.profile?.email)) profile.email else null
 
         val newUri =
-            if (!profile.avatar?.equals(_profileState.value.profile?.avatarUri?.toUri())!!) {
+            if (!profile.avatar?.equals(_profileState.value.profile?.avatarUrl?.toUri())!!) {
                 profile.avatar
             } else null
 

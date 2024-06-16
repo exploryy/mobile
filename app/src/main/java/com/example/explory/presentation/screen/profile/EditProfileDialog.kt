@@ -30,13 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
-import com.example.explory.data.model.profile.Profile
+import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.profile.ProfileRequest
 import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.LittleRound
@@ -44,14 +43,14 @@ import com.example.explory.ui.theme.Value.LittleRound
 
 @Composable
 fun EditProfileDialog(
-    profile: Profile?,
+    profile: ProfileDto?,
     onDismiss: () -> Unit,
     onSave: (ProfileRequest) -> Unit
 ) {
-    val name = remember { mutableStateOf(profile?.name ?: "") }
+    val name = remember { mutableStateOf(profile?.username ?: "") }
     val email = remember { mutableStateOf(profile?.email ?: "") }
     val password = remember { mutableStateOf("") }
-    val avatarUri = remember { mutableStateOf(profile?.avatarUri ?: "") }
+    val avatarUri = remember { mutableStateOf(profile?.avatarUrl ?: "") }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -161,13 +160,4 @@ fun EditProfileDialog(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun EditProfileDialogPreview(){
-    EditProfileDialog(
-        Profile("dsdasd", "AlexLine", "alex@example.com", "нет"),
-        {}, {}
-    )
 }

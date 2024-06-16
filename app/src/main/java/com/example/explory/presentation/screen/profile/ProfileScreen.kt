@@ -26,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -83,7 +82,8 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val imageUrl = profileState.profile?.avatarUri
+                val imageUrl = profileState.profile?.avatarUrl
+                val borderUrl = profileState.profile?.inventoryDto?.avatarFrames
                 Box(
                     modifier = Modifier
                         .size(100.dp)
@@ -91,10 +91,10 @@ fun ProfileScreen(
                 ) {
                     Avatar(
                         image = imageUrl,
+                        border = borderUrl,
                         modifier = Modifier
                             .size(100.dp)
                             .align(Alignment.Center)
-                            .clip(CircleShape)
                     )
                 }
 
@@ -141,7 +141,7 @@ fun ProfileScreen(
 
             profileState.profile?.let {
                 Text(
-                    text = it.name,
+                    text = it.username,
                     color = Color.White,
                     style = MaterialTheme.typography.headlineLarge
                 )

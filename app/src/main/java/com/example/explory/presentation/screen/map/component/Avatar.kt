@@ -19,6 +19,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.example.explory.R
+import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.White
 
@@ -26,51 +27,92 @@ import com.example.explory.ui.theme.White
 fun Avatar(
     modifier: Modifier = Modifier,
     image: String?,
+    border: CosmeticItemInInventoryDto? = null
 ) {
     val ctx = LocalContext.current
     val imageLoader = ImageLoader.Builder(ctx).build()
+
     Box(
-        modifier = modifier.background(color = DarkGray, shape = CircleShape)
+        modifier = modifier
     ) {
-        SubcomposeAsyncImage(
-            model = image,
-            imageLoader = imageLoader,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clip(CircleShape)
-                .fillMaxSize(),
-            alignment = Alignment.Center
+        Box(
+            modifier = modifier
+                .background(color = DarkGray, shape = CircleShape)
         ) {
-            when (painter.state) {
-                is AsyncImagePainter.State.Success -> {
-                    SubcomposeAsyncImageContent()
-                }
+            SubcomposeAsyncImage(
+                model = image,
+                imageLoader = imageLoader,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .clip(CircleShape),
+                alignment = Alignment.Center
+            ) {
+                when (painter.state) {
+                    is AsyncImagePainter.State.Success -> {
+                        SubcomposeAsyncImageContent()
+                    }
 
-                is AsyncImagePainter.State.Error -> {
-                    Icon(
-                        painter = painterResource(id = R.drawable.picture),
-                        contentDescription = null,
-                        tint = White,
-                        modifier = Modifier.scale(0.5f)
-                    )
-                }
+                    is AsyncImagePainter.State.Error -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.picture),
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.scale(0.5f)
+                        )
+                    }
 
-                is AsyncImagePainter.State.Empty -> {
-                    Icon(
-                        painter = painterResource(id = R.drawable.picture),
-                        contentDescription = null,
-                        tint = White,
-                        modifier = Modifier.scale(0.5f)
-                    )
-                }
+                    is AsyncImagePainter.State.Empty -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.picture),
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.scale(0.5f)
+                        )
+                    }
 
-                is AsyncImagePainter.State.Loading -> {
-                    CircularProgressIndicator(
-                        color = White,
-                        trackColor = White.copy(alpha = 0.3f),
-                    )
+                    is AsyncImagePainter.State.Loading -> {
+                        CircularProgressIndicator(
+                            color = White,
+                            trackColor = White.copy(alpha = 0.3f),
+                        )
+                    }
+                }
+            }
+        }
+
+        border?.let {
+            SubcomposeAsyncImage(
+                model = it.url,
+                imageLoader = imageLoader,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize(),
+                alignment = Alignment.Center
+            ) {
+                when (painter.state) {
+                    is AsyncImagePainter.State.Success -> {
+                        SubcomposeAsyncImageContent()
+                    }
+                    is AsyncImagePainter.State.Error -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.picture),
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.scale(0.5f)
+                        )
+                    }
+                    is AsyncImagePainter.State.Empty -> {
+
+                    }
+
+                    is AsyncImagePainter.State.Loading -> {
+
+                    }
                 }
             }
         }
