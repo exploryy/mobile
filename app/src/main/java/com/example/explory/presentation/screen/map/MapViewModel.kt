@@ -40,11 +40,13 @@ import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.util.Locale
 import kotlin.math.cos
@@ -457,6 +459,7 @@ class MapViewModel(
                 val friendLocations = friendStats.associate {
                     it.profileDto.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
                 }
+
                 val friendAvatars = friendStats.associate { friendStat ->
                     friendStat.profileDto.userId to Pair(
                         friendStat.profileDto.username,
@@ -509,16 +512,18 @@ class MapViewModel(
     }
 
 
-    fun loadImage(imageUrl: String?): Bitmap? {
+    private suspend fun loadImage(imageUrl: String?): Bitmap? {
         return try {
             if (imageUrl.isNullOrEmpty()) {
                 null
             } else {
-                Glide.with(context)
-                    .asBitmap()
-                    .load(imageUrl)
-                    .submit()
-                    .get()
+                withContext(Dispatchers.IO) {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(imageUrl)
+                        .submit()
+                        .get()
+                }
             }
         } catch (e: FileNotFoundException) {
             e.printStackTrace()

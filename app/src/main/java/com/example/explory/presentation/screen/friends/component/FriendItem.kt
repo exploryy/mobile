@@ -54,7 +54,7 @@ fun FriendItem(
             ) {
                 Avatar(
                     image = friend.avatar,
-                    border = null,
+                    border = friend.inventoryDto.avatarFrames,
                     modifier = Modifier
                         .size(64.dp)
                 )
