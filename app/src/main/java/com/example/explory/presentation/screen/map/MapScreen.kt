@@ -78,7 +78,6 @@ import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGreen
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Transparent
-import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
@@ -89,7 +88,6 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
-import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
 import com.mapbox.maps.extension.compose.style.StyleImage
 import com.mapbox.maps.extension.compose.style.layers.generated.FillAntialias
@@ -107,6 +105,7 @@ import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
+import com.mapbox.maps.plugin.viewport.data.DefaultViewportTransitionOptions
 import com.mapbox.maps.viewannotation.annotationAnchors
 import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
@@ -225,7 +224,7 @@ fun MapScreen(
                 true
             }, scaleBar = {}, logo = {}, attribution = {}, compass = {
                 Compass(
-                    contentPadding = PaddingValues(vertical = 110.dp, horizontal = 20.dp),
+                    contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
                 )
             }, style = {
                 MapboxStandardStyle(
@@ -262,7 +261,6 @@ fun MapScreen(
                                 fillAntialias = FillAntialias(true),
                             )
                         }
-
                     },
 //                        lightPreset = if (isDarkTheme) LightPreset.DUSK else LightPreset.DAY
                 )
@@ -276,6 +274,8 @@ fun MapScreen(
                         enabled = true
                     }
                     mapViewportState.transitionToFollowPuckState(
+                        defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()
+                            .maxDurationMs(0).build()
 //                        followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
 //                            .pitch(PITCH).build(),
                     )
@@ -450,11 +450,25 @@ fun MapScreen(
 //                    })
 
                     Log.d("MapScreen", "points: $points")
-                    PolygonAnnotation(
-                        points = points,
-                        fillColorInt = AccentColor.toArgb(),
-                        fillOpacity = 0.7,
-                        fillOutlineColorInt = White.toArgb(),
+                    val circleSourceState = GeoJsonSourceState(
+                        initialData = GeoJSONData(
+                            Feature.fromGeometry(
+                                Polygon.fromLngLats(
+                                    points
+                                )
+                            )
+                        )
+                    )
+                    FillLayer(
+                        sourceState = circleSourceState,
+                        fillColor = FillColor(Transparent),
+                        layerId = "circle-layer",
+                    )
+                    LineLayer(
+                        sourceState = circleSourceState,
+                        layerId = "circle-line-layer",
+                        lineColor = LineColor(AccentColor),
+                        lineWidth = LineWidth(5.0)
                     )
                 }
 
