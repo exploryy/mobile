@@ -20,23 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.explory.data.storage.ThemePreferenceManager
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 
 // todo fix ))) (произошёл анлак)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    themePreferenceManager: ThemePreferenceManager = koinInject<ThemePreferenceManager>(),
+    isDarkTheme: Boolean,
+    onThemeChangeClick: (Boolean) -> Unit,
     onBackClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
-    val isDarkTheme = themePreferenceManager.isDarkTheme()
-
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             sheetState.show()
@@ -76,7 +73,7 @@ fun SettingsScreen(
                 )
                 Switch(
                     checked = isDarkTheme,
-                    onCheckedChange = { themePreferenceManager.setDarkTheme(it) },
+                    onCheckedChange = onThemeChangeClick,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
                         uncheckedThumbColor = MaterialTheme.colorScheme.surface

@@ -423,7 +423,6 @@ fun MapScreen(
                     }
                 }
 
-                SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
                 Column {
                     TopInfoColumn(
                         modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
@@ -513,7 +512,7 @@ fun MapScreen(
                             modifier = Modifier.scale(1.4f)
                         )
                     }
-                    
+
                 }
             }
 
@@ -536,6 +535,7 @@ fun MapScreen(
                 }
             )
         }
+        SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
     }
 
     when {
@@ -598,6 +598,10 @@ fun MapScreen(
 
         mapState.showSettingsScreen -> {
             SettingsScreen(
+                isDarkTheme = mapState.isDarkTheme,
+                onThemeChangeClick = { isDarkTheme ->
+                    viewModel.updateTheme(isDarkTheme)
+                },
                 onBackClick = { viewModel.updateShowSettingsScreen() })
         }
 
@@ -613,6 +617,7 @@ fun MapScreen(
         mapState.isInventoryOpen -> {
             InventoryScreen(onDismiss = { viewModel.updateInventoryOpenScreen() })
         }
+
     }
     if (mapState.event != null) {
         EventDialog(event = mapState.event!!,
@@ -620,6 +625,7 @@ fun MapScreen(
             onFriendDecline = { viewModel.declineFriendRequest(it) },
             onFriendAccept = { viewModel.acceptFriendRequest(it) })
     }
+
     LaunchedEffect(mapState.toastText) {
         if (mapState.toastText != null) {
 //            Toast.makeText(context, mapState.toastText, LENGTH_SHORT).show()

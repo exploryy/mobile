@@ -273,6 +273,10 @@ class MapViewModel(
         _mapState.update { state -> state.copy(isDarkTheme = themePreferenceManager.isDarkTheme()) }
     }
 
+    fun updateTheme(isDarkTheme: Boolean) {
+        themePreferenceManager.setDarkTheme(isDarkTheme)
+        _mapState.update { state -> state.copy(isDarkTheme = isDarkTheme) }
+    }
 
     fun getStartData() {
         updateUiState(UiState.Loading)
