@@ -10,6 +10,7 @@ import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.EquipItemUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
+import com.example.explory.domain.usecase.GetCurrentBattlePassUseCase
 import com.example.explory.domain.usecase.GetFriendProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
@@ -65,4 +66,5 @@ fun domainModule() = module {
     factoryOf(::GetInventoryUseCase)
     factoryOf(::BuyItemUseCase)
     factoryOf(::SellItemUseCase)
+    factoryOf(::GetCurrentBattlePassUseCase)
 }

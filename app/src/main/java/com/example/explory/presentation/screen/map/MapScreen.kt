@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
@@ -573,6 +574,12 @@ fun MapScreen(
                     )
 
                 }
+
+                AnimatedButton(
+                    onClick = {  },
+                    modifier = Modifier
+                        .size(48.dp)
+                )
             }
         }
         ButtonControlRow(
