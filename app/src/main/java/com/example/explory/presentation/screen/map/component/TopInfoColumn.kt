@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,18 +51,34 @@ fun TopInfoColumn(
         verticalAlignment = Alignment.Top,
     ) {
         Column(Modifier.width(165.dp)) {
-            Text(
-                text = currentLocationName.lowercase(),
-                color = Color.White,
-                style = S24_W600,
-                textDecoration = TextDecoration.Underline,
-
+            if (currentLocationName.isBlank()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.White,
+                    trackColor = Color.White.copy(0.5f)
                 )
+            } else {
+                Text(
+                    text = currentLocationName.lowercase(),
+                    color = Color.White,
+                    style = S24_W600,
+                    textDecoration = TextDecoration.Underline
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "${"%.4f".format(currentLocationPercent)}%", color = Color.White,
-                style = S20_W600,
-            )
+            if (currentLocationPercent == 0.0) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.White,
+                    trackColor = Color.White.copy(0.5f)
+                )
+            } else {
+                Text(
+                    text = "${"%.4f".format(currentLocationPercent)}%", color = Color.White,
+                    style = S20_W600,
+                )
+            }
+
         }
         Spacer(modifier = Modifier.weight(1f))
         BalanceBar(
@@ -87,7 +104,7 @@ fun BalanceBar(
 
     Column(
         modifier = modifier
-            .background(Color.White.copy(0.3f), shape = RoundedCornerShape(8.dp))
+            .background(Color.White.copy(0.15f), shape = RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
             .padding(8.dp)
             .width(120.dp),

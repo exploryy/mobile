@@ -20,6 +20,7 @@ import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
+import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.data.websocket.EventDto
 import com.example.explory.data.websocket.EventType
 import com.example.explory.data.websocket.EventWebSocketClient
@@ -32,9 +33,9 @@ import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
-import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.presentation.utils.UiState
 import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
@@ -55,7 +56,6 @@ import kotlin.math.sin
 
 @SuppressLint("StaticFieldLeak")
 class MapViewModel(
-    private val getPolygonsUseCase: GetPolygonsUseCase,
     private val getQuestsUseCase: GetQuestsUseCase,
     private val getCoinsUseCase: GetCoinsUseCase,
     private val questRepository: QuestRepository,
@@ -70,6 +70,7 @@ class MapViewModel(
     private val declineFriendUseCase: DeclineFriendUseCase,
     private val locationTracker: LocationTracker,
     private val getProfileUseCase: GetProfileUseCase,
+    private val themePreferenceManager: ThemePreferenceManager,
     private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
@@ -90,50 +91,34 @@ class MapViewModel(
         )
     )
 
-    init {
-        getStartData()
-        loadFriendStatistics()
-        fetchBalance()
-        fetchProfile()
-    }
-
-    fun startWebSockets() {
+    private fun startWebSockets() {
+        startLocationUpdates()
         webSocketClient.connect()
         eventWebSocketClient.connect()
         friendsLocationWebSocketClient.connect()
-        startLocationUpdates()
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
         observeEventWebSocketMessages()
     }
 
     private fun calculateDistance(
-        firstLat: Double,
-        firstLng: Double,
-        secondLat: Double,
-        secondLng: Double
+        firstLat: Double, firstLng: Double, secondLat: Double, secondLng: Double
     ): Double {
         val results = FloatArray(1)
         android.location.Location.distanceBetween(
-            firstLat,
-            firstLng,
-            secondLat,
-            secondLng,
-            results
+            firstLat, firstLng, secondLat, secondLng, results
         )
-        Log.d("MapViewModel", "Distance to user: ${results[0]}")
         return results[0].toDouble()
     }
 
-    private fun fetchProfile() {
-        viewModelScope.launch {
-            try {
-                val profile = getProfileUseCase.execute()
-                _mapState.update { it.copy(currentUserFog = profile.inventoryDto.fog) }
-            } catch (e: Exception) {
-                _mapState.update { it.copy(currentUserFog = null) }
-            }
+    private suspend fun fetchProfile() {
+        try {
+            val profile = getProfileUseCase.execute()
+            _mapState.update { it.copy(currentUserFog = profile.inventoryDto.fog) }
+        } catch (e: Exception) {
+            _mapState.update { it.copy(currentUserFog = null) }
         }
+
     }
 
     fun collectCoin(coin: CoinDto, userLocation: Point) {
@@ -156,7 +141,6 @@ class MapViewModel(
                         toastText = "Монета собрана"
                     )
                 }
-                fetchBalance()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -183,8 +167,7 @@ class MapViewModel(
                 _mapState.update { it ->
                     it.copy(toastText = "Квест начат",
                         activeQuest = quest,
-                        notCompletedQuests = it.notCompletedQuests.filter { it.questId.toString() != questId }
-                    )
+                        notCompletedQuests = it.notCompletedQuests.filter { it.questId.toString() != questId })
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -227,54 +210,32 @@ class MapViewModel(
         }
     }
 
-    private fun getStartPolygons() {
-        viewModelScope.launch {
-            val polygons = getPolygonsUseCase.execute()
-            val newInnerPoints = polygons.features.flatMap { feature ->
-                feature.geometry.coordinates.flatMap { coordinateList ->
-                    coordinateList.map { innerList ->
-                        LineString.fromLngLats(innerList.map { coordinates ->
-                            Point.fromLngLat(coordinates[0], coordinates[1])
-                        })
-                    }
-                }
-            }
-            onInnerListUpdate(newInnerPoints)
-        }
-    }
-
     private fun updateCurrentLocation(latitude: Double, longitude: Double) {
         try {
             val geocoder = Geocoder(context, Locale.getDefault())
             @Suppress("DEPRECATION") val addresses: List<Address>? =
                 geocoder.getFromLocation(latitude, longitude, 1)
-            if (!addresses.isNullOrEmpty())
-                if (addresses[0].locality != _mapState.value.currentLocationName) {
-                    if (addresses[0].locality != null)
-                        onCurrentLocationCityChanged(addresses[0].locality)
-                    else if (addresses[0].subAdminArea != null)
-                        onCurrentLocationCityChanged(addresses[0].subAdminArea)
-                    else if (addresses[0].adminArea != null)
-                        onCurrentLocationCityChanged(addresses[0].adminArea)
-                    else if (addresses[0].countryName != null)
-                        onCurrentLocationCityChanged(addresses[0].countryName)
-                }
+            if (!addresses.isNullOrEmpty()) if (addresses[0].locality != _mapState.value.currentLocationName) {
+                if (addresses[0].locality != null) onCurrentLocationCityChanged(addresses[0].locality)
+                else if (addresses[0].subAdminArea != null) onCurrentLocationCityChanged(addresses[0].subAdminArea)
+                else if (addresses[0].adminArea != null) onCurrentLocationCityChanged(addresses[0].adminArea)
+                else if (addresses[0].countryName != null) onCurrentLocationCityChanged(addresses[0].countryName)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun startLocationUpdates() {
-        viewModelScope.launch {
-            locationTracker.setLocationListener { location ->
-                updateUserLocation(location.latitude, location.longitude)
-                updateCurrentLocation(location.latitude, location.longitude)
-                val locationRequest = LocationRequest(
-                    longitude = location.longitude.toString(),
-                    latitude = location.latitude.toString(),
-                    figureType = "CIRCLE",
-                    place = _mapState.value.currentLocationName
-                )
+        locationTracker.setLocationListener { location ->
+            updateUserLocation(location.latitude, location.longitude)
+            updateCurrentLocation(location.latitude, location.longitude)
+            val locationRequest = LocationRequest(
+                longitude = location.longitude.toString(),
+                latitude = location.latitude.toString(),
+                figureType = "CIRCLE",
+                place = _mapState.value.currentLocationName
+            )
 //                val currentTime = System.currentTimeMillis()
 
 //                if (shouldSendLocation(locationRequest, currentTime)) {
@@ -282,10 +243,10 @@ class MapViewModel(
 //                    lastSentLocation = locationRequest
 //                    lastSentTime = currentTime
 //                }
-                sendLocationToServer(locationRequest)
-            }
-            locationTracker.startTracking()
+            sendLocationToServer(locationRequest)
         }
+        locationTracker.startTracking()
+
     }
 
     private fun sendLocationToServer(locationRequest: LocationRequest) {
@@ -308,10 +269,29 @@ class MapViewModel(
         return distance >= minDistanceChange || timeElapsed >= minTimeInterval
     }
 
-    private fun getStartData() {
+    private fun getTheme() {
+        _mapState.update { state -> state.copy(isDarkTheme = themePreferenceManager.isDarkTheme()) }
+    }
+
+
+    fun getStartData() {
+        updateUiState(UiState.Loading)
         viewModelScope.launch {
-            getQuests()
-            getCoins()
+            try {
+                getQuests()
+                getCoins()
+                getBalance()
+                loadFriendStatistics()
+                fetchProfile()
+                startWebSockets()
+                getTheme()
+            } catch (e: Exception) {
+                updateUiState(UiState.Error("Ошибка загрузки данных"))
+                Log.e("MapViewModel", "Error getting start data", e)
+            } finally {
+                Log.d("MapViewModel", "Data loaded")
+                updateUiState(UiState.Default)
+            }
         }
     }
 
@@ -374,14 +354,11 @@ class MapViewModel(
     }
 
     fun getPointsForCircle(
-        latitude: Double,
-        longitude: Double,
-        radiusInMeters: Double
+        latitude: Double, longitude: Double, radiusInMeters: Double
     ): List<List<Point>> {
         val earthRadius = 6378137.0
         val numberOfSides = 100
-        val deltaLat =
-            Math.toDegrees(radiusInMeters / earthRadius)
+        val deltaLat = Math.toDegrees(radiusInMeters / earthRadius)
         val deltaLon = deltaLat / cos(Math.toRadians(latitude))
 
 
@@ -467,29 +444,25 @@ class MapViewModel(
         }
     }
 
-    private fun loadFriendStatistics() {
-        viewModelScope.launch {
-            try {
-                val friendStats = getFriendStatisticUseCase.execute()
-                val friendLocations = friendStats.associate {
-                    it.profileDto.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
-                }
-
-                val friendAvatars = friendStats.associate { friendStat ->
-                    friendStat.profileDto.userId to Pair(
-                        friendStat.profileDto.username,
-                        loadImage(friendStat.profileDto.avatarUrl)
-                    )
-                }
-                _mapState.update { state ->
-                    state.copy(
-                        friendsLocations = friendLocations,
-                        friendAvatars = friendAvatars
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private suspend fun loadFriendStatistics() {
+        try {
+            val friendStats = getFriendStatisticUseCase.execute()
+            val friendLocations = friendStats.associate {
+                it.profileDto.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
             }
+
+            val friendAvatars = friendStats.associate { friendStat ->
+                friendStat.profileDto.userId to Pair(
+                    friendStat.profileDto.username, loadImage(friendStat.profileDto.avatarUrl)
+                )
+            }
+            _mapState.update { state ->
+                state.copy(
+                    friendsLocations = friendLocations, friendAvatars = friendAvatars
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -549,11 +522,7 @@ class MapViewModel(
                 null
             } else {
                 withContext(Dispatchers.IO) {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(imageUrl)
-                        .submit()
-                        .get()
+                    Glide.with(context).asBitmap().load(imageUrl).submit().get()
                 }
             }
         } catch (e: FileNotFoundException) {
@@ -588,14 +557,13 @@ class MapViewModel(
         }
     }
 
-    private fun fetchBalance() {
-        viewModelScope.launch {
-            try {
-                val result = getBalanceUseCase.execute()
-                _mapState.update { it.copy(userBalance = result) }
-            } catch (e: Exception) {
-                Log.e("BalanceViewModel", "Failed to fetch balance", e)
-            }
+    private suspend fun getBalance() {
+        try {
+            val result = getBalanceUseCase.execute()
+            _mapState.update { it.copy(userBalance = result) }
+        } catch (e: Exception) {
+            Log.e("BalanceViewModel", "Failed to fetch balance", e)
+
         }
     }
 
@@ -609,17 +577,14 @@ class MapViewModel(
         _mapState.update { it.copy(currentLocationPercent = areaPercent) }
     }
 
+    fun updateUiState(uiState: UiState) {
+        _mapState.update { it.copy(uiState = uiState) }
+    }
+
     fun updateShowViewAnnotationIndex(index: Int?) {
         _mapState.update { it.copy(showViewAnnotationIndex = index) }
     }
 
-    fun updateShowMap(show: Boolean) {
-        _mapState.update { it.copy(showMap = show) }
-    }
-
-    fun updateShowRequestPermissionButton(show: Boolean) {
-        _mapState.update { it.copy(showRequestPermissionButton = show) }
-    }
 
     fun incrementPermissionRequestCount() {
         _mapState.update { it.copy(permissionRequestCount = it.permissionRequestCount + 1) }
@@ -655,15 +620,14 @@ class MapViewModel(
 
     fun updateShopOpen() {
         _mapState.update { it.copy(isShopOpen = !it.isShopOpen) }
-        fetchBalance()
+//        fetchBalance()
     }
 
     fun onFriendMarkerClicked(friendId: String) {
         viewModelScope.launch {
             try {
                 val friendPolygons = polygonRepository.getFriendPolygons(friendId)
-                val friendProfile = FriendProfile(
-                    id = friendId,
+                val friendProfile = FriendProfile(id = friendId,
                     polygons = friendPolygons.features.flatMap { feature ->
                         feature.geometry.coordinates.flatMap { coordinateList ->
                             coordinateList.map { innerList ->
@@ -672,8 +636,7 @@ class MapViewModel(
                                 }
                             }
                         }
-                    }
-                )
+                    })
                 _mapState.update {
                     it.copy(
                         selectedFriendProfile = friendProfile
@@ -696,8 +659,11 @@ class MapViewModel(
     }
 
     fun updateInventoryOpenScreen() {
-        fetchProfile()
-        _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
+        // todo event on this update
+        viewModelScope.launch {
+            fetchProfile()
+            _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
+        }
     }
 
     fun setError(message: String?) {

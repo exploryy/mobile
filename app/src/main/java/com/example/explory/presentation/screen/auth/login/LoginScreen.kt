@@ -56,6 +56,7 @@ import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
 import com.example.explory.ui.theme.Value.SpaceBetweenObjects
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -140,6 +141,7 @@ fun SharedTransitionScope.LoginScreen(
                             text = stringResource(R.string.login_to),
                             style = S24_W600,
                             textAlign = TextAlign.Left,
+                            color = White,
                             modifier = Modifier.padding(
                                 top = MoreSpaceBetweenObjects, bottom = SpaceBetweenObjects
                             )
@@ -151,11 +153,16 @@ fun SharedTransitionScope.LoginScreen(
                             onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
                             isError = loginState.errorMessage != null,
                             colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = White,
+                                unfocusedTextColor = White,
                                 errorContainerColor = Red.copy(alpha = 0.1f),
                                 cursorColor = Color.White,
                                 focusedBorderColor = Color.White,
                                 unfocusedBorderColor = Color.Gray,
                                 errorBorderColor = Red,
+                                errorTextColor = Red,
+                                errorLabelColor = Red,
+                                errorPlaceholderColor = Red,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
                             ),
@@ -171,10 +178,16 @@ fun SharedTransitionScope.LoginScreen(
                             errorText = loginState.errorMessage,
                             colors = OutlinedTextFieldDefaults.colors(
                                 errorContainerColor = Red.copy(alpha = 0.1f),
+                                focusedTextColor = White,
+                                unfocusedTextColor = White,
                                 cursorColor = Color.White,
                                 focusedBorderColor = Color.White,
                                 unfocusedBorderColor = Color.Gray,
                                 errorBorderColor = Red,
+                                errorTextColor = Red,
+                                errorPlaceholderColor = Red,
+                                errorTrailingIconColor = Red,
+                                errorLabelColor = Red,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
                             ),

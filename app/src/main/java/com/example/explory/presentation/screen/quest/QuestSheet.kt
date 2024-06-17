@@ -102,13 +102,15 @@ fun QuestSheet(
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = name,
-                    style = S24_W600,
-                )
-                if (questStatus != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    InfoBox(text = questStatus, containerColor = Green)
+                Column {
+                    Text(
+                        text = name,
+                        style = S24_W600,
+                    )
+                    if (questStatus != null) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        InfoBox(text = questStatus, containerColor = Green)
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))

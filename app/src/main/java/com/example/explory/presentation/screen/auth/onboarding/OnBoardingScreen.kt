@@ -1,6 +1,5 @@
 package com.example.explory.presentation.screen.auth.onboarding
 
-import androidx.annotation.RawRes
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -29,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,21 +35,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
+import com.example.explory.presentation.screen.auth.onboarding.component.PageContent
 import com.example.explory.presentation.screen.auth.onboarding.component.PageIndicator
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.Gray
-import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S16_W600
-import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -178,45 +166,3 @@ fun SharedTransitionScope.OnBoardingScreen(
     }
 }
 
-@Composable
-fun PageContent(
-    modifier: Modifier = Modifier, title: String, description: String, @RawRes animation: Int
-) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
-    val progress by animateLottieCompositionAsState(
-        composition, iterations = LottieConstants.IterateForever
-    )
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        LottieAnimation(
-            composition = composition,
-            modifier = Modifier.size(200.dp),
-            progress = { progress },
-        )
-        Text(
-            text = title,
-            style = S24_W600,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = description,
-            style = S16_W400,
-            color = Gray,
-            textAlign = TextAlign.Center,
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewPageContent() {
-    PageContent(
-        title = "Title",
-        description = "Some text that should be quite long to see how it looks on the screen.",
-        animation = R.raw.success
-    )
-}

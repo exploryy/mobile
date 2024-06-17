@@ -53,6 +53,7 @@ import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -135,6 +136,7 @@ fun SharedTransitionScope.RegistrationScreen(
                             text = stringResource(R.string.to_register),
                             style = S24_W600,
                             textAlign = TextAlign.Left,
+                            color = White,
                             modifier = Modifier.padding(
                                 top = Value.MoreSpaceBetweenObjects,
                                 bottom = Value.SpaceBetweenObjects
@@ -152,11 +154,17 @@ fun SharedTransitionScope.RegistrationScreen(
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
+                                focusedTextColor = White,
+                                unfocusedTextColor = White,
                                 unfocusedBorderColor = Color.Gray,
                                 cursorColor = Color.White,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
                                 errorBorderColor = Red,
+                                errorTextColor = Red,
+                                errorLabelColor = Red,
+
+                                errorPlaceholderColor = Red,
                                 errorContainerColor = Red.copy(alpha = 0.1f)
                             ),
                             modifier = Modifier
@@ -175,11 +183,16 @@ fun SharedTransitionScope.RegistrationScreen(
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
+                                focusedTextColor = White,
+                                unfocusedTextColor = White,
                                 unfocusedBorderColor = Color.Gray,
                                 cursorColor = Color.White,
                                 focusedLabelColor = Color.White,
+                                errorLabelColor = Red,
+                                errorPlaceholderColor = Red,
                                 unfocusedLabelColor = Color.Gray,
                                 errorBorderColor = Red,
+                                errorTextColor = Red,
                                 errorContainerColor = Red.copy(alpha = 0.1f)
                             ),
                             modifier = Modifier
@@ -200,9 +213,16 @@ fun SharedTransitionScope.RegistrationScreen(
                             onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
+                                focusedTextColor = White,
+                                unfocusedTextColor = White,
                                 unfocusedBorderColor = Color.Gray,
                                 cursorColor = Color.White,
+                                errorTextColor = Red,
+                                errorPlaceholderColor = Red,
                                 focusedLabelColor = Color.White,
+                                errorTrailingIconColor = Red,
+                                errorLabelColor = Red,
+
                                 unfocusedLabelColor = Color.Gray,
                                 errorBorderColor = Red,
                                 errorContainerColor = Red.copy(alpha = 0.1f)
