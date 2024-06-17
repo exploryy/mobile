@@ -1,9 +1,12 @@
 package com.example.explory.presentation.screen.map.component
 
+import androidx.compose.foundation.background
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.data.websocket.EventDto
 import com.example.explory.data.websocket.EventType
@@ -23,7 +26,10 @@ fun EventDialog(
     onFriendDecline: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    BasicAlertDialog(onDismissRequest = onDismissRequest) {
+    BasicAlertDialog(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        onDismissRequest = onDismissRequest
+    ) {
         when (event.type) {
             EventType.COMPLETE_QUEST -> {
                 CompleteQuestContent(event = event, onDismiss = onDismissRequest)

@@ -34,7 +34,7 @@ import com.example.explory.data.websocket.EventType
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.MediumGray
 import com.example.explory.ui.theme.S16_W600
-import com.example.explory.ui.theme.S24_W600
+import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.White
 
 @Composable
@@ -44,6 +44,10 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
         composition,
         iterations = LottieConstants.IterateForever
     )
+    val info = event.text.split(";")
+    val name = info[0].lowercase()
+    val exp = info[1].toInt()
+    val coins = info[2].toInt()
     Column(
         Modifier
             .size(DIALOG_WIDTH.dp, DIALOG_HEIGHT.dp)
@@ -58,8 +62,8 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
             progress = { progress },
         )
         Text(
-            text = event.text,
-            style = S24_W600,
+            text = "Квест\n%s завершён!".format(name),
+            style = S20_W600,
             textAlign = TextAlign.Center,
             color = Black
         )
@@ -75,12 +79,12 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RewardBox(
-                count = 100,
+                count = coins,
                 icon = R.drawable.coin
             )
-            RewardBox(count = 1337, icon = R.drawable.exp)
+            RewardBox(count = exp, icon = R.drawable.exp)
         }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f).height(16.dp))
         Button(
             onClick = onDismiss,
             shape = RoundedCornerShape(8.dp),

@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -55,20 +58,25 @@ fun QuestSheet(
 ) {
     FlexibleBottomSheet(
         onDismissRequest = { },
+        windowInsets = WindowInsets(0.dp),
         sheetState = rememberFlexibleBottomSheetState(
             flexibleSheetSize = FlexibleSheetSize(
                 fullyExpanded = 0.9f,
                 intermediatelyExpanded = 0.5f,
-                slightlyExpanded = 0.2f,
+                slightlyExpanded = 0.12f,
             ),
+            allowNestedScroll = false,
             isModal = false,
+            skipIntermediatelyExpanded = true,
             skipSlightlyExpanded = false,
             skipHiddenState = true,
         ),
         containerColor = DarkGray,
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Row(
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically

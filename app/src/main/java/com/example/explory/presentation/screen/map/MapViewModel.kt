@@ -171,10 +171,22 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 Log.d("MapViewModel", "Quest id $questId")
+                val quest =
+                    _mapState.value.notCompletedQuests.find { it.questId.toString() == questId }
+                if (calculateDistance(
+                        _mapState.value.userPoint?.latitude() ?: 0.0,
+                        _mapState.value.userPoint?.longitude() ?: 0.0,
+                        quest?.latitude?.toDouble() ?: 0.0,
+                        quest?.longitude?.toDouble() ?: 0.0
+                    ) > 100.0
+                ) {
+                    _mapState.update { it.copy(toastText = "Вы слишком далеко от квеста") }
+                    return@launch
+                }
                 questRepository.startQuest(questId, "WALK")
                 _mapState.update { it ->
                     it.copy(toastText = "Квест начат",
-                        activeQuest = it.notCompletedQuests.find { it.questId.toString() == questId },
+                        activeQuest = quest,
                         notCompletedQuests = it.notCompletedQuests.filter { it.questId.toString() != questId }
                     )
                 }
@@ -235,32 +247,39 @@ class MapViewModel(
         }
     }
 
+    private fun updateCurrentLocation(latitude: Double, longitude: Double) {
+        try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            @Suppress("DEPRECATION") val addresses: List<Address>? =
+                geocoder.getFromLocation(latitude, longitude, 1)
+            if (!addresses.isNullOrEmpty())
+                if (addresses[0].locality != _mapState.value.currentLocationName) {
+                    if (addresses[0].locality != null)
+                        onCurrentLocationCityChanged(addresses[0].locality)
+                    else if (addresses[0].subAdminArea != null)
+                        onCurrentLocationCityChanged(addresses[0].subAdminArea)
+                    else if (addresses[0].adminArea != null)
+                        onCurrentLocationCityChanged(addresses[0].adminArea)
+                    else if (addresses[0].countryName != null)
+                        onCurrentLocationCityChanged(addresses[0].countryName)
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun startLocationUpdates() {
         viewModelScope.launch {
             locationTracker.setLocationListener { location ->
                 updateUserLocation(location.latitude, location.longitude)
-                val geocoder = Geocoder(context, Locale.getDefault())
-                val addresses: List<Address>? =
-                    geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                if (!addresses.isNullOrEmpty())
-                    if (addresses[0].locality != _mapState.value.currentLocationName) {
-                        if (addresses[0].locality != null)
-                            onCurrentLocationCityChanged(addresses[0].locality)
-                        else if (addresses[0].subAdminArea != null)
-                            onCurrentLocationCityChanged(addresses[0].subAdminArea)
-                        else if (addresses[0].adminArea != null)
-                            onCurrentLocationCityChanged(addresses[0].adminArea)
-                        else if (addresses[0].countryName != null)
-                            onCurrentLocationCityChanged(addresses[0].countryName)
-                    }
-
-//                val currentTime = System.currentTimeMillis()
+                updateCurrentLocation(location.latitude, location.longitude)
                 val locationRequest = LocationRequest(
                     longitude = location.longitude.toString(),
                     latitude = location.latitude.toString(),
                     figureType = "CIRCLE",
                     place = _mapState.value.currentLocationName
                 )
+//                val currentTime = System.currentTimeMillis()
 
 //                if (shouldSendLocation(locationRequest, currentTime)) {
 //                    sendLocationToServer(locationRequest)
@@ -484,6 +503,7 @@ class MapViewModel(
                 event.let {
                     when (it.type) {
                         EventType.COMPLETE_QUEST -> {
+                            Log.d("MapViewModel", "Quest completed")
                             _mapState.update { state -> state.copy(event = it) }
                             updateP2PQuest(null)
                             updateDistanceQuest(null)
@@ -506,9 +526,12 @@ class MapViewModel(
                         }
 
                         EventType.UPDATE_LEVEL -> _mapState.update { state ->
-                            fetchBalance()
+                            val info = it.text.split(";")
                             state.copy(
-                                userBalance = state.userBalance?.copy(level = it.text.toInt())
+                                userBalance = state.userBalance?.copy(
+                                    level = info[0].toInt(),
+                                    totalExperienceInLevel = info[1].toInt()
+                                )
                             )
                         }
 

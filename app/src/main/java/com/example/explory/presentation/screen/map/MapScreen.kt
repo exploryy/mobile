@@ -77,13 +77,13 @@ import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGreen
 import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.ViewAnnotationAnchor
-import com.mapbox.maps.dsl.cameraOptions
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
@@ -104,7 +104,6 @@ import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceSt
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
 import com.mapbox.maps.extension.style.layers.properties.generated.LineJoin
 import com.mapbox.maps.plugin.PuckBearing
-import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
@@ -123,11 +122,9 @@ const val OPENED_WORLD_LAYER = "layer-parking"
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(),
-//    themeViewModel: ThemeViewModel = koinViewModel(),
     onLogout: () -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
-//    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
     LaunchedEffect(mapState.showMap) {
         if (mapState.showMap) {
             viewModel.startWebSockets()
@@ -166,6 +163,7 @@ fun MapScreen(
     val taskBitmap: Bitmap? = remember {
         drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
     }
+
 
     val finish = painterResource(id = R.drawable.finish)
     val finishBitmap: Bitmap = remember(finish) {
@@ -233,7 +231,7 @@ fun MapScreen(
                 MapboxStandardStyle(
                     topSlot = {
                         fun getImageBitmapById(id: Long): ImageBitmap {
-                            return when (id){
+                            return when (id) {
                                 2L -> fogGrassBitmap
                                 5L -> fogWaterBitmap
                                 6L -> fogCloudBitmap
@@ -341,7 +339,7 @@ fun MapScreen(
                     val point = Point.fromLngLat(location.second, location.first)
                     val friendAvatar = mapState.friendAvatars[userId]?.second
                     val friendName = mapState.friendAvatars[userId]?.first
-                    
+
 //                    val infiniteTransition = rememberInfiniteTransition(label = "")
 //                    val animatedSize = infiniteTransition.animateFloat(
 //                        initialValue = 0.9f,
@@ -409,18 +407,18 @@ fun MapScreen(
                                     )
                                 }
                             }
-                            mapViewportState.flyTo(cameraOptions {
-                                center(
-                                    Point.fromLngLat(
-                                        mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
-                                        mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
-                                    )
-                                )
-                                zoom(13.0)
-                                pitch(0.0)
-                            }, animationOptions = MapAnimationOptions.mapAnimationOptions {
-                                duration(2000)
-                            })
+//                            mapViewportState.flyTo(cameraOptions {
+//                                center(
+//                                    Point.fromLngLat(
+//                                        mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
+//                                        mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
+//                                    )
+//                                )
+//                                zoom(13.0)
+//                                pitch(0.0)
+//                            }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+//                                duration(2000)
+//                            })
                         })
 
                     PointAnnotation(
@@ -441,15 +439,15 @@ fun MapScreen(
                     val points = viewModel.getPointsForCircle(
                         point.latitude(),
                         point.longitude(),
-                        mapState.distanceQuest!!.distance.toDouble()
+                        mapState.distanceQuest!!.distance
                     )
-                    mapViewportState.flyTo(cameraOptions {
-                        center(point)
-                        zoom(12.0)
-                        pitch(0.0)
-                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
-                        duration(2000)
-                    })
+//                    mapViewportState.flyTo(cameraOptions {
+//                        center(point)
+//                        zoom(12.0)
+//                        pitch(0.0)
+//                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+//                        duration(2000)
+//                    })
 
                     Log.d("MapScreen", "points: $points")
                     PolygonAnnotation(
@@ -470,20 +468,21 @@ fun MapScreen(
                             )
                         )
                     )
-                    mapViewportState.flyTo(cameraOptions {
-                        center(
-                            Point.fromLngLat(
-                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.second,
-                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.first
-                            )
-                        )
-                        zoom(14.0)
-                        pitch(0.0)
-                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
-                        duration(2000)
-                    })
+//                    mapViewportState.flyTo(cameraOptions {
+//                        center(
+//                            Point.fromLngLat(
+//                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.second,
+//                                mapState.friendsLocations[mapState.selectedFriendProfile!!.id]!!.first
+//                            )
+//                        )
+//                        zoom(14.0)
+//                        pitch(0.0)
+//                    }, animationOptions = MapAnimationOptions.mapAnimationOptions {
+//                        duration(2000)
+//                    })
                     FillLayer(
                         sourceState = userSourceState,
+                        fillColor = FillColor(Transparent),
                         layerId = "user-layer",
                     )
                     LineLayer(
@@ -690,6 +689,7 @@ fun MapScreen(
         }
     }
     if (mapState.event != null) {
+        Log.d("MapScreen", "event: ${mapState.event}")
         EventDialog(event = mapState.event!!,
             onDismissRequest = { viewModel.updateEvent(null) },
             onFriendDecline = { viewModel.declineFriendRequest(it) },
