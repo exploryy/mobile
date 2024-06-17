@@ -1,7 +1,10 @@
 package com.example.explory.presentation.screen.inventory
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,6 +33,8 @@ class InventoryViewModel(
         fetchInventory()
     }
 
+    val iconsList = listOf(2L)
+
     fun fetchInventory() {
         viewModelScope.launch {
             _inventoryState.update { it.copy(isLoading = true) }
@@ -50,6 +55,9 @@ class InventoryViewModel(
                 fetchInventory()
                 closeItemDialog()
                 Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
+                if (iconsList.contains(itemId)){
+                    setAppIcon(itemId)
+                }
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
@@ -64,6 +72,9 @@ class InventoryViewModel(
                 fetchInventory()
                 closeItemDialog()
                 Toast.makeText(context, "Предмет снят", Toast.LENGTH_SHORT).show()
+                if (iconsList.contains(itemId)){
+                    setAppIcon(null)
+                }
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
@@ -81,6 +92,23 @@ class InventoryViewModel(
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }
+    }
+
+    private fun setAppIcon(iconId: Long?) {
+        Log.d("ИКОНКА", iconId.toString())
+        val pm = context.packageManager
+
+        pm.setComponentEnabledSetting(
+            ComponentName(context, "com.example.explory.MainActivity"),
+            if (iconId == null) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+        pm.setComponentEnabledSetting(
+            ComponentName(context, "com.example.explory.MainActivityAlias1"),
+            if (iconId == 4L) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
     }
 
     fun openItemDialog(item: CosmeticItemInInventoryDto) {
