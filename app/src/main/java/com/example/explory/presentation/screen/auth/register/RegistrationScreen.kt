@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -43,16 +41,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.explory.R
 import com.example.explory.presentation.screen.auth.component.AdviceText
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
+import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value
 import org.koin.androidx.compose.koinViewModel
 
@@ -134,25 +133,31 @@ fun SharedTransitionScope.RegistrationScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.to_register),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = S24_W600,
                             textAlign = TextAlign.Left,
                             modifier = Modifier.padding(
-                                top = Value.MoreSpaceBetweenObjects, bottom = Value.SpaceBetweenObjects
+                                top = Value.MoreSpaceBetweenObjects,
+                                bottom = Value.SpaceBetweenObjects
                             )
                         )
 
                         OutlinedTextFieldWithLabel(
                             label = stringResource(R.string.email),
+                            isError = state.error != null,
                             value = state.email,
-                            onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateEmail(it)) },
+                            onValueChange = {
+                                viewModel.processIntent(
+                                    RegistrationIntent.UpdateEmail(it)
+                                )
+                            },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
                                 unfocusedBorderColor = Color.Gray,
                                 cursorColor = Color.White,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                                errorBorderColor = Red,
+                                errorContainerColor = Red.copy(alpha = 0.1f)
                             ),
                             modifier = Modifier
                         )
@@ -160,15 +165,22 @@ fun SharedTransitionScope.RegistrationScreen(
                         OutlinedTextFieldWithLabel(
                             label = stringResource(R.string.name),
                             value = state.name,
-                            onValueChange = { viewModel.processIntent(RegistrationIntent.UpdateName(it)) },
+                            isError = state.error != null,
+                            onValueChange = {
+                                viewModel.processIntent(
+                                    RegistrationIntent.UpdateName(
+                                        it
+                                    )
+                                )
+                            },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
                                 unfocusedBorderColor = Color.Gray,
                                 cursorColor = Color.White,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                                errorBorderColor = Red,
+                                errorContainerColor = Red.copy(alpha = 0.1f)
                             ),
                             modifier = Modifier
                         )
@@ -192,8 +204,8 @@ fun SharedTransitionScope.RegistrationScreen(
                                 cursorColor = Color.White,
                                 focusedLabelColor = Color.White,
                                 unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                errorContainerColor = Color.Red.copy(alpha = 0.1f)
+                                errorBorderColor = Red,
+                                errorContainerColor = Red.copy(alpha = 0.1f)
                             ),
                             modifier = Modifier
                         )
@@ -213,16 +225,16 @@ fun SharedTransitionScope.RegistrationScreen(
                             shape = RoundedCornerShape(Value.BigRound),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(IntrinsicSize.Min),
+                                .height(56.dp),
                             enabled = !state.isLoading && viewModel.isContinueButtonAvailable(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.White
                             )
                         ) {
                             Text(
-                                text = stringResource(R.string.login_button), style = TextStyle(
-                                    fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
-                                )
+                                text = stringResource(R.string.login_button),
+                                style = S16_W600,
+                                color = Black
                             )
                         }
 

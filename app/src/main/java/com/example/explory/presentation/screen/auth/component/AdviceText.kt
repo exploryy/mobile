@@ -20,15 +20,15 @@ fun AdviceText(
     clickableText: String,
     onClick: () -> Unit,
     modifier: Modifier
-){
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.BottomCenter)
             .padding(BasePadding),
-    ){
+    ) {
         val highlightedText = buildAnnotatedString {
-            withStyle(style = spanStyleGray){
+            withStyle(style = spanStyleGray) {
                 append("$baseText ")
             }
 
@@ -39,7 +39,7 @@ fun AdviceText(
 
         ClickableText(
             onClick = { offset ->
-                if (offset >= 16){
+                if (offset >= 16) {
                     onClick()
                 }
             },

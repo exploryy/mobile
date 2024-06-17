@@ -5,17 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.S14_W400
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
 
@@ -24,6 +21,7 @@ fun OutlinedTextFieldWithLabel(
     label: String,
     value: String,
     onValueChange: ((String) -> Unit)? = null,
+    isError: Boolean = false,
     error: String? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     modifier: Modifier
@@ -47,18 +45,18 @@ fun OutlinedTextFieldWithLabel(
                     .fillMaxWidth()
                     .padding(top = MiddlePadding),
                 shape = RoundedCornerShape(BigRound),
-                isError = error != null,
+                isError = isError,
                 colors = colors,
-                textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400)
+                textStyle = S14_W400
             )
 
             error?.let {
-                Text (
+                Text(
                     text = it,
                     modifier = Modifier
                         .padding(top = MiddlePadding),
-                    color = Color.Red,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.W400)
+                    color = Red,
+                    style = S14_W400
                 )
             }
         }

@@ -19,16 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.sp
+import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.S14_W400
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordTextField(
     label: String,
@@ -39,7 +36,7 @@ fun PasswordTextField(
     errorText: String? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     modifier: Modifier
-){
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -76,15 +73,15 @@ fun PasswordTextField(
                 },
                 isError = errorText != null,
                 colors = colors,
-                textStyle = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.W400)
+                textStyle = S14_W400
             )
             errorText?.let {
-                Text (
+                Text(
                     text = it,
                     modifier = Modifier
                         .padding(top = MiddlePadding),
-                    color = Color.Red,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.W400)
+                    color = Red,
+                    style = S14_W400
                 )
             }
         }

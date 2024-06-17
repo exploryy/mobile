@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.net.ConnectException
 
 class RegistrationViewModel(
     private val postRegistrationUseCase: PostRegistrationUseCase
@@ -94,12 +95,16 @@ class RegistrationViewModel(
         when (exception) {
             is HttpException -> when (exception.code()) {
                 400 -> _state.update {
-                    it.copy(error = "Пользователь с таким email уже существует")
+                    it.copy(error = "Некорректные данные")
                 }
 
                 else -> _state.update {
                     it.copy(error = "Ошибка сервера")
                 }
+            }
+
+            is ConnectException -> _state.update {
+                it.copy(error = "Не удалось подключиться к серверу")
             }
 
             else -> _state.update {

@@ -107,10 +107,6 @@ class MapViewModel(
         observeEventWebSocketMessages()
     }
 
-    fun getFriendInfo(friendId: String) {
-
-    }
-
     private fun calculateDistance(
         firstLat: Double,
         firstLng: Double,

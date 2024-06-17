@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.explory.R
-import com.example.explory.presentation.MainActivity
+import com.example.explory.MainActivity
 
 class LocationService : Service() {
 

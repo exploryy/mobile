@@ -78,7 +78,9 @@ import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGreen
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Transparent
+import com.example.explory.ui.theme.White
 import com.mapbox.geojson.Feature
+import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
 import com.mapbox.maps.MapboxExperimental
@@ -88,21 +90,22 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
-import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
 import com.mapbox.maps.extension.compose.style.StyleImage
 import com.mapbox.maps.extension.compose.style.layers.generated.FillAntialias
 import com.mapbox.maps.extension.compose.style.layers.generated.FillColor
 import com.mapbox.maps.extension.compose.style.layers.generated.FillLayer
 import com.mapbox.maps.extension.compose.style.layers.generated.FillPattern
+import com.mapbox.maps.extension.compose.style.layers.generated.LineBorderColor
+import com.mapbox.maps.extension.compose.style.layers.generated.LineBorderWidth
+import com.mapbox.maps.extension.compose.style.layers.generated.LineCap
 import com.mapbox.maps.extension.compose.style.layers.generated.LineColor
+import com.mapbox.maps.extension.compose.style.layers.generated.LineJoin
 import com.mapbox.maps.extension.compose.style.layers.generated.LineLayer
 import com.mapbox.maps.extension.compose.style.layers.generated.LineWidth
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJSONData
 import com.mapbox.maps.extension.compose.style.sources.generated.GeoJsonSourceState
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
-import com.mapbox.maps.extension.style.layers.properties.generated.LineJoin
 import com.mapbox.maps.plugin.PuckBearing
-import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.DefaultViewportTransitionOptions
@@ -115,13 +118,12 @@ import org.koin.androidx.compose.koinViewModel
 
 const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
-const val OPENED_WORLD_LAYER = "layer-parking"
+const val OPENED_WORLD_LAYER = "opened-layer"
 
 @OptIn(MapboxExperimental::class)
 @Composable
 fun MapScreen(
-    viewModel: MapViewModel = koinViewModel(),
-    onLogout: () -> Unit
+    viewModel: MapViewModel = koinViewModel(), onLogout: () -> Unit
 ) {
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     LaunchedEffect(mapState.showMap) {
@@ -150,6 +152,7 @@ fun MapScreen(
             Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints.toList())
         )
     )
+
 
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
@@ -323,6 +326,7 @@ fun MapScreen(
                 mapState.coins.forEach { coin ->
                     val point =
                         Point.fromLngLat(coin.longitude.toDouble(), coin.latitude.toDouble())
+
                     PointAnnotation(point = point,
                         iconSize = 0.2,
                         iconEmissiveStrength = 0.0,
@@ -350,77 +354,44 @@ fun MapScreen(
 //                        ), label = ""
 //                    )
 
-                    if (friendAvatar == null) {
-                        val defaultAvatarBitmap = createDefaultAvatar(userId)
-                        PointAnnotation(
-                            point = point,
-                            iconSize = 1.0,
-                            iconImageBitmap = defaultAvatarBitmap,
-                            onClick = {
-                                viewModel.onFriendMarkerClicked(userId)
-                                true
-                            },
-                            textField = friendName,
-                            textOffset = listOf(0.0, 2.0)
-                        )
-
-                    } else {
-                        val targetSize = 100
-                        val circleBitmap = createCircularAvatar(friendAvatar, targetSize)
-
-                        PointAnnotation(
-                            point = point,
-                            iconSize = 1.0,
-                            iconImageBitmap = circleBitmap,
-                            onClick = {
-                                viewModel.onFriendMarkerClicked(userId)
-                                true
-                            },
-                            textField = friendName,
-                            textOffset = listOf(0.0, 2.0),
-                            textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
-                        )
-                    }
+                    PointAnnotation(
+                        point = point,
+                        iconSize = 1.0,
+                        iconImageBitmap = if (friendAvatar != null) createCircularAvatar(
+                            friendAvatar, 100
+                        ) else createDefaultAvatar(userId),
+                        onClick = {
+                            viewModel.onFriendMarkerClicked(userId)
+                            true
+                        },
+                        textField = friendName,
+                        textOffset = listOf(0.0, 2.0),
+                        textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
+                    )
                 }
 
                 if (mapState.p2pQuest != null) {
-                    PolylineAnnotationGroup(lineDasharray = listOf(1.0, 1.0),
-                        annotations = mutableListOf<PolylineAnnotationOptions>().apply {
-                            val points = mapState.p2pQuest!!.route.points
-                            points.forEachIndexed { index, pointDto ->
-                                if (index < points.size - 1) {
-                                    add(
-                                        PolylineAnnotationOptions().withLineColor(AccentColor.toArgb())
-                                            .withLineWidth(5.0)
-                                            .withLineJoin(LineJoin.ROUND)
-                                            .withPoints(
-                                                listOf(
-                                                    Point.fromLngLat(
-                                                        pointDto.longitude.toDouble(),
-                                                        pointDto.latitude.toDouble()
-                                                    ), Point.fromLngLat(
-                                                        points[index + 1].longitude.toDouble(),
-                                                        points[index + 1].latitude.toDouble()
-                                                    )
-                                                )
-                                            )
+                    val lineSourceData = GeoJSONData(
+                        Feature.fromGeometry(
+                            LineString.fromLngLats(
+                                mapState.p2pQuest!!.route.points.map {
+                                    Point.fromLngLat(
+                                        it.longitude.toDouble(), it.latitude.toDouble()
                                     )
                                 }
-                            }
-//                            mapViewportState.flyTo(cameraOptions {
-//                                center(
-//                                    Point.fromLngLat(
-//                                        mapState.p2pQuest!!.route.points[points.size / 2].longitude.toDouble(),
-//                                        mapState.p2pQuest!!.route.points[points.size / 2].latitude.toDouble()
-//                                    )
-//                                )
-//                                zoom(13.0)
-//                                pitch(0.0)
-//                            }, animationOptions = MapAnimationOptions.mapAnimationOptions {
-//                                duration(2000)
-//                            })
-                        })
-
+                            )
+                        )
+                    )
+                    LineLayer(
+                        sourceState = GeoJsonSourceState(initialData = lineSourceData),
+                        layerId = "line-layer",
+                        lineColor = LineColor(AccentColor),
+                        lineBorderColor = LineBorderColor(White),
+                        lineJoin = LineJoin.ROUND,
+                        lineCap = LineCap.ROUND,
+                        lineBorderWidth = LineBorderWidth(3.0),
+                        lineWidth = LineWidth(10.0)
+                    )
                     PointAnnotation(
                         point = Point.fromLngLat(
                             mapState.p2pQuest!!.route.points.last().longitude.toDouble(),
@@ -437,9 +408,7 @@ fun MapScreen(
                         mapState.distanceQuest!!.commonQuestDto.latitude.toDouble()
                     )
                     val points = viewModel.getPointsForCircle(
-                        point.latitude(),
-                        point.longitude(),
-                        mapState.distanceQuest!!.distance
+                        point.latitude(), point.longitude(), mapState.distanceQuest!!.distance
                     )
 //                    mapViewportState.flyTo(cameraOptions {
 //                        center(point)
@@ -523,8 +492,7 @@ fun MapScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(
-                Modifier.padding(start = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                Modifier.padding(start = 20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 IconButton(
                     onClick = { viewModel.updateShowSettingsScreen() },
@@ -629,11 +597,8 @@ fun MapScreen(
         }
 
         mapState.p2pQuest != null -> {
-            val imageUrl =
-                if (mapState.p2pQuest!!.commonQuestDto.images.isEmpty())
-                    null
-                else
-                    mapState.p2pQuest!!.commonQuestDto.images.first()
+            val imageUrl = if (mapState.p2pQuest!!.commonQuestDto.images.isEmpty()) null
+            else mapState.p2pQuest!!.commonQuestDto.images.first()
 
             QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
                 image = imageUrl,
@@ -641,8 +606,7 @@ fun MapScreen(
                 difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                 distance = mapState.p2pQuest!!.route.distance,
-                questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId
-                ) "активный" else null,
+                questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null,
                 point = mapState.p2pQuest!!.route.points.first(),
                 onButtonClicked = {
                     if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
@@ -655,11 +619,8 @@ fun MapScreen(
         }
 
         mapState.distanceQuest != null -> {
-            val imageUrl =
-                if (mapState.distanceQuest!!.commonQuestDto.images.isEmpty())
-                    null
-                else
-                    mapState.distanceQuest!!.commonQuestDto.images.first()
+            val imageUrl = if (mapState.distanceQuest!!.commonQuestDto.images.isEmpty()) null
+            else mapState.distanceQuest!!.commonQuestDto.images.first()
 
             QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
                 image = imageUrl,
@@ -667,8 +628,7 @@ fun MapScreen(
                 difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
                 transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
                 distance = mapState.distanceQuest!!.distance,
-                questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId
-                ) "активный" else null,
+                questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null,
                 point = PointDto(
                     mapState.distanceQuest!!.commonQuestDto.longitude,
                     mapState.distanceQuest!!.commonQuestDto.latitude,

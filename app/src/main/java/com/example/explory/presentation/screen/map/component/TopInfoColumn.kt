@@ -116,14 +116,16 @@ fun BalanceBar(
 @Composable
 fun BarItem(modifier: Modifier = Modifier, value: Int, icon: Int) {
     Row(
-        modifier = modifier.widthIn(min = 0.dp, max = 60.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "$value",
             color = Color.White,
             style = S16_W600,
-            overflow = TextOverflow.Visible,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.widthIn(min = 0.dp, max = 55.dp)
         )
         Spacer(modifier = Modifier.width(4.dp))
         Image(
