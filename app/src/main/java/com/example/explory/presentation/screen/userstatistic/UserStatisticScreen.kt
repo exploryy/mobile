@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
@@ -16,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.userstatistic.component.AnimatedCircularProgressIndicator
 import com.example.explory.ui.theme.Purple40
@@ -58,12 +61,12 @@ fun UserStatisticScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                     ) {
                         Card(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 8.dp)
+                                .heightIn(min = 150.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -78,7 +81,8 @@ fun UserStatisticScreen(
                                 )
                                 Text(
                                     text = it.level.toString(),
-                                    style = MaterialTheme.typography.displayLarge
+                                    fontSize = 85.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
                         }
@@ -86,6 +90,7 @@ fun UserStatisticScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 8.dp)
+                                .heightIn(min = 150.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -113,7 +118,7 @@ fun UserStatisticScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(vertical = 16.dp)
                     ) {
                         Column(
                             modifier = Modifier

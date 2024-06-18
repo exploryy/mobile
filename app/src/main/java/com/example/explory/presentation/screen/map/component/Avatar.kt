@@ -3,6 +3,7 @@ package com.example.explory.presentation.screen.map.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -14,6 +15,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
@@ -38,6 +40,7 @@ fun Avatar(
         Box(
             modifier = modifier
                 .background(color = DarkGray, shape = CircleShape)
+                .padding(4.dp)
         ) {
             SubcomposeAsyncImage(
                 model = image,
@@ -84,34 +87,33 @@ fun Avatar(
         }
 
         border?.let {
-            SubcomposeAsyncImage(
-                model = it.url,
-                imageLoader = imageLoader,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .fillMaxSize(),
-                alignment = Alignment.Center
             ) {
-                when (painter.state) {
-                    is AsyncImagePainter.State.Success -> {
-                        SubcomposeAsyncImageContent()
-                    }
-                    is AsyncImagePainter.State.Error -> {
-                        Icon(
-                            painter = painterResource(id = R.drawable.picture),
-                            contentDescription = null,
-                            tint = White,
-                            modifier = Modifier.scale(0.5f)
-                        )
-                    }
-                    is AsyncImagePainter.State.Empty -> {
-
-                    }
-
-                    is AsyncImagePainter.State.Loading -> {
-
+                SubcomposeAsyncImage(
+                    model = it.url,
+                    imageLoader = imageLoader,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    alignment = Alignment.Center
+                ) {
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Success -> {
+                            SubcomposeAsyncImageContent()
+                        }
+                        is AsyncImagePainter.State.Error -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.picture),
+                                contentDescription = null,
+                                tint = White,
+                                modifier = Modifier.scale(0.5f)
+                            )
+                        }
+                        is AsyncImagePainter.State.Empty -> {}
+                        is AsyncImagePainter.State.Loading -> {}
                     }
                 }
             }
