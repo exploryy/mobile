@@ -66,7 +66,7 @@ fun UserStatisticScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 8.dp)
-                                .heightIn(min = 150.dp)
+                                .heightIn(min = 180.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -90,7 +90,7 @@ fun UserStatisticScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 8.dp)
-                                .heightIn(min = 150.dp)
+                                .heightIn(min = 180.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -110,7 +110,7 @@ fun UserStatisticScreen(
                                     progressBackgroundColor = MaterialTheme.colorScheme.primary,
                                     progressIndicatorColor = MaterialTheme.colorScheme.onSurface,
                                     completedColor = MaterialTheme.colorScheme.primary,
-                                    circularIndicatorDiameter = 100.dp
+                                    circularIndicatorDiameter = 110.dp
                                 )
                             }
                         }

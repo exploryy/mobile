@@ -5,8 +5,11 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.progressSemantics
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +26,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -36,19 +41,13 @@ fun AnimatedCircularProgressIndicator(
     circularIndicatorDiameter: Dp = 64.dp,
     modifier: Modifier = Modifier
 ) {
-
     val stroke = with(LocalDensity.current) {
         Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
     }
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        ProgressStatus(
-            currentValue = currentValue,
-            maxValue = maxValue
-        )
-
         val animateFloat = remember { Animatable(0f) }
-        LaunchedEffect(animateFloat) {
+        LaunchedEffect(currentValue) {
             animateFloat.animateTo(
                 targetValue = currentValue / maxValue.toFloat(),
                 animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
@@ -79,6 +78,18 @@ fun AnimatedCircularProgressIndicator(
                 )
             }
         }
+
+        Box(
+            modifier = Modifier
+                .size(circularIndicatorDiameter)
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            ProgressStatus(
+                currentValue = currentValue,
+                maxValue = maxValue
+            )
+        }
     }
 }
 
@@ -87,11 +98,21 @@ private fun ProgressStatus(
     currentValue: Int,
     maxValue: Int,
 ) {
-    Text(text = buildAnnotatedString {
+    val text = buildAnnotatedString {
         append(AnnotatedString("$currentValue"))
         append(AnnotatedString(text = "/"))
         append(AnnotatedString(text = "$maxValue"))
-    })
+    }
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyLarge,
+        textAlign = TextAlign.Center,
+        maxLines = 2,
+        overflow = TextOverflow.Clip,
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(2.dp)
+    )
 }
 
 private fun DrawScope.drawCircularProgressIndicator(
