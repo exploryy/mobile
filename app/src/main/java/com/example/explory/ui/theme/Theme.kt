@@ -23,8 +23,10 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = WhiteContentColor,
     onSecondary = OffWhite,
     onBackground = LightGray,
-    onSurface = OffWhite
-)
+    onSurface = OffWhite,
+    surfaceContainer = Black,
+
+    )
 
 private val LightColorScheme = lightColorScheme(
     primary = OffWhite,
@@ -49,6 +51,7 @@ fun ExploryTheme(
             val context = LocalContext.current
             if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         isDarkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -58,7 +61,8 @@ fun ExploryTheme(
         SideEffect {
             val window = (view.context as Activity).window
 //            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                !isDarkTheme
         }
     }
 

@@ -4,9 +4,10 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.explory.R
 import com.example.explory.MainActivity
+import com.example.explory.R
 
 class LocationService : Service() {
 
@@ -59,6 +60,7 @@ class LocationService : Service() {
     }
 
     private fun stop() {
+        Log.d("LocationService", "Location updates stopped")
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }

@@ -2,9 +2,6 @@ package com.example.explory.presentation.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,12 +20,9 @@ fun AppNavigation() {
     SharedTransitionLayout {
         NavHost(
             navController = navController,
-            startDestination = Screen.Splash.route,
-            enterTransition = { fadeIn(tween(300)) },
-            exitTransition = { fadeOut(tween(1000)) }
+            startDestination = Screen.Splash.route
         ) {
-            composable(Screen.Splash.route, enterTransition = { fadeIn(tween(3000)) },
-                exitTransition = { fadeOut(tween(1000)) })
+            composable(Screen.Splash.route)
             {
                 SplashScreen(onNavigateToMap = {
                     navController.navigate(Screen.Map.route) {
@@ -45,10 +39,7 @@ fun AppNavigation() {
                     navController.navigate(Screen.Login.route)
                 })
             }
-            composable(Screen.Map.route,
-                enterTransition = { fadeIn(tween(3000)) },
-                exitTransition = { fadeOut(tween(1000)) }
-            ) {
+            composable(Screen.Map.route) {
                 MapScreen(onLogout = {
                     navController.navigate(Screen.Welcome.route) {
                         popUpTo(Screen.Map.route) {

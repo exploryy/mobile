@@ -131,14 +131,14 @@ class MapViewModel(
                         userLocation.longitude()
                     ) > 100.0
                 ) {
-                    _mapState.update { it.copy(toastText = "Вы слишком далеко от монеты") }
+                    _mapState.update { it.copy(infoText = "Вы слишком далеко от монеты") }
                     return@launch
                 }
                 coinsRepository.collectCoin(coin.coinId)
                 _mapState.update { it ->
                     it.copy(
                         coins = it.coins.filter { it.coinId != coin.coinId },
-                        toastText = "Монета собрана"
+                        infoText = "Монета собрана"
                     )
                 }
             } catch (e: Exception) {
@@ -160,12 +160,12 @@ class MapViewModel(
                         quest?.longitude?.toDouble() ?: 0.0
                     ) > 100.0
                 ) {
-                    _mapState.update { it.copy(toastText = "Вы слишком далеко от квеста") }
+                    _mapState.update { it.copy(infoText = "Вы слишком далеко от квеста") }
                     return@launch
                 }
                 questRepository.startQuest(questId, "WALK")
                 _mapState.update { it ->
-                    it.copy(toastText = "Квест начат",
+                    it.copy(infoText = "Квест начат",
                         activeQuest = quest,
                         notCompletedQuests = it.notCompletedQuests.filter { it.questId.toString() != questId })
                 }
@@ -199,7 +199,7 @@ class MapViewModel(
                 questRepository.cancelQuest(questId)
                 _mapState.update {
                     it.copy(
-                        toastText = "Квест отменен",
+                        infoText = "Квест отменен",
                         activeQuest = null,
                         notCompletedQuests = it.notCompletedQuests + it.activeQuest!!
                     )
@@ -310,21 +310,21 @@ class MapViewModel(
     private suspend fun getQuests(addNew: Boolean = false) {
         try {
             val quests = getQuestsUseCase.execute()
-            if (quests.active.isNotEmpty()) {
-                when (quests.active[0].questType) {
-                    "DISTANCE" -> {
-                        val distanceQuest =
-                            questRepository.getDistanceQuest(quests.active[0].questId.toString())
-                        updateDistanceQuest(distanceQuest)
-                    }
-
-                    "POINT_TO_POINT" -> {
-                        val p2pQuest =
-                            questRepository.getP2PQuest(quests.active[0].questId.toString())
-                        updateP2PQuest(p2pQuest)
-                    }
-                }
-            }
+//            if (quests.active.isNotEmpty()) {
+//                when (quests.active[0].questType) {
+//                    "DISTANCE" -> {
+//                        val distanceQuest =
+//                            questRepository.getDistanceQuest(quests.active[0].questId.toString())
+//                        updateDistanceQuest(distanceQuest)
+//                    }
+//
+//                    "POINT_TO_POINT" -> {
+//                        val p2pQuest =
+//                            questRepository.getP2PQuest(quests.active[0].questId.toString())
+//                        updateP2PQuest(p2pQuest)
+//                    }
+//                }
+//            }
             if (addNew) {
                 _mapState.update {
                     it.copy(
@@ -626,8 +626,8 @@ class MapViewModel(
         _mapState.update { it.copy(userPoint = Point.fromLngLat(longitude, latitude)) }
     }
 
-    fun updateToastText(text: String?) {
-        _mapState.update { it.copy(toastText = text) }
+    fun updateInfoText(text: String?) {
+        _mapState.update { it.copy(infoText = text) }
     }
 
     fun updateShopOpen() {

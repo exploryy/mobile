@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onDetachedFromWindow()
         Intent(applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_STOP
-            stopService(this)
+            startService(this)
         }
     }
 }
