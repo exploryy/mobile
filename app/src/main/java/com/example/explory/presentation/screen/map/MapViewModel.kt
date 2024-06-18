@@ -406,7 +406,7 @@ class MapViewModel(
     fun getCorrectDifficulty(difficulty: String): String {
         return when (difficulty) {
             "EASY" -> "легкий"
-            "MEDIUM" -> "средний"
+            "MEDIUM" -> "среднняя сложность"
             "HARD" -> "сложный"
             else -> "неизвестно"
         }

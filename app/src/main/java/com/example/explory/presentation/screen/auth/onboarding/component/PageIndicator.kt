@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PageIndicator(
+    modifier: Modifier = Modifier,
     pagerState: PagerState
 ){
     val pageCount = pagerState.pageCount
     Row(
-        Modifier
+        modifier
             .height(24.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Start

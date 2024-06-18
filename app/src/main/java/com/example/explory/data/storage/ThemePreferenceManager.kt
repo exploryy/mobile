@@ -9,10 +9,11 @@ class ThemePreferenceManager(context: Context) {
         private const val KEY_DARK_THEME = "dark_theme"
     }
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     fun isDarkTheme(): Boolean {
-        return prefs.getBoolean(KEY_DARK_THEME, false)
+        return prefs.getBoolean(KEY_DARK_THEME, true)
     }
 
     fun setDarkTheme(isDark: Boolean) {

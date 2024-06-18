@@ -24,7 +24,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -49,7 +48,6 @@ import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value.BasePadding
@@ -152,20 +150,6 @@ fun SharedTransitionScope.LoginScreen(
                             value = loginState.login,
                             onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
                             isError = loginState.errorMessage != null,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = White,
-                                unfocusedTextColor = White,
-                                errorContainerColor = Red.copy(alpha = 0.1f),
-                                cursorColor = Color.White,
-                                focusedBorderColor = Color.White,
-                                unfocusedBorderColor = Color.Gray,
-                                errorBorderColor = Red,
-                                errorTextColor = Red,
-                                errorLabelColor = Red,
-                                errorPlaceholderColor = Red,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.Gray,
-                            ),
                             modifier = Modifier
                         )
 
@@ -176,21 +160,7 @@ fun SharedTransitionScope.LoginScreen(
                             transformationState = loginState.isPasswordHide,
                             onButtonClick = { viewModel.processIntent(LoginIntent.UpdatePasswordVisibility) },
                             errorText = loginState.errorMessage,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                errorContainerColor = Red.copy(alpha = 0.1f),
-                                focusedTextColor = White,
-                                unfocusedTextColor = White,
-                                cursorColor = Color.White,
-                                focusedBorderColor = Color.White,
-                                unfocusedBorderColor = Color.Gray,
-                                errorBorderColor = Red,
-                                errorTextColor = Red,
-                                errorPlaceholderColor = Red,
-                                errorTrailingIconColor = Red,
-                                errorLabelColor = Red,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.Gray,
-                            ),
+
                             modifier = Modifier
                         )
                         Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))

@@ -25,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -49,7 +48,6 @@ import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value
@@ -152,21 +150,7 @@ fun SharedTransitionScope.RegistrationScreen(
                                     RegistrationIntent.UpdateEmail(it)
                                 )
                             },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.White,
-                                focusedTextColor = White,
-                                unfocusedTextColor = White,
-                                unfocusedBorderColor = Color.Gray,
-                                cursorColor = Color.White,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Red,
-                                errorTextColor = Red,
-                                errorLabelColor = Red,
 
-                                errorPlaceholderColor = Red,
-                                errorContainerColor = Red.copy(alpha = 0.1f)
-                            ),
                             modifier = Modifier
                         )
 
@@ -181,20 +165,6 @@ fun SharedTransitionScope.RegistrationScreen(
                                     )
                                 )
                             },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.White,
-                                focusedTextColor = White,
-                                unfocusedTextColor = White,
-                                unfocusedBorderColor = Color.Gray,
-                                cursorColor = Color.White,
-                                focusedLabelColor = Color.White,
-                                errorLabelColor = Red,
-                                errorPlaceholderColor = Red,
-                                unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Red,
-                                errorTextColor = Red,
-                                errorContainerColor = Red.copy(alpha = 0.1f)
-                            ),
                             modifier = Modifier
                         )
 
@@ -211,22 +181,7 @@ fun SharedTransitionScope.RegistrationScreen(
                             errorText = state.error,
                             transformationState = state.isPasswordHide,
                             onButtonClick = { viewModel.processIntent(RegistrationIntent.UpdatePasswordVisibility) },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.White,
-                                focusedTextColor = White,
-                                unfocusedTextColor = White,
-                                unfocusedBorderColor = Color.Gray,
-                                cursorColor = Color.White,
-                                errorTextColor = Red,
-                                errorPlaceholderColor = Red,
-                                focusedLabelColor = Color.White,
-                                errorTrailingIconColor = Red,
-                                errorLabelColor = Red,
 
-                                unfocusedLabelColor = Color.Gray,
-                                errorBorderColor = Red,
-                                errorContainerColor = Red.copy(alpha = 0.1f)
-                            ),
                             modifier = Modifier
                         )
 

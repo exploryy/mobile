@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.explory.ui.theme.MediumGray
+import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.White
 
@@ -18,7 +18,7 @@ import com.example.explory.ui.theme.White
 fun InfoBox(
     modifier: Modifier = Modifier,
     text: String,
-    containerColor: Color = MediumGray,
+    containerColor: Color = DarkGray,
     textColor: Color = White
 ) {
     Box(

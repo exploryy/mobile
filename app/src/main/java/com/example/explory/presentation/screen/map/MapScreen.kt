@@ -16,26 +16,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -43,10 +41,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
@@ -115,7 +109,7 @@ const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
 const val OPENED_WORLD_LAYER = "opened-layer"
 
-@OptIn(MapboxExperimental::class)
+@OptIn(MapboxExperimental::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(), onLogout: () -> Unit
@@ -134,6 +128,18 @@ fun MapScreen(
             viewModel.updateInfoText(null)
         }
     }
+    val state = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            confirmValueChange = {
+                if (it == SheetValue.Hidden) {
+                    viewModel.updateP2PQuest(null)
+                    viewModel.updateDistanceQuest(null)
+                }
+                true
+            },
+            skipHiddenState = false
+        )
+    )
 
     val context = LocalContext.current
     val mapViewportState = rememberMapViewportState {
@@ -458,7 +464,7 @@ fun MapScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         MapButton(
-                            onClick = { viewModel.updateShowFriendScreen() },
+                            onClick = { viewModel.updateShowSettingsScreen() },
                             icon = Icons.Filled.Settings
                         )
                         MapButton(
@@ -471,10 +477,6 @@ fun MapScreen(
                     }
                 }
 
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.active_quest))
-                val progress by animateLottieCompositionAsState(
-                    composition, iterations = LottieConstants.IterateForever
-                )
                 if (mapState.activeQuest != null) {
                     Box(
                         modifier = Modifier
@@ -493,27 +495,27 @@ fun MapScreen(
 
 
                 ButtonControlRow(mapViewportState = mapViewportState) { viewModel.updateShowFriendScreen() }
-                if (mapState.p2pQuest != null || mapState.distanceQuest != null) {
-                    IconButton(
-                        colors = IconButtonDefaults.iconButtonColors(containerColor = Black),
-                        onClick = {
-                            viewModel.updateP2PQuest(null)
-                            viewModel.updateDistanceQuest(null)
-                        },
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 60.dp)
-                            .size(45.dp)
-
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close),
-                            tint = Color.White,
-                            contentDescription = null,
-                            modifier = Modifier.scale(1.4f)
-                        )
-                    }
-
-                }
+//                if (mapState.p2pQuest != null || mapState.distanceQuest != null) {
+//                    IconButton(
+//                        colors = IconButtonDefaults.iconButtonColors(containerColor = Black),
+//                        onClick = {
+//                            viewModel.updateP2PQuest(null)
+//                            viewModel.updateDistanceQuest(null)
+//                        },
+//                        modifier = Modifier
+//                            .padding(start = 20.dp, top = 60.dp)
+//                            .size(45.dp)
+//
+//                    ) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.close),
+//                            tint = Color.White,
+//                            contentDescription = null,
+//                            modifier = Modifier.scale(1.4f)
+//                        )
+//                    }
+//
+//                }
             }
 
             is UiState.Error -> {
@@ -544,33 +546,30 @@ fun MapScreen(
 
 
             mapState.p2pQuest != null -> {
-                val imageUrl = if (mapState.p2pQuest!!.commonQuestDto.images.isEmpty()) null
-                else mapState.p2pQuest!!.commonQuestDto.images.first()
-
                 QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
-                    image = imageUrl,
+                    images = mapState.p2pQuest!!.commonQuestDto.images,
                     description = mapState.p2pQuest!!.commonQuestDto.description,
                     difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                     transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                     distance = mapState.p2pQuest!!.route.distance,
                     questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null,
                     point = mapState.p2pQuest!!.route.points.first(),
+                    state = state,
+                    onDismissRequest = { viewModel.updateP2PQuest(null) },
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
                         } else {
-                            viewModel.updateDistanceQuest(null)
                             viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
                         }
+                        viewModel.updateDistanceQuest(null)
+
                     })
             }
 
             mapState.distanceQuest != null -> {
-                val imageUrl = if (mapState.distanceQuest!!.commonQuestDto.images.isEmpty()) null
-                else mapState.distanceQuest!!.commonQuestDto.images.first()
-
                 QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
-                    image = imageUrl,
+                    images = mapState.distanceQuest!!.commonQuestDto.images,
                     description = mapState.distanceQuest!!.commonQuestDto.description,
                     difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
                     transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
@@ -582,13 +581,16 @@ fun MapScreen(
                         mapState.distanceQuest!!.commonQuestDto.longitude,
                         mapState.distanceQuest!!.commonQuestDto.latitude
                     ),
+                    onDismissRequest = { viewModel.updateDistanceQuest(null) },
+                    state = state,
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
                         } else {
-                            viewModel.updateP2PQuest(null)
                             viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
                         }
+                        viewModel.updateP2PQuest(null)
+
                     })
             }
 

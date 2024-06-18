@@ -6,15 +6,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S14_W400
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
+import com.example.explory.ui.theme.White
 
 @Composable
 fun OutlinedTextFieldWithLabel(
@@ -23,7 +24,6 @@ fun OutlinedTextFieldWithLabel(
     onValueChange: ((String) -> Unit)? = null,
     isError: Boolean = false,
     error: String? = null,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     modifier: Modifier
 ) {
     Box(
@@ -46,7 +46,17 @@ fun OutlinedTextFieldWithLabel(
                     .padding(top = MiddlePadding),
                 shape = RoundedCornerShape(BigRound),
                 isError = isError,
-                colors = colors,
+                colors = TextFieldDefaults.colors().copy(
+                    focusedTextColor = White,
+                    unfocusedTextColor = White,
+                    cursorColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.Gray,
+                    errorTextColor = Red,
+                    errorLabelColor = Red,
+                    errorPlaceholderColor = Red,
+                    errorContainerColor = Red.copy(alpha = 0.1f)
+                ),
                 textStyle = S14_W400
             )
 
