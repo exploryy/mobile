@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S14_W400
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
 import com.example.explory.ui.theme.White
@@ -72,6 +73,8 @@ fun PasswordTextField(
                 },
                 isError = errorText != null,
                 colors = TextFieldDefaults.colors().copy(
+                    focusedContainerColor = Transparent,
+                    unfocusedContainerColor = Transparent,
                     focusedTextColor = White,
                     unfocusedTextColor = White,
                     cursorColor = Color.White,

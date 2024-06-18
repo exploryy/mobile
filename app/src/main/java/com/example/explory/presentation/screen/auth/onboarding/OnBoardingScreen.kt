@@ -1,9 +1,6 @@
 package com.example.explory.presentation.screen.auth.onboarding
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -43,9 +40,9 @@ import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Value
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SharedTransitionScope.OnBoardingScreen(
+fun OnBoardingScreen(
     animatedVisibilityScope: AnimatedVisibilityScope, onClickNavigation: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
@@ -84,11 +81,13 @@ fun SharedTransitionScope.OnBoardingScreen(
 
             Column(modifier = Modifier
                 .fillMaxSize()
-                .sharedElement(state = rememberSharedContentState(key = "column"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = { _, _ ->
-                        tween(durationMillis = 500)
-                    }), verticalArrangement = Arrangement.Bottom
+//                .sharedElement(state = rememberSharedContentState(key = "column"),
+//                    animatedVisibilityScope = animatedVisibilityScope,
+//                    boundsTransform = { _, _ ->
+//                        tween(durationMillis = 500)
+//                    })
+                ,
+                verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
                     modifier = Modifier

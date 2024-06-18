@@ -1,9 +1,6 @@
 package com.example.explory.presentation.screen.auth.register
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -18,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,9 +51,9 @@ import com.example.explory.ui.theme.Value
 import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SharedTransitionScope.RegistrationScreen(
+fun RegistrationScreen(
     viewModel: RegistrationViewModel = koinViewModel(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
@@ -97,7 +94,7 @@ fun SharedTransitionScope.RegistrationScreen(
             IconButton(onClick = {
                 onBackClick()
             }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
             }
         }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent))
 
@@ -112,11 +109,12 @@ fun SharedTransitionScope.RegistrationScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .sharedElement(state = rememberSharedContentState(key = "column"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ ->
-                            tween(durationMillis = 500)
-                        }), verticalArrangement = Arrangement.Bottom
+//                    .sharedElement(state = rememberSharedContentState(key = "column"),
+//                        animatedVisibilityScope = animatedVisibilityScope,
+//                        boundsTransform = { _, _ ->
+//                            tween(durationMillis = 500)
+//                        })
+                , verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
                     modifier = Modifier

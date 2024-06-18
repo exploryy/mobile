@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S14_W400
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
 import com.example.explory.ui.theme.White
@@ -47,6 +48,8 @@ fun OutlinedTextFieldWithLabel(
                 shape = RoundedCornerShape(BigRound),
                 isError = isError,
                 colors = TextFieldDefaults.colors().copy(
+                    focusedContainerColor = Transparent,
+                    unfocusedContainerColor = Transparent,
                     focusedTextColor = White,
                     unfocusedTextColor = White,
                     cursorColor = Color.White,

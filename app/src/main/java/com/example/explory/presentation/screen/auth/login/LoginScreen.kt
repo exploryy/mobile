@@ -2,8 +2,6 @@ package com.example.explory.presentation.screen.auth.login
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -59,7 +57,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.LoginScreen(
+fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
@@ -114,13 +112,14 @@ fun SharedTransitionScope.LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "column"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ ->
-                            tween(durationMillis = 500)
-                        }
-                    ),
+//                    .sharedElement(
+//                        state = rememberSharedContentState(key = "column"),
+//                        animatedVisibilityScope = animatedVisibilityScope,
+//                        boundsTransform = { _, _ ->
+//                            tween(durationMillis = 500)
+//                        }
+//                    )
+                ,
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
