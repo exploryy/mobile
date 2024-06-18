@@ -37,7 +37,7 @@ class DefaultLocationClient(
             }
 
             val locationRequest =
-                LocationRequest.Builder(Priority.PRIORITY_PASSIVE, 1000 * 30)
+                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000 * 30)
                     .setWaitForAccurateLocation(false)
                     .setMinUpdateIntervalMillis(3000)
                     .setMinUpdateDistanceMeters(7f)

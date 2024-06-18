@@ -31,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -101,7 +100,7 @@ import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
 import org.koin.androidx.compose.koinViewModel
 
-
+// todo use error screen on error (when no internet)
 const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
 const val OPENED_WORLD_LAYER = "opened-layer"
@@ -136,7 +135,6 @@ fun MapScreen(
             Polygon.fromOuterInner(viewModel.outerLineString, mapState.innerPoints.toList())
         )
     )
-
 
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
@@ -237,6 +235,10 @@ fun MapScreen(
                 }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
+                        mapView.mapboxMap.subscribeMapLoadingError {
+                            viewModel.updateUiState(UiState.Error(it.message))
+                        }
+
                         mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
                             puckBearingEnabled = true
@@ -535,7 +537,6 @@ fun MapScreen(
                 }
             )
         }
-        SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter))
     }
 
     when {
@@ -625,6 +626,9 @@ fun MapScreen(
             onFriendDecline = { viewModel.declineFriendRequest(it) },
             onFriendAccept = { viewModel.acceptFriendRequest(it) })
     }
+
+    SnackbarHost(snackBarHostState)
+
 
     LaunchedEffect(mapState.toastText) {
         if (mapState.toastText != null) {

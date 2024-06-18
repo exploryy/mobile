@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 
-// todo fix ))) (произошёл анлак)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(

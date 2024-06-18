@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.foreground.LocationService
 import com.example.explory.presentation.navigation.AppNavigation
 import com.example.explory.ui.theme.ExploryTheme
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onDetachedFromWindow()
         Intent(applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_STOP
-            startService(this)
+            stopService(this)
         }
     }
 }

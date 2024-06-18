@@ -76,10 +76,10 @@ class MapViewModel(
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
 
-    private var lastSentLocation: LocationRequest? = null
-    private var lastSentTime: Long = 0
-    private val minDistanceChange = 5
-    private val minTimeInterval = 20000L
+//    private var lastSentLocation: LocationRequest? = null
+//    private var lastSentTime: Long = 0
+//    private val minDistanceChange = 5
+//    private val minTimeInterval = 20000L
 
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
@@ -243,6 +243,14 @@ class MapViewModel(
 //                    lastSentLocation = locationRequest
 //                    lastSentTime = currentTime
 //                }
+
+            // todo return on release
+//            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                    !location.isMock
+//                } else {
+//                    !location.isFromMockProvider
+//                }
+//            )
             sendLocationToServer(locationRequest)
         }
         locationTracker.startTracking()
@@ -253,21 +261,21 @@ class MapViewModel(
         webSocketClient.sendLocationRequest(locationRequest)
     }
 
-    private fun shouldSendLocation(locationRequest: LocationRequest, currentTime: Long): Boolean {
-        if (lastSentLocation == null) {
-            return true
-        }
-
-        val distance = calculateDistance(
-            lastSentLocation!!.latitude.toDouble(),
-            lastSentLocation!!.longitude.toDouble(),
-            locationRequest.latitude.toDouble(),
-            locationRequest.longitude.toDouble()
-        )
-        val timeElapsed = currentTime - lastSentTime
-
-        return distance >= minDistanceChange || timeElapsed >= minTimeInterval
-    }
+//    private fun shouldSendLocation(locationRequest: LocationRequest, currentTime: Long): Boolean {
+//        if (lastSentLocation == null) {
+//            return true
+//        }
+//
+//        val distance = calculateDistance(
+//            lastSentLocation!!.latitude.toDouble(),
+//            lastSentLocation!!.longitude.toDouble(),
+//            locationRequest.latitude.toDouble(),
+//            locationRequest.longitude.toDouble()
+//        )
+//        val timeElapsed = currentTime - lastSentTime
+//
+//        return distance >= minDistanceChange || timeElapsed >= minTimeInterval
+//    }
 
     private fun getTheme() {
         _mapState.update { state -> state.copy(isDarkTheme = themePreferenceManager.isDarkTheme()) }
