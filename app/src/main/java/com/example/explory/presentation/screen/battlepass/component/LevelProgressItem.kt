@@ -48,7 +48,7 @@ fun LevelProgressItem(level: BattlePassLevelDto, currentLevel: Int) {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        LevelCard(level)
+        LevelCard(level, currentLevel)
     }
 }
 
