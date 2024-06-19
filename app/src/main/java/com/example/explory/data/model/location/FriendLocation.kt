@@ -3,8 +3,9 @@ package com.example.explory.data.model.location
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FriendLocationDto(
-    val clientId: String,
+data class FriendLocation(
+    val longitude: Double,
     val latitude: Double,
-    val longitude: Double
+    val figureType: String,
+    val place: String
 )

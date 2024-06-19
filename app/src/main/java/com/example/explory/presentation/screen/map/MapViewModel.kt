@@ -581,14 +581,16 @@ class MapViewModel(
         }
     }
 
-    private fun onFriendsLocationUpdate(friendLocation: FriendLocationDto) {
+    private fun onFriendsLocationUpdate(friendLocation: CreatePolygonRequestDto) {
         _mapState.update { state ->
             val updatedLocations = state.friendsLocations.toMutableMap()
-            updatedLocations[friendLocation.clientId] =
-                friendLocation.latitude to friendLocation.longitude
+            updatedLocations[friendLocation.userId] =
+                friendLocation.createPolygonRequestDto.latitude to
+                        friendLocation.createPolygonRequestDto.longitude
             state.copy(friendsLocations = updatedLocations)
         }
     }
+
 
     private suspend fun getBalance() {
         try {

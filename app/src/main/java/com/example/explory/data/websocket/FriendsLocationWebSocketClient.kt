@@ -1,7 +1,7 @@
 package com.example.explory.data.websocket
 
 import android.util.Log
-import com.example.explory.data.model.location.FriendLocationDto
+import com.example.explory.data.model.location.CreatePolygonRequestDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,8 +21,8 @@ class FriendsLocationWebSocketClient(
     private val baseUrl: String,
     private val interceptor: Interceptor
 ) {
-    private val _messages = MutableStateFlow<FriendLocationDto?>(null)
-    val messages: StateFlow<FriendLocationDto?> get() = _messages
+    private val _messages = MutableStateFlow<CreatePolygonRequestDto?>(null)
+    val messages: StateFlow<CreatePolygonRequestDto?> get() = _messages
 
     @Volatile
     private var webSocket: WebSocket? = null
@@ -70,7 +70,7 @@ class FriendsLocationWebSocketClient(
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d("Received friend location", text)
             try {
-                val response = Json.decodeFromString<FriendLocationDto>(text.dropLast(1).drop(1).replace("\\", ""))
+                val response = Json.decodeFromString<CreatePolygonRequestDto>(text.dropLast(1).drop(1).replace("\\", ""))
                 _messages.value = response
             } catch (e: Exception) {
                 e.printStackTrace()
