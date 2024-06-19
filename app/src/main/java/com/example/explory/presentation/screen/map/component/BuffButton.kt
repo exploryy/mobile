@@ -2,9 +2,8 @@ package com.example.explory.presentation.screen.map.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,8 +23,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.domain.model.BuffDto
 import com.example.explory.ui.theme.DarkGray
-import com.example.explory.ui.theme.Gray
-import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.White
 
@@ -41,12 +38,13 @@ fun BuffButton(
     )
     Column(
         modifier = modifier
-            .fillMaxHeight()
+            .height(225.dp)
             .background(DarkGray, shape = RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         LottieAnimation(
             composition = composition,
@@ -54,7 +52,7 @@ fun BuffButton(
             progress = { progress },
         )
         Text(text = buff.title, style = S20_W600, color = White, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = buff.description, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
+//        Spacer(modifier = Modifier.height(16.dp))
+//        Text(text = buff.description, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
     }
 }

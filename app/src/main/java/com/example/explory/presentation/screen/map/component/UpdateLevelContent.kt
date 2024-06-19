@@ -32,26 +32,23 @@ import com.example.explory.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateLevelContent(event: EventDto, onBuffChoose: (Long) -> Unit) {
-
     val info = event.text.split(";")
     val level = info[0].toInt()
     val buffs = listOf(
         BuffDto(
             id = 1,
             title = "Увеличение опыта",
-            description = "Больше опыта за пройденное расстояние",
             animation = R.raw.exp
         ),
         BuffDto(
             id = 2,
             title = "Увеличение монет",
-            description = "Больше монет в день",
             animation = R.raw.coins
         )
     )
     Column(
         Modifier
-            .size(DIALOG_WIDTH.dp, 400.dp)
+            .size(DIALOG_WIDTH.dp, 350.dp)
             .background(
                 BottomSheetDefaults.ContainerColor, shape = RoundedCornerShape(DIALOG_SHAPE.dp)
             )
@@ -65,9 +62,9 @@ fun UpdateLevelContent(event: EventDto, onBuffChoose: (Long) -> Unit) {
             textAlign = TextAlign.Center,
             color = White
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "Выберите улучшение", color = Gray)
         Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Выберите улучшение", color = Gray)
+        Spacer(modifier = Modifier.weight(1f))
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

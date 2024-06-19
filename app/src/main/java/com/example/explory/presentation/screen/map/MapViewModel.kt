@@ -512,6 +512,7 @@ class MapViewModel(
                         EventType.UPDATE_LEVEL -> _mapState.update { state ->
                             val info = it.text.split(";")
                             state.copy(
+                                event = it,
                                 userBalance = state.userBalance?.copy(
                                     level = info[0].toInt(),
                                     totalExperienceInLevel = info[1].toInt()
