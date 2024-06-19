@@ -678,6 +678,10 @@ class MapViewModel(
         }
     }
 
+    fun updateBattlePassOpenScreen() {
+        _mapState.update { it.copy(isBattlePassOpen = !it.isBattlePassOpen) }
+    }
+
     fun setError(message: String?) {
         if (message != null) {
             _mapState.update { it.withErrorEnqueued(message) }

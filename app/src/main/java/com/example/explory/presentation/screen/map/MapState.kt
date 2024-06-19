@@ -43,7 +43,8 @@ data class MapState(
     val event: EventDto? = null,
     val isShopOpen: Boolean = false,
     val isInventoryOpen: Boolean = false,
-    val currentUserFog: CosmeticItemInInventoryDto? = null
+    val currentUserFog: CosmeticItemInInventoryDto? = null,
+    val isBattlePassOpen: Boolean = false
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })

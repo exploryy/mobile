@@ -2,6 +2,7 @@ package com.example.explory.data.service
 
 import com.example.explory.data.model.BalanceDto
 import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.battlepass.BattlePassDto
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.location.AreaDto
@@ -225,6 +226,10 @@ interface ApiService {
 
     @DELETE("/inventory/{item_id}/sell")
     suspend fun sellItem(@Path("item_id") itemId: Long)
+
+    //battlepass
+    @GET("/battle_pass/current")
+    suspend fun getCurrentBattlePass() : BattlePassDto
 }
 
 

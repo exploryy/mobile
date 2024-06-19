@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
@@ -260,7 +261,7 @@ fun MapScreen(
                         )
 
                     }
-                    
+
                     if (mapState.showViewAnnotationIndex != null) {
                         val quest = mapState.notCompletedQuests[mapState.showViewAnnotationIndex!!]
                         ViewAnnotation(options = viewAnnotationOptions {
@@ -461,6 +462,11 @@ fun MapScreen(
                             onClick = { viewModel.updateInventoryOpenScreen() },
                             icon = Icons.Filled.Backpack
                         )
+                        AnimatedButton(
+                            onClick = { viewModel.updateBattlePassOpenScreen() },
+                            modifier = Modifier
+                                .size(48.dp)
+                        )
                     }
                 }
 
@@ -582,6 +588,10 @@ fun MapScreen(
 
             mapState.isInventoryOpen -> {
                 InventoryScreen(onDismiss = { viewModel.updateInventoryOpenScreen() })
+            }
+
+            mapState.isBattlePassOpen -> {
+                BattlePassScreen(onDismiss = { viewModel.updateBattlePassOpenScreen() })
             }
 
         }
