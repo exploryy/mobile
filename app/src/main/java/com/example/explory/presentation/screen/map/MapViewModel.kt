@@ -15,7 +15,7 @@ import com.example.explory.R
 import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
-import com.example.explory.data.model.location.FriendLocationDto
+import com.example.explory.data.model.location.CreatePolygonRequestDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
@@ -302,7 +302,7 @@ class MapViewModel(
                 startWebSockets()
                 getTheme()
             } catch (e: Exception) {
-                updateUiState(UiState.Error("Ошибка загрузки данных"))
+                updateUiState(UiState.Error("Нет подключения к серверу"))
                 Log.e("MapViewModel", "Error getting start data", e)
             } finally {
                 Log.d("MapViewModel", "Data loaded")

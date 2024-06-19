@@ -4,8 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,11 +28,12 @@ import com.example.explory.R
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.Gray
 import com.example.explory.ui.theme.S16_W400
+import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.White
 
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier, message: String) {
+fun ErrorScreen(modifier: Modifier = Modifier, message: String, onReconnectClicked: () -> Unit) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
     val progress by animateLottieCompositionAsState(
         composition, iterations = LottieConstants.IterateForever
@@ -36,7 +42,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String) {
         modifier = modifier
             .fillMaxSize()
             .background(Black)
-            .padding(top = 64.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 64.dp, start = 24.dp, end = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         LottieAnimation(
@@ -48,11 +54,25 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String) {
         Text(text = "Произошла ошибка", style = S20_W600, color = White)
         Spacer(modifier = Modifier.size(16.dp))
         Text(text = message, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(100.dp))
+        Button(
+            onClick = onReconnectClicked,
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Black,
+                containerColor = White
+            )
+        ) {
+            Text(text = "Переподключиться", style = S16_W600)
+        }
     }
 }
 
 @Preview
 @Composable
 private fun PreviewErrorScreen() {
-    ErrorScreen(message = "Нет подключения к сети")
+    ErrorScreen(message = "Нет подключения к сети", onReconnectClicked = {})
 }

@@ -499,7 +499,11 @@ fun MapScreen(
             }
 
             is UiState.Error -> {
-                ErrorScreen(message = (mapState.uiState as UiState.Error).message)
+                ErrorScreen(
+                    message = (mapState.uiState as UiState.Error).message,
+                    onReconnectClicked = {
+                        viewModel.getStartData()
+                    })
             }
 
             UiState.Loading, UiState.PermissionGranted -> LoadingScreen()
