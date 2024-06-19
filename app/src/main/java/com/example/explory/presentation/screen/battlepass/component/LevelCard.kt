@@ -46,7 +46,7 @@ fun LevelCard(level: BattlePassLevelDto, currentLevel: Int) {
             }
         }
 
-        if (level.level == currentLevel) {
+        if (level.level <= currentLevel) {
             Box(
                 modifier = Modifier
                     .matchParentSize()
