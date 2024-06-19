@@ -4,7 +4,7 @@
     <string name="statistic">Статистика</string>
 
     <string name="registration">Регистрация</string>
-    <string name="to_register">Зарегистрироваться</string>
+    <string name="to_register">Регистрация</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="confirm_password">Подтвердите пароль</string>

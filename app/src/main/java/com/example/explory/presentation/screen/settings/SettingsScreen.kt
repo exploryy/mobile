@@ -14,29 +14,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.explory.presentation.screen.common.ThemeViewModel
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    themeViewModel: ThemeViewModel = koinViewModel(),
+    isDarkTheme: Boolean,
+    onThemeChangeClick: (Boolean) -> Unit,
     onBackClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
-    val isDarkTheme by themeViewModel.isDarkTheme.collectAsState()
-
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             sheetState.show()
@@ -76,7 +72,7 @@ fun SettingsScreen(
                 )
                 Switch(
                     checked = isDarkTheme,
-                    onCheckedChange = { themeViewModel.setDarkTheme(it) },
+                    onCheckedChange = onThemeChangeClick,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
                         uncheckedThumbColor = MaterialTheme.colorScheme.surface

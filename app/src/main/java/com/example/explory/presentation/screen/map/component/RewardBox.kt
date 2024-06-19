@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.White
 
@@ -27,7 +27,7 @@ fun RewardBox(modifier: Modifier = Modifier, count: Int, icon: Int) {
         modifier = modifier
             .wrapContentSize()
             .clip(RoundedCornerShape(16.dp))
-            .background(White.copy(0.3f), shape = RoundedCornerShape(16.dp))
+            .background(DarkGray, shape = RoundedCornerShape(16.dp))
             .padding(8.dp)
     ) {
         Column(
@@ -43,7 +43,7 @@ fun RewardBox(modifier: Modifier = Modifier, count: Int, icon: Int) {
             Text(
                 text = count.toString(),
                 style = S16_W600,
-                color = Black
+                color = White
             )
         }
     }

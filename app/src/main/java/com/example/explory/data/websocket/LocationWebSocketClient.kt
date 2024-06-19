@@ -7,8 +7,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -25,6 +28,12 @@ class LocationWebSocketClient(
 ) {
     private val _messages = MutableStateFlow<LocationResponse?>(null)
     val messages: StateFlow<LocationResponse?> get() = _messages
+
+    private val _error = MutableSharedFlow<String?>(
+        replay = 1,
+        extraBufferCapacity = 1
+    )
+    val error: SharedFlow<String?> get() = _error.asSharedFlow()
 
     @Volatile
     private var webSocket: WebSocket? = null
@@ -83,6 +92,7 @@ class LocationWebSocketClient(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.d("Connection failed", t.message.toString())
+            _error.tryEmit(t.message)
             client.dispatcher.executorService.shutdown()  // Properly shut down the dispatcher
             attemptReconnect()
         }

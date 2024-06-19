@@ -1,16 +1,12 @@
 package com.example.explory.presentation.screen.auth.login
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,14 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -43,25 +37,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.explory.R
 import com.example.explory.presentation.screen.auth.component.AdviceText
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
+import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
 import com.example.explory.ui.theme.Value.SpaceBetweenObjects
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SharedTransitionScope.LoginScreen(
+fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
@@ -99,11 +94,12 @@ fun SharedTransitionScope.LoginScreen(
 
         TopAppBar(title = { Text(text = "") }, navigationIcon = {
             IconButton(onClick = { onBackClick() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
             }
         }, colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent
-        ))
+        )
+        )
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -115,13 +111,14 @@ fun SharedTransitionScope.LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "column"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ ->
-                            tween(durationMillis = 500)
-                        }
-                    ),
+//                    .sharedElement(
+//                        state = rememberSharedContentState(key = "column"),
+//                        animatedVisibilityScope = animatedVisibilityScope,
+//                        boundsTransform = { _, _ ->
+//                            tween(durationMillis = 500)
+//                        }
+//                    )
+                ,
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
@@ -138,8 +135,9 @@ fun SharedTransitionScope.LoginScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.login_to),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = S24_W600,
                             textAlign = TextAlign.Left,
+                            color = White,
                             modifier = Modifier.padding(
                                 top = MoreSpaceBetweenObjects, bottom = SpaceBetweenObjects
                             )
@@ -149,16 +147,7 @@ fun SharedTransitionScope.LoginScreen(
                             label = stringResource(R.string.login),
                             value = loginState.login,
                             onValueChange = { viewModel.processIntent(LoginIntent.UpdateLogin(it)) },
-                            error = loginState.errorMessage,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                errorContainerColor = Color.Red.copy(alpha = 0.1f),
-                                cursorColor = Color.White,
-                                focusedBorderColor = Color.White,
-                                unfocusedBorderColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.Gray,
-                            ),
+                            isError = loginState.errorMessage != null,
                             modifier = Modifier
                         )
 
@@ -169,15 +158,7 @@ fun SharedTransitionScope.LoginScreen(
                             transformationState = loginState.isPasswordHide,
                             onButtonClick = { viewModel.processIntent(LoginIntent.UpdatePasswordVisibility) },
                             errorText = loginState.errorMessage,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                errorContainerColor = Color.Red.copy(alpha = 0.1f),
-                                cursorColor = Color.White,
-                                focusedBorderColor = Color.White,
-                                unfocusedBorderColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.Gray,
-                            ),
+
                             modifier = Modifier
                         )
                         Spacer(modifier = Modifier.height(MoreSpaceBetweenObjects))
@@ -188,16 +169,16 @@ fun SharedTransitionScope.LoginScreen(
                             shape = RoundedCornerShape(BigRound),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(IntrinsicSize.Min),
+                                .height(56.dp),
                             enabled = !loginState.isLoading && viewModel.isLoginButtonAvailable(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.White
                             )
                         ) {
                             Text(
-                                text = stringResource(R.string.login_button), style = TextStyle(
-                                    fontSize = 15.sp, fontWeight = FontWeight.W600, color = Color.Black
-                                )
+                                text = stringResource(R.string.login_button),
+                                style = S16_W600,
+                                color = Black
                             )
                         }
 

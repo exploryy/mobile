@@ -17,14 +17,13 @@ import java.util.LinkedList
 import java.util.Queue
 
 data class MapState(
-    val uiState: UiState = UiState.Default,
+    val uiState: UiState = UiState.Loading,
+    val isDarkTheme: Boolean = false,
     val innerPoints: List<LineString> = emptyList(),
     val completedQuests: List<CompletedQuestDto> = emptyList(),
     val activeQuest: QuestDto? = null,
     val notCompletedQuests: List<QuestDto> = emptyList(),
     val coins: List<CoinDto> = emptyList(),
-    val showMap: Boolean = false,
-    val showRequestPermissionButton: Boolean = false,
     val permissionRequestCount: Int = 1,
     val showFriendsScreen: Boolean = false,
     val showSettingsScreen: Boolean = false,
@@ -36,7 +35,7 @@ data class MapState(
     val friendsLocations: Map<String, Pair<Double, Double>> = emptyMap(),
     val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
     val userPoint: Point? = null,
-    val toastText: String? = null,
+    val infoText: String? = null,
     val selectedFriendProfile: FriendProfile? = null,
     val userBalance: BalanceDto? = null,
     val errorQueue: Queue<String> = LinkedList(),

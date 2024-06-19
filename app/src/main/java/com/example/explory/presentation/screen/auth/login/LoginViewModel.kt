@@ -5,14 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.common.Constants
 import com.example.explory.data.model.auth.AuthRequest
-import com.example.explory.domain.usecase.PostLoginUseCase
 import com.example.explory.data.websocket.LocationWebSocketClient
+import com.example.explory.domain.usecase.PostLoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class LoginViewModel(
@@ -96,7 +97,12 @@ class LoginViewModel(
                 processIntent(LoginIntent.UpdateErrorText("Превышено время ожидания"))
             } catch (e: HttpException) {
                 Log.d("LoginViewModel", "Error: ${e.message}")
-                processIntent(LoginIntent.UpdateErrorText("Ошибка авторизации"))
+                processIntent(LoginIntent.UpdateErrorText("Неверный логин или пароль"))
+            } catch (e: ConnectException) {
+                processIntent(LoginIntent.UpdateErrorText("Не удалось подключиться к серверу"))
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error", e)
+                processIntent(LoginIntent.UpdateErrorText("Ошибка сервера"))
             } finally {
                 processIntent(LoginIntent.UpdateLoading)
             }
