@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.explory.R
 import com.example.explory.data.model.CoinDto
-import com.example.explory.data.model.location.FriendLocationDto
+import com.example.explory.data.model.location.CreatePolygonRequestDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
@@ -564,11 +564,12 @@ class MapViewModel(
         }
     }
 
-    private fun onFriendsLocationUpdate(friendLocation: FriendLocationDto) {
+    private fun onFriendsLocationUpdate(friendLocation: CreatePolygonRequestDto) {
         _mapState.update { state ->
             val updatedLocations = state.friendsLocations.toMutableMap()
-            updatedLocations[friendLocation.clientId] =
-                friendLocation.latitude to friendLocation.longitude
+            updatedLocations[friendLocation.userId] =
+                friendLocation.createPolygonRequestDto.latitude to
+                        friendLocation.createPolygonRequestDto.longitude
             state.copy(friendsLocations = updatedLocations)
         }
     }
