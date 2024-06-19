@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
@@ -576,7 +577,7 @@ fun MapScreen(
                 }
 
                 AnimatedButton(
-                    onClick = {  },
+                    onClick = { viewModel.updateBattlePassOpenScreen() },
                     modifier = Modifier
                         .size(48.dp)
                 )
@@ -707,6 +708,10 @@ fun MapScreen(
 
         mapState.isInventoryOpen -> {
             InventoryScreen(onDismiss = { viewModel.updateInventoryOpenScreen() })
+        }
+
+        mapState.isBattlePassOpen -> {
+            BattlePassScreen(onDismiss = { viewModel.updateBattlePassOpenScreen() })
         }
     }
     if (mapState.event != null) {
