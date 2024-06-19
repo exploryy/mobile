@@ -182,12 +182,15 @@ class MapViewModel(
                     val distanceQuest = questRepository.getDistanceQuest(questId)
                     updateDistanceQuest(distanceQuest)
                     updateP2PQuest(null)
+                    Log.d("MapViewModel", "Distance quest: $distanceQuest")
                 }
 
                 "POINT_TO_POINT" -> {
                     val p2pQuest = questRepository.getP2PQuest(questId)
                     updateP2PQuest(p2pQuest)
                     updateDistanceQuest(null)
+                    Log.d("MapViewModel", "Distance quest: $p2pQuest")
+
                 }
             }
         }

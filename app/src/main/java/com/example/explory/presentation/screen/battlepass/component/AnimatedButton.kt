@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 fun AnimatedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.fire))
     val scope = rememberCoroutineScope()
     Box(
@@ -36,7 +36,7 @@ fun AnimatedButton(
         )
         LottieAnimation(
             composition = composition,
-            progress = progress,
+            progress = { progress },
             modifier = Modifier.fillMaxSize()
         )
     }

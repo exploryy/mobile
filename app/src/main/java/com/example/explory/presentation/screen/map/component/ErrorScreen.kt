@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -35,7 +36,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String) {
         modifier = modifier
             .fillMaxSize()
             .background(Black)
-            .padding(top = 64.dp),
+            .padding(top = 64.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         LottieAnimation(
@@ -46,7 +47,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String) {
         Spacer(modifier = Modifier.size(32.dp))
         Text(text = "Произошла ошибка", style = S20_W600, color = White)
         Spacer(modifier = Modifier.size(16.dp))
-        Text(text = message, style = S16_W400, color = Gray)
+        Text(text = message, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
     }
 }
 

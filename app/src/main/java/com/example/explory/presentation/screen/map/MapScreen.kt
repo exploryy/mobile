@@ -538,7 +538,7 @@ fun MapScreen(
 
                     },
                     onDismissRequest = { viewModel.updateP2PQuest(null) },
-                    reviews = mapState.p2pQuest!!.questReviews,
+                    reviews = mapState.p2pQuest!!.fullReviewDto,
                     questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null
                 )
             }
@@ -565,7 +565,7 @@ fun MapScreen(
 
                     },
                     onDismissRequest = { viewModel.updateDistanceQuest(null) },
-                    reviews = mapState.distanceQuest!!.questReviews,
+                    reviews = mapState.distanceQuest!!.fullReviewDto,
                     questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null
                 )
             }
