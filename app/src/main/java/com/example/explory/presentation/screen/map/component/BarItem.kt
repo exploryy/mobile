@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.common.formatNumber
-import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S18_W600
 import com.example.explory.ui.theme.Yellow
 
 @Composable
@@ -31,7 +31,7 @@ fun BarItem(
         Text(
             text = formatNumber(value),
             color = textColor,
-            style = S16_W600,
+            style = S18_W600,
             maxLines = 1,
             modifier = Modifier.widthIn(min = 0.dp, max = 55.dp)
         )

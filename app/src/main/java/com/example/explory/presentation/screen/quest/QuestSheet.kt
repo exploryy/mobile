@@ -49,8 +49,11 @@ import androidx.compose.ui.unit.offset
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.explory.R
+import com.example.explory.data.model.quest.FullReviewsDto
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.data.model.quest.ReviewDto
 import com.example.explory.presentation.screen.auth.onboarding.component.PageIndicator
+import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.map.component.BarItem
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DarkGray
@@ -76,7 +79,7 @@ fun QuestSheet(
     distance: Double,
     onButtonClicked: () -> Unit,
     onDismissRequest: () -> Unit,
-    reviews: ReviewsDto?,
+    reviews: FullReviewsDto,
     questStatus: String? = null
 ) {
     val state = rememberBottomSheetScaffoldState(
@@ -86,157 +89,152 @@ fun QuestSheet(
                     onDismissRequest()
                 }
                 true
-            },
-            skipHiddenState = false
+            }, skipHiddenState = false
         )
     )
     val pagerState = rememberPagerState(pageCount = { images.size })
-    BottomSheetScaffold(
-        sheetPeekHeight = 250.dp,
-        scaffoldState = state, sheetContent = {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    item {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+    BottomSheetScaffold(sheetPeekHeight = 250.dp, scaffoldState = state, sheetContent = {
+        Box(Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ImagePage(
+                            image = images.firstOrNull(),
+                            modifier = Modifier
+                                .size(70.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(
+                            Modifier.padding(end = 64.dp)
                         ) {
-                            ImagePage(
-                                image = images.firstOrNull(),
-                                modifier = Modifier
-                                    .size(70.dp)
-                                    .clip(CircleShape)
+                            Text(
+                                text = name,
+                                style = S20_W600,
                             )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(
-                                Modifier.padding(end = 64.dp)
-                            ) {
-                                Text(
-                                    text = name,
-                                    style = S20_W600,
-                                )
-                                if (reviews != null) {
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Row {
-                                        Text(
-                                            text = "${reviews.avgRating}",
-                                            style = S16_W400,
-                                            color = White
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.star),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                    }
+                            if (reviews.reviews.isNotEmpty()) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Row {
+                                    Text(
+                                        text = reviews.avg.toString(),
+                                        style = S16_W400,
+                                        color = White
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.star),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
                                 }
                             }
                         }
                     }
-                    item {
+                }
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        InfoBox(text = "${point.latitude}, ${point.longitude}")
+                        if (questStatus != null) {
+                            InfoBox(text = questStatus, containerColor = Green)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Text(text = description, style = S16_W400, color = Gray)
+
+                    Spacer(modifier = Modifier.height(18.dp))
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        InfoBox(
+                            text = transportType
+                        )
+                        InfoBox(text = "${distance.toInt()} метров")
+                        InfoBox(text = difficulty)
+                        InfoBox(text = "одиночный")
+                    }
+                }
+
+
+                item {
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = { onButtonClicked() },
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(),
+
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Black, containerColor = White
+                        )
+                    ) {
+                        Text(
+                            if (questStatus == null) "Начать квест" else "Отменить квест",
+                            style = S14_W600
+                        )
+                    }
+                }
+                item {
+                    if (images.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(32.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            InfoBox(text = "${point.latitude}, ${point.longitude}")
-                            if (questStatus != null) {
-                                InfoBox(text = questStatus, containerColor = Green)
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(18.dp))
-                        Text(text = description, style = S16_W400, color = Gray)
-
-                        Spacer(modifier = Modifier.height(18.dp))
-                        FlowRow(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            InfoBox(
-                                text = transportType
-                            )
-                            InfoBox(text = "${distance.toInt()} метров")
-                            InfoBox(text = difficulty)
-                            InfoBox(text = "одиночный")
-                        }
-                    }
-
-
-                    item {
-                        Spacer(modifier = Modifier.height(40.dp))
-                        Button(
-                            shape = RoundedCornerShape(8.dp),
-                            onClick = { onButtonClicked() },
-                            modifier = Modifier
-                                .height(50.dp)
-                                .fillMaxWidth(),
-
-                            colors = ButtonDefaults.buttonColors(
-                                contentColor = Black, containerColor = White
-                            )
-                        ) {
-                            Text(
-                                if (questStatus == null) "Начать квест" else "Отменить квест",
-                                style = S14_W600
+                        HorizontalPager(state = pagerState) { page ->
+                            ImagePage(
+                                image = images[page],
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp),
                             )
                         }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        PageIndicator(pagerState = pagerState)
                     }
-                    item {
-                        if (images.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(32.dp))
-                            HorizontalPager(state = pagerState) { page ->
-                                ImagePage(
-                                    image = images[page],
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(200.dp),
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            PageIndicator(pagerState = pagerState)
-                        }
-                    }
-
-                    if (reviews?.list?.isNotEmpty() == true) {
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(text = "Отзывы", style = S20_W600)
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-
-                        items(reviews.list) {
-                            ReviewCard(review = it)
-                        }
-                    }
-                    item { Spacer(modifier = Modifier.height(16.dp)) }
-
                 }
-                IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = Black,
-                        containerColor = White
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .clip(CircleShape)
-                        .padding(end = 24.dp),
 
-                    onClick = {
-                        Log.d("QuestSheet", "Clicked button")
-                        onDismissRequest()
+                if (reviews.reviews.isNotEmpty()) {
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(text = "Отзывы", style = S20_W600)
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.close),
-                        contentDescription = null,
-                        tint = Black,
-                    )
+
+                    items(reviews.reviews) {
+                        ReviewCard(review = it)
+                    }
                 }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+
             }
-        }) {}
+            IconButton(colors = IconButtonDefaults.iconButtonColors(
+                contentColor = Black, containerColor = White
+            ),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .clip(CircleShape)
+                    .padding(end = 24.dp),
+
+                onClick = {
+                    Log.d("QuestSheet", "Clicked button")
+                    onDismissRequest()
+                }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = null,
+                    tint = Black,
+                )
+            }
+        }
+    }) {}
 }
 
 @Composable
@@ -253,7 +251,8 @@ fun ImagePage(
             },
             error = {
                 Icon(
-                    painter = painterResource(id = R.drawable.picture), contentDescription = null,
+                    painter = painterResource(id = R.drawable.picture),
+                    contentDescription = null,
                     modifier = Modifier.scale(0.5f)
                 )
 
@@ -273,43 +272,43 @@ fun ReviewCard(modifier: Modifier = Modifier, review: ReviewDto) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            Avatar(
+                image = review.profile.avatarUrl,
+                modifier = Modifier.size(40.dp),
+                border = review.profile.inventoryDto.avatarFrames
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = review.author,
-                style = S16_W600,
-                color = White
+                text = review.profile.username, style = S16_W600, color = White
             )
             Spacer(modifier = Modifier.weight(1f))
-            BarItem(value = review.rating, icon = R.drawable.star, textColor = White)
+            BarItem(value = review.score, icon = R.drawable.star, textColor = White)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = review.text,
+            text = review.message,
             style = S16_W400,
             color = Gray,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        if (review.images.isNotEmpty()) {
+        if (review.reviewPhotos.isNotEmpty()) {
             val sidePadding = (-16).dp
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.layout { measurable, constraints ->
                     val placeable =
                         measurable.measure(constraints.offset(horizontal = -sidePadding.roundToPx() * 2))
 
                     layout(
-                        placeable.width + sidePadding.roundToPx() * 2,
-                        placeable.height
+                        placeable.width + sidePadding.roundToPx() * 2, placeable.height
                     ) {
                         placeable.place(+sidePadding.roundToPx(), 0)
                     }
 
-                }
-            ) {
-                items(review.images) { image ->
+                }) {
+                items(review.reviewPhotos) { image ->
                     ImagePage(
                         image = image,
-                        modifier = Modifier
-                            .size(100.dp),
+                        modifier = Modifier.size(100.dp),
                         shape = RoundedCornerShape(8.dp)
                     )
                 }
@@ -324,23 +323,6 @@ fun ReviewCard(modifier: Modifier = Modifier, review: ReviewDto) {
     }
 }
 
-@Preview
-@Composable
-private fun PreviewReviewCard() {
-    ReviewCard(
-        review = ReviewDto(
-            author = "Андрейка",
-            date = "21.01.2024",
-            rating = 5,
-            text = "Местечно так то конечно классное, но не хватает пива и чипсов, вообще задание классное было, весело провёл время разработчики они вообще молодцы реально плюс репчик им!!",
-            images = listOf(
-                "https://i.imgur.com/oFc85y7.jpeg",
-                "https://i.imgur.com/eCS5ghi.jpeg",
-                "https://i.imgur.com/YsPlS5K.jpeg"
-            )
-        )
-    )
-}
 
 @Preview
 @Composable
@@ -348,27 +330,18 @@ private fun PreviewQuestSheet() {
     ExploryTheme {
         QuestSheet(name = "Длинное название квеста квест квест квест",
             images = emptyList(),
-            point = PointDto("0.0", "0.0", "0.0", "0.0"),
+            point = PointDto("0.0", "0.0"),
             description = "Описание",
             difficulty = "Сложность",
             transportType = "Тип транспорта",
             distance = 100.0,
             onButtonClicked = { },
-            reviews = null,
+            reviews = FullReviewsDto(
+                avg = 4.5,
+                reviews = emptyList()
+            ),
             onDismissRequest = { })
     }
 }
 
 
-data class ReviewsDto(
-    val avgRating: Double,
-    val list: List<ReviewDto>
-)
-
-data class ReviewDto(
-    val author: String,
-    val date: String,
-    val rating: Int,
-    val text: String,
-    val images: List<String>
-)

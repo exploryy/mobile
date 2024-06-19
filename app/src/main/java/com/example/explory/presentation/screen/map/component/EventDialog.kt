@@ -1,12 +1,9 @@
 package com.example.explory.presentation.screen.map.component
 
-import androidx.compose.foundation.background
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.data.websocket.EventDto
 import com.example.explory.data.websocket.EventType
@@ -27,7 +24,6 @@ fun EventDialog(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     BasicAlertDialog(
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         onDismissRequest = onDismissRequest
     ) {
         when (event.type) {
@@ -38,24 +34,22 @@ fun EventDialog(
 
             EventType.REQUEST_TO_FRIEND -> {
                 viewModel.getUserInfo(event.text)
-                RequestToFriendContent(
-                    user = state.user,
-                    onAcceptClick = {
-                        onFriendAccept(it)
-                        onDismissRequest()
-                    },
-                    onDeclineClick = {
-                        onFriendDecline(it)
-                        onDismissRequest()
-                    }
-                )
+                RequestToFriendContent(user = state.user, onAcceptClick = {
+                    onFriendAccept(it)
+                    onDismissRequest()
+                }, onDeclineClick = {
+                    onFriendDecline(it)
+                    onDismissRequest()
+                })
             }
 
             EventType.CHANGE_MONEY -> {}
             EventType.NEW_QUEST -> {}
-            EventType.UPDATE_LEVEL -> {}
+            EventType.UPDATE_LEVEL -> {
+                UpdateLevelContent(event, { onDismissRequest() })
+            }
+
             EventType.UPDATE_EXPERIENCE -> {}
         }
     }
 }
-

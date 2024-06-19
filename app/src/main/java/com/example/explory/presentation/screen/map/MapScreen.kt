@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -37,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.PointDto
@@ -106,7 +106,7 @@ const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
 const val OPENED_WORLD_LAYER = "opened-layer"
 
-@OptIn(MapboxExperimental::class, ExperimentalMaterial3Api::class)
+@OptIn(MapboxExperimental::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = koinViewModel(), onLogout: () -> Unit
@@ -260,6 +260,7 @@ fun MapScreen(
                         )
 
                     }
+                    
                     if (mapState.showViewAnnotationIndex != null) {
                         val quest = mapState.notCompletedQuests[mapState.showViewAnnotationIndex!!]
                         ViewAnnotation(options = viewAnnotationOptions {
@@ -481,27 +482,6 @@ fun MapScreen(
 
 
                 ButtonControlRow(mapViewportState = mapViewportState) { viewModel.updateShowFriendScreen() }
-//                if (mapState.p2pQuest != null || mapState.distanceQuest != null) {
-//                    IconButton(
-//                        colors = IconButtonDefaults.iconButtonColors(containerColor = Black),
-//                        onClick = {
-//                            viewModel.updateP2PQuest(null)
-//                            viewModel.updateDistanceQuest(null)
-//                        },
-//                        modifier = Modifier
-//                            .padding(start = 20.dp, top = 60.dp)
-//                            .size(45.dp)
-//
-//                    ) {
-//                        Icon(
-//                            painter = painterResource(id = R.drawable.close),
-//                            tint = Color.White,
-//                            contentDescription = null,
-//                            modifier = Modifier.scale(1.4f)
-//                        )
-//                    }
-//
-//                }
             }
 
             is UiState.Error -> {
@@ -550,7 +530,7 @@ fun MapScreen(
 
                     },
                     onDismissRequest = { viewModel.updateP2PQuest(null) },
-                    reviews = null,
+                    reviews = mapState.p2pQuest!!.questReviews,
                     questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null
                 )
             }
@@ -560,8 +540,6 @@ fun MapScreen(
                     name = mapState.distanceQuest!!.commonQuestDto.name,
                     images = mapState.distanceQuest!!.commonQuestDto.images,
                     point = PointDto(
-                        mapState.distanceQuest!!.commonQuestDto.longitude,
-                        mapState.distanceQuest!!.commonQuestDto.latitude,
                         mapState.distanceQuest!!.commonQuestDto.longitude,
                         mapState.distanceQuest!!.commonQuestDto.latitude
                     ),
@@ -579,7 +557,7 @@ fun MapScreen(
 
                     },
                     onDismissRequest = { viewModel.updateDistanceQuest(null) },
-                    reviews = null,
+                    reviews = mapState.distanceQuest!!.questReviews,
                     questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null
                 )
             }
@@ -612,21 +590,10 @@ fun MapScreen(
                 alignment = Alignment.BottomCenter,
                 onDismissRequest = {
                     it.dismiss()
-                }
+                },
+                properties = PopupProperties(focusable = false)
             ) {
-                Box(
-                    modifier = Modifier
-                        .clickable {
-                            it.dismiss()
-                        },
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Snackbar(
-                        it,
-                        modifier = Modifier
-                    )
-                }
-
+                Snackbar(it)
             }
         }
     }

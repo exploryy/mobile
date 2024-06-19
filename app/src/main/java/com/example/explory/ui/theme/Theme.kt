@@ -12,8 +12,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.example.explory.data.storage.ThemePreferenceManager
-import org.koin.compose.koinInject
 
 private val DarkColorScheme = darkColorScheme(
     primary = OffBlack,
@@ -41,11 +39,10 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ExploryTheme(
-    themePreferenceManager: ThemePreferenceManager = koinInject(),
+    isDarkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val isDarkTheme = themePreferenceManager.isDarkTheme()
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
