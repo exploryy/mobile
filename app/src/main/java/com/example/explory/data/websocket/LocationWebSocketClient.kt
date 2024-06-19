@@ -29,7 +29,7 @@ class LocationWebSocketClient(
     private val _messages = MutableStateFlow<LocationResponse?>(null)
     val messages: StateFlow<LocationResponse?> get() = _messages
 
-//    private val _error = MutableSharedFlow<String?>(
+    //    private val _error = MutableSharedFlow<String?>(
 //        replay = 1,
 //        extraBufferCapacity = 1
 //    )
@@ -40,7 +40,7 @@ class LocationWebSocketClient(
     @Volatile
     private var webSocket: WebSocket? = null
     private var reconnectAttempts = 0
-    private val maxReconnectAttempts = 15
+    private val maxReconnectAttempts = 5
     private val reconnectInterval = 5000L
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -87,7 +87,6 @@ class LocationWebSocketClient(
             try {
                 val response = Json.decodeFromString<LocationResponse>(text)
                 _messages.value = response
-                _isConnected.tryEmit(true)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -95,7 +94,7 @@ class LocationWebSocketClient(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.d("Connection failed", t.message.toString())
-            _isConnected.tryEmit(false)
+//            _isConnected.tryEmit(false)
             client.dispatcher.executorService.shutdown()  // Properly shut down the dispatcher
             attemptReconnect()
         }
@@ -124,6 +123,7 @@ class LocationWebSocketClient(
                     connect()
                 }
             } else {
+                _isConnected.tryEmit(true)
                 Log.d("Reconnecting failed", "Max reconnect attempts reached")
                 close()
             }

@@ -519,7 +519,7 @@ fun MapScreen(
             })
 
         }
-
+        Log.d("MapScreen", "p2p quest state is ${mapState.p2pQuest}")
         when {
             mapState.showFriendsScreen -> {
                 ProfileScreen(

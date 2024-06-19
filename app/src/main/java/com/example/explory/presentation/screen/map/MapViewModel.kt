@@ -501,9 +501,14 @@ class MapViewModel(
                     when (it.type) {
                         EventType.COMPLETE_QUEST -> {
                             Log.d("MapViewModel", "Quest completed")
-                            _mapState.update { state -> state.copy(event = it) }
-                            updateP2PQuest(null)
-                            updateDistanceQuest(null)
+                            _mapState.update { state ->
+                                state.copy(
+                                    event = it,
+                                    activeQuest = null,
+                                    p2pQuest = null,
+                                    distanceQuest = null
+                                )
+                            }
                         }
 
                         EventType.REQUEST_TO_FRIEND -> {

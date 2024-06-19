@@ -30,10 +30,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,16 +80,7 @@ fun QuestSheet(
     reviews: FullReviewsDto,
     questStatus: String? = null
 ) {
-    val state = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            confirmValueChange = {
-                if (it == SheetValue.Hidden) {
-                    onDismissRequest()
-                }
-                true
-            }, skipHiddenState = false
-        )
-    )
+    val state = rememberBottomSheetScaffoldState()
     val pagerState = rememberPagerState(pageCount = { images.size })
     BottomSheetScaffold(sheetPeekHeight = 250.dp, scaffoldState = state, sheetContent = {
         Box(Modifier.fillMaxSize()) {
