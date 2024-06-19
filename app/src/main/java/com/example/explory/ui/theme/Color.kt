@@ -31,4 +31,4 @@ val GrayColor = Color(0xFFC4C8CC)
 
 val Red = Color(0xFFE57373)
 val Green = Color(0xFF81C784)
-val Yellow = Color(0xFFC1A875)
+val Yellow = Color(0xFFFFC107)

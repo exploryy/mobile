@@ -22,12 +22,9 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -128,18 +125,7 @@ fun MapScreen(
             viewModel.updateInfoText(null)
         }
     }
-    val state = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            confirmValueChange = {
-                if (it == SheetValue.Hidden) {
-                    viewModel.updateP2PQuest(null)
-                    viewModel.updateDistanceQuest(null)
-                }
-                true
-            },
-            skipHiddenState = false
-        )
-    )
+
 
     val context = LocalContext.current
     val mapViewportState = rememberMapViewportState {
@@ -546,16 +532,14 @@ fun MapScreen(
 
 
             mapState.p2pQuest != null -> {
-                QuestSheet(name = mapState.p2pQuest!!.commonQuestDto.name,
+                QuestSheet(
+                    name = mapState.p2pQuest!!.commonQuestDto.name,
                     images = mapState.p2pQuest!!.commonQuestDto.images,
+                    point = mapState.p2pQuest!!.route.points.first(),
                     description = mapState.p2pQuest!!.commonQuestDto.description,
                     difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
                     transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                     distance = mapState.p2pQuest!!.route.distance,
-                    questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null,
-                    point = mapState.p2pQuest!!.route.points.first(),
-                    state = state,
-                    onDismissRequest = { viewModel.updateP2PQuest(null) },
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
@@ -564,25 +548,27 @@ fun MapScreen(
                         }
                         viewModel.updateDistanceQuest(null)
 
-                    })
+                    },
+                    onDismissRequest = { viewModel.updateP2PQuest(null) },
+                    reviews = null,
+                    questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null
+                )
             }
 
             mapState.distanceQuest != null -> {
-                QuestSheet(name = mapState.distanceQuest!!.commonQuestDto.name,
+                QuestSheet(
+                    name = mapState.distanceQuest!!.commonQuestDto.name,
                     images = mapState.distanceQuest!!.commonQuestDto.images,
-                    description = mapState.distanceQuest!!.commonQuestDto.description,
-                    difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
-                    transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
-                    distance = mapState.distanceQuest!!.distance,
-                    questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null,
                     point = PointDto(
                         mapState.distanceQuest!!.commonQuestDto.longitude,
                         mapState.distanceQuest!!.commonQuestDto.latitude,
                         mapState.distanceQuest!!.commonQuestDto.longitude,
                         mapState.distanceQuest!!.commonQuestDto.latitude
                     ),
-                    onDismissRequest = { viewModel.updateDistanceQuest(null) },
-                    state = state,
+                    description = mapState.distanceQuest!!.commonQuestDto.description,
+                    difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
+                    transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
+                    distance = mapState.distanceQuest!!.distance,
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
@@ -591,7 +577,11 @@ fun MapScreen(
                         }
                         viewModel.updateP2PQuest(null)
 
-                    })
+                    },
+                    onDismissRequest = { viewModel.updateDistanceQuest(null) },
+                    reviews = null,
+                    questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null
+                )
             }
 
             mapState.showSettingsScreen -> {

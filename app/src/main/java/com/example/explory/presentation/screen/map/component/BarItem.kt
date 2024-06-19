@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.common.formatNumber
@@ -17,14 +18,19 @@ import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Yellow
 
 @Composable
-fun BarItem(modifier: Modifier = Modifier, value: Int, icon: Int) {
+fun BarItem(
+    modifier: Modifier = Modifier,
+    value: Int,
+    icon: Int,
+    textColor: Color = Yellow
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = formatNumber(value),
-            color = Yellow,
+            color = textColor,
             style = S16_W600,
             maxLines = 1,
             modifier = Modifier.widthIn(min = 0.dp, max = 55.dp)
