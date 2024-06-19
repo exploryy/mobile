@@ -8,7 +8,7 @@ import com.example.explory.data.model.quest.CompletedQuestDto
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
-import com.example.explory.data.websocket.EventDto
+import com.example.explory.data.model.event.EventDto
 import com.example.explory.domain.model.FriendProfile
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString

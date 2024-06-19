@@ -31,8 +31,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
-import com.example.explory.data.websocket.EventDto
-import com.example.explory.data.websocket.EventType
+import com.example.explory.data.model.event.EventDto
+import com.example.explory.data.model.event.EventType
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.ExploryTheme
 import com.example.explory.ui.theme.Gray

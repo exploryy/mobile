@@ -1,10 +1,10 @@
 package com.example.explory.data.websocket
 
 import android.util.Log
+import com.example.explory.data.model.event.EventDto
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,9 +24,6 @@ class EventWebSocketClient(
     )
     private val client = OkHttpClient().newBuilder().addInterceptor(interceptor).build()
     val events = _events.asSharedFlow()
-    private val _isConnected =
-        MutableSharedFlow<Boolean?>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
     fun connect() {
         val request = Request.Builder().url(url).build()
         webSocket = client.newWebSocket(request, createWebSocketListener())
@@ -40,7 +37,6 @@ class EventWebSocketClient(
     private fun createWebSocketListener() = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             Log.d("EventWebSocket", "Connected")
-            _isConnected.tryEmit(true)
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
@@ -57,7 +53,6 @@ class EventWebSocketClient(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.d("EventWebSocket", "Error: ${t.message}")
-            _isConnected.tryEmit(false)
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
@@ -74,20 +69,5 @@ class EventWebSocketClient(
         const val NORMAL_CLOSURE_STATUS = 1000
     }
 
-}
-
-@Serializable
-data class EventDto(
-    val text: String,
-    val type: EventType
-)
-
-enum class EventType {
-    COMPLETE_QUEST,
-    REQUEST_TO_FRIEND,
-    CHANGE_MONEY,
-    NEW_QUEST,
-    UPDATE_LEVEL,
-    UPDATE_EXPERIENCE
 }
 

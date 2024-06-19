@@ -13,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.explory.R
 import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.event.EventDto
+import com.example.explory.data.model.event.EventType
 import com.example.explory.data.model.location.FriendLocationDto
 import com.example.explory.data.model.location.LocationRequest
 import com.example.explory.data.model.quest.DistanceQuestDto
@@ -21,8 +23,6 @@ import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.storage.ThemePreferenceManager
-import com.example.explory.data.websocket.EventDto
-import com.example.explory.data.websocket.EventType
 import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
 import com.example.explory.data.websocket.LocationTracker
@@ -99,6 +99,7 @@ class MapViewModel(
         observeWebSocketMessages()
         observeFriendsLocationWebSocketMessages()
         observeEventWebSocketMessages()
+        observeWebSocketConnection()
     }
 
     private fun calculateDistance(
@@ -439,6 +440,18 @@ class MapViewModel(
         _mapState.update { it.copy(innerPoints = newInnerPoints) }
     }
 
+    private fun observeWebSocketConnection() {
+        viewModelScope.launch {
+            webSocketClient.isConnected.collect { isConnected ->
+                if (isConnected == true) {
+                    updateUiState(UiState.Default)
+                } else {
+                    updateUiState(UiState.Error("Нет подключения к серверу"))
+                }
+            }
+        }
+    }
+
     private fun observeWebSocketMessages() {
         viewModelScope.launch {
             webSocketClient.messages.collect { response ->
@@ -524,6 +537,10 @@ class MapViewModel(
                             state.copy(
                                 userBalance = state.userBalance?.copy(experience = it.text.toInt())
                             )
+                        }
+
+                        EventType.UPDATE_BATTLE_PASS_LEVEL -> {
+
                         }
                     }
                 }

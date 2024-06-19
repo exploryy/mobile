@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.profile.FriendProfileDto
-import com.example.explory.data.websocket.EventDto
-import com.example.explory.data.websocket.EventType
+import com.example.explory.data.model.event.EventDto
+import com.example.explory.data.model.event.EventType
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600

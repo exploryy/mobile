@@ -66,5 +66,5 @@ private fun Context.checkAndRequestLocationPermission(
 
 private val locationPermissions = arrayOf(
     android.Manifest.permission.ACCESS_FINE_LOCATION,
-    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+    android.Manifest.permission.ACCESS_COARSE_LOCATION
 )

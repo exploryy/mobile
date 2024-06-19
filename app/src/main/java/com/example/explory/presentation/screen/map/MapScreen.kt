@@ -245,9 +245,9 @@ fun MapScreen(
                 }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
-                        mapView.mapboxMap.subscribeMapLoadingError {
-                            viewModel.updateUiState(UiState.Error(it.message))
-                        }
+//                        mapView.mapboxMap.subscribeMapLoadingError {
+//                            viewModel.updateUiState(UiState.Error(it.message))
+//                        }
 
                         mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
@@ -353,12 +353,13 @@ fun MapScreen(
                     }
 
                     if (mapState.p2pQuest != null) {
-                        val lineSourceData =
+                        val lineSourceData = remember {
                             GeoJSONData(Feature.fromGeometry(LineString.fromLngLats(mapState.p2pQuest!!.route.points.map {
                                 Point.fromLngLat(
                                     it.longitude.toDouble(), it.latitude.toDouble()
                                 )
                             })))
+                        }
                         LineLayer(
                             sourceState = GeoJsonSourceState(initialData = lineSourceData),
                             layerId = "line-layer",
@@ -389,15 +390,17 @@ fun MapScreen(
                             point.latitude(), point.longitude(), mapState.distanceQuest!!.distance
                         )
 
-                        val circleSourceState = GeoJsonSourceState(
-                            initialData = GeoJSONData(
-                                Feature.fromGeometry(
-                                    Polygon.fromLngLats(
-                                        points
+                        val circleSourceState = remember {
+                            GeoJsonSourceState(
+                                initialData = GeoJSONData(
+                                    Feature.fromGeometry(
+                                        Polygon.fromLngLats(
+                                            points
+                                        )
                                     )
                                 )
                             )
-                        )
+                        }
                         FillLayer(
                             sourceState = circleSourceState,
                             fillColor = FillColor(Transparent),
@@ -413,15 +416,17 @@ fun MapScreen(
                     }
 
                     if (mapState.selectedFriendProfile != null) {
-                        val userSourceState = GeoJsonSourceState(
-                            initialData = GeoJSONData(
-                                Feature.fromGeometry(
-                                    Polygon.fromLngLats(
-                                        mapState.selectedFriendProfile!!.polygons
+                        val userSourceState = remember {
+                            GeoJsonSourceState(
+                                initialData = GeoJSONData(
+                                    Feature.fromGeometry(
+                                        Polygon.fromLngLats(
+                                            mapState.selectedFriendProfile!!.polygons
+                                        )
                                     )
                                 )
                             )
-                        )
+                        }
                         FillLayer(
                             sourceState = userSourceState,
                             fillColor = FillColor(Transparent),
@@ -430,6 +435,7 @@ fun MapScreen(
                         LineLayer(
                             sourceState = userSourceState,
                             layerId = "user-line-layer",
+                            lineEmissiveStrength = LineEmissiveStrength(1.0),
                             lineColor = LineColor(Red),
                             lineWidth = LineWidth(5.0)
                         )

@@ -6,10 +6,10 @@ import com.example.explory.data.model.location.LocationResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -29,11 +29,13 @@ class LocationWebSocketClient(
     private val _messages = MutableStateFlow<LocationResponse?>(null)
     val messages: StateFlow<LocationResponse?> get() = _messages
 
-    private val _error = MutableSharedFlow<String?>(
-        replay = 1,
-        extraBufferCapacity = 1
-    )
-    val error: SharedFlow<String?> get() = _error.asSharedFlow()
+//    private val _error = MutableSharedFlow<String?>(
+//        replay = 1,
+//        extraBufferCapacity = 1
+//    )
+    private val _isConnected =
+        MutableSharedFlow<Boolean?>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val isConnected = _isConnected.asSharedFlow()
 
     @Volatile
     private var webSocket: WebSocket? = null
@@ -85,6 +87,7 @@ class LocationWebSocketClient(
             try {
                 val response = Json.decodeFromString<LocationResponse>(text)
                 _messages.value = response
+                _isConnected.tryEmit(true)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -92,7 +95,7 @@ class LocationWebSocketClient(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Log.d("Connection failed", t.message.toString())
-            _error.tryEmit(t.message)
+            _isConnected.tryEmit(false)
             client.dispatcher.executorService.shutdown()  // Properly shut down the dispatcher
             attemptReconnect()
         }

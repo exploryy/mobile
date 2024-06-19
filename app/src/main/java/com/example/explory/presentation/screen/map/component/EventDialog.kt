@@ -5,8 +5,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.explory.data.websocket.EventDto
-import com.example.explory.data.websocket.EventType
+import com.example.explory.data.model.event.EventDto
+import com.example.explory.data.model.event.EventType
 import org.koin.androidx.compose.koinViewModel
 
 const val DIALOG_WIDTH = 400
@@ -50,6 +50,7 @@ fun EventDialog(
             }
 
             EventType.UPDATE_EXPERIENCE -> {}
+            EventType.UPDATE_BATTLE_PASS_LEVEL -> TODO()
         }
     }
 }
