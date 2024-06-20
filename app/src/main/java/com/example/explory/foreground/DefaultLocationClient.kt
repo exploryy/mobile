@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
-import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -41,13 +40,12 @@ class DefaultLocationClient(
                     .setWaitForAccurateLocation(false)
                     .setMinUpdateIntervalMillis(3000)
                     .setMinUpdateDistanceMeters(7f)
-                    .setMaxUpdateDelayMillis(30000).build()
+                    .setMaxUpdateDelayMillis(15000).build()
 
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
                     super.onLocationResult(result)
                     result.locations.lastOrNull()?.let { location ->
-                        Log.d("LocationClient", "Got location -> $location")
                         launch { send(location) }
                     }
                 }

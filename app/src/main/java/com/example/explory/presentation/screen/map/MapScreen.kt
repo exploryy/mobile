@@ -139,6 +139,9 @@ fun MapScreen(
     }
 
     val withHolesSourceState = remember { GeoJsonSourceState() }
+    val lineSourceData = remember { GeoJsonSourceState() }
+    val circleSourceState = remember { GeoJsonSourceState() }
+    val userSourceState = remember { GeoJsonSourceState() }
 
     withHolesSourceState.data = GeoJSONData(
         Feature.fromGeometry(
@@ -151,6 +154,18 @@ fun MapScreen(
 
     val taskBitmap: Bitmap? = remember {
         drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
+    }
+
+    val easyTaskBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.quest_easy))
+    }
+
+    val mediumTaskBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.quest_medium))
+    }
+
+    val hardTaskBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.quest_hard))
     }
 
     val finishBitmap: Bitmap? = remember {
@@ -215,16 +230,6 @@ fun MapScreen(
                 }, style = {
                     MapboxStandardStyle(
                         topSlot = {
-                            fun getImageBitmapById(id: Long): ImageBitmap {
-                                return when (id) {
-                                    2L -> fogGrassBitmap
-                                    5L -> fogWaterBitmap
-                                    6L -> fogCloudBitmap
-                                    7L -> fogSnowBitmap
-                                    else -> fogGrassBitmap
-                                }
-                            }
-
                             FillLayer(
                                 sourceState = withHolesSourceState,
                                 layerId = OPENED_WORLD_LAYER,
@@ -234,7 +239,13 @@ fun MapScreen(
                                     FillPattern(
                                         StyleImage(
                                             "fog",
-                                            getImageBitmapById(mapState.currentUserFog!!.itemId)
+                                            when (mapState.currentUserFog!!.itemId) {
+                                                2L -> fogGrassBitmap
+                                                5L -> fogWaterBitmap
+                                                6L -> fogCloudBitmap
+                                                7L -> fogSnowBitmap
+                                                else -> fogGrassBitmap
+                                            }
                                         )
                                     ),
                                 fillAntialias = FillAntialias(true),
@@ -245,10 +256,6 @@ fun MapScreen(
                 }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
-//                        mapView.mapboxMap.subscribeMapLoadingError {
-//                            viewModel.updateUiState(UiState.Error(it.message))
-//                        }
-
                         mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
                             puckBearingEnabled = true
@@ -258,8 +265,6 @@ fun MapScreen(
                         mapViewportState.transitionToFollowPuckState(
                             defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()
                                 .maxDurationMs(0).build()
-//                        followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
-//                            .pitch(PITCH).build(),
                         )
 
                     }
@@ -298,7 +303,12 @@ fun MapScreen(
                             iconEmissiveStrength = 0.5,
                             iconHaloColorInt = White.toArgb(),
                             iconHaloWidth = 1.0,
-                            iconImageBitmap = taskBitmap,
+                            iconImageBitmap = when (quest.difficultyType) {
+                                "EASY" -> easyTaskBitmap
+                                "MEDIUM" -> mediumTaskBitmap
+                                "HARD" -> hardTaskBitmap
+                                else -> taskBitmap
+                            },
                             onClick = {
                                 viewModel.updateShowViewAnnotationIndex(index)
                                 true
@@ -335,7 +345,6 @@ fun MapScreen(
 //                            repeatMode = RepeatMode.Reverse
 //                        ), label = ""
 //                    )
-
                         PointAnnotation(
                             point = point,
                             iconSize = 1.0,
@@ -353,15 +362,15 @@ fun MapScreen(
                     }
 
                     if (mapState.p2pQuest != null) {
-                        val lineSourceData = remember {
-                            GeoJSONData(Feature.fromGeometry(LineString.fromLngLats(mapState.p2pQuest!!.route.points.map {
+                        lineSourceData.data = GeoJSONData(
+                            Feature.fromGeometry(LineString.fromLngLats(mapState.p2pQuest!!.route.points.map {
                                 Point.fromLngLat(
                                     it.longitude.toDouble(), it.latitude.toDouble()
                                 )
-                            })))
-                        }
+                            }))
+                        )
                         LineLayer(
-                            sourceState = GeoJsonSourceState(initialData = lineSourceData),
+                            sourceState = lineSourceData,
                             layerId = "line-layer",
                             lineColor = LineColor(AccentColor),
                             lineBorderColor = LineBorderColor(White),
@@ -390,17 +399,14 @@ fun MapScreen(
                             point.latitude(), point.longitude(), mapState.distanceQuest!!.distance
                         )
 
-                        val circleSourceState = remember {
-                            GeoJsonSourceState(
-                                initialData = GeoJSONData(
-                                    Feature.fromGeometry(
-                                        Polygon.fromLngLats(
-                                            points
-                                        )
-                                    )
+                        circleSourceState.data = GeoJSONData(
+                            Feature.fromGeometry(
+                                Polygon.fromLngLats(
+                                    points
                                 )
                             )
-                        }
+                        )
+
                         FillLayer(
                             sourceState = circleSourceState,
                             fillColor = FillColor(Transparent),
@@ -416,17 +422,14 @@ fun MapScreen(
                     }
 
                     if (mapState.selectedFriendProfile != null) {
-                        val userSourceState = remember {
-                            GeoJsonSourceState(
-                                initialData = GeoJSONData(
-                                    Feature.fromGeometry(
-                                        Polygon.fromLngLats(
-                                            mapState.selectedFriendProfile!!.polygons
-                                        )
-                                    )
+                        userSourceState.data = GeoJSONData(
+                            Feature.fromGeometry(
+                                Polygon.fromLngLats(
+                                    mapState.selectedFriendProfile!!.polygons
                                 )
                             )
-                        }
+                        )
+
                         FillLayer(
                             sourceState = userSourceState,
                             fillColor = FillColor(Transparent),

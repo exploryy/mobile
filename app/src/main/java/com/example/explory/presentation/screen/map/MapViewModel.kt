@@ -76,11 +76,6 @@ class MapViewModel(
     private val _mapState = MutableStateFlow(MapState())
     val mapState = _mapState.asStateFlow()
 
-//    private var lastSentLocation: LocationRequest? = null
-//    private var lastSentTime: Long = 0
-//    private val minDistanceChange = 5
-//    private val minTimeInterval = 20000L
-
     val outerLineString: LineString = LineString.fromLngLats(
         listOf(
             Point.fromLngLat(180.0, 90.0),
@@ -240,13 +235,6 @@ class MapViewModel(
                 figureType = "CIRCLE",
                 place = _mapState.value.currentLocationName
             )
-//                val currentTime = System.currentTimeMillis()
-
-//                if (shouldSendLocation(locationRequest, currentTime)) {
-//                    sendLocationToServer(locationRequest)
-//                    lastSentLocation = locationRequest
-//                    lastSentTime = currentTime
-//                }
 
             // todo return on release
 //            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -265,21 +253,6 @@ class MapViewModel(
         webSocketClient.sendLocationRequest(locationRequest)
     }
 
-//    private fun shouldSendLocation(locationRequest: LocationRequest, currentTime: Long): Boolean {
-//        if (lastSentLocation == null) {
-//            return true
-//        }
-//
-//        val distance = calculateDistance(
-//            lastSentLocation!!.latitude.toDouble(),
-//            lastSentLocation!!.longitude.toDouble(),
-//            locationRequest.latitude.toDouble(),
-//            locationRequest.longitude.toDouble()
-//        )
-//        val timeElapsed = currentTime - lastSentTime
-//
-//        return distance >= minDistanceChange || timeElapsed >= minTimeInterval
-//    }
 
     private fun getTheme() {
         _mapState.update { state -> state.copy(isDarkTheme = themePreferenceManager.isDarkTheme()) }
@@ -314,21 +287,6 @@ class MapViewModel(
     private suspend fun getQuests(addNew: Boolean = false) {
         try {
             val quests = getQuestsUseCase.execute()
-//            if (quests.active.isNotEmpty()) {
-//                when (quests.active[0].questType) {
-//                    "DISTANCE" -> {
-//                        val distanceQuest =
-//                            questRepository.getDistanceQuest(quests.active[0].questId.toString())
-//                        updateDistanceQuest(distanceQuest)
-//                    }
-//
-//                    "POINT_TO_POINT" -> {
-//                        val p2pQuest =
-//                            questRepository.getP2PQuest(quests.active[0].questId.toString())
-//                        updateP2PQuest(p2pQuest)
-//                    }
-//                }
-//            }
             if (addNew) {
                 _mapState.update {
                     it.copy(
@@ -346,13 +304,6 @@ class MapViewModel(
                     )
                 }
             }
-//            _mapState.update {
-//                it.copy(
-//                    notCompletedQuests = quests.notCompleted,
-//                    completedQuests = quests.completed,
-//                    activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
-//                )
-//            }
         } catch (e: Exception) {
             Log.e("MapViewModel", "Error getting quests", e)
         }
