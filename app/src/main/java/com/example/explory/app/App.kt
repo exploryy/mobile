@@ -11,7 +11,6 @@ import com.example.explory.di.dataModule
 import com.example.explory.di.domainModule
 import com.example.explory.foreground.LocationService
 import com.example.explory.foreground.hasNotificationPermission
-import com.example.explory.foreground.hasOldNotificationPermission
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -23,7 +22,8 @@ class App : Application() {
         if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 this.hasNotificationPermission()
             } else {
-                this.hasOldNotificationPermission()
+                true
+//                this.hasOldNotificationPermission()
             }
         ) {
             val channel = NotificationChannel(
