@@ -3,7 +3,6 @@ package com.example.explory.presentation.screen.map.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -15,7 +14,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
@@ -40,7 +38,7 @@ fun Avatar(
         Box(
             modifier = modifier
                 .background(color = DarkGray, shape = CircleShape)
-                .padding(4.dp)
+//                .padding(4.dp)
         ) {
             SubcomposeAsyncImage(
                 model = image,

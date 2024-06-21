@@ -17,8 +17,10 @@ import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
 import com.example.explory.data.model.location.CreatePolygonRequestDto
 import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
@@ -36,7 +38,6 @@ import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.presentation.utils.UiState
-import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Yellow
@@ -159,7 +160,7 @@ class MapViewModel(
                     _mapState.update { it.copy(infoText = "Вы слишком далеко от квеста") }
                     return@launch
                 }
-                questRepository.startQuest(questId, "WALK")
+                questRepository.startQuest(questId, TransportType.CAR)
                 _mapState.update { it ->
                     it.copy(infoText = "Квест начат",
                         activeQuest = quest,
@@ -348,31 +349,27 @@ class MapViewModel(
 //    ): List<Point> {
 //    }
 
-    fun getCorrectTransportType(transportType: String): String {
+    fun getCorrectTransportType(transportType: TransportType): String {
         return when (transportType) {
-            "WALK" -> "пешком"
-            "CAR" -> "на машине"
-            "BICYCLE" -> "на велосипеде"
-            "MOTORCYCLE" -> "на мотоцикле"
-            else -> "неизвестно"
+            TransportType.WALK -> "пешком"
+            TransportType.CAR -> "на машине"
+            TransportType.BICYCLE -> "на велосипеде"
         }
     }
 
-    fun getCorrectDifficulty(difficulty: String): String {
+    fun getCorrectDifficulty(difficulty: DifficultyType): String {
         return when (difficulty) {
-            "EASY" -> "легкий"
-            "MEDIUM" -> "среднняя сложность"
-            "HARD" -> "сложный"
-            else -> "неизвестно"
+            DifficultyType.EASY -> "легкий"
+            DifficultyType.MEDIUM -> "среднняя сложность"
+            DifficultyType.HARD -> "сложный"
         }
     }
 
-    fun getColorByDifficulty(difficulty: String): Color {
+    fun getColorByDifficulty(difficulty: DifficultyType): Color {
         return when (difficulty) {
-            "EASY" -> Green
-            "MEDIUM" -> Yellow
-            "HARD" -> Red
-            else -> AccentColor
+            DifficultyType.EASY -> Green
+            DifficultyType.MEDIUM -> Yellow
+            DifficultyType.HARD -> Red
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.explory.presentation.screen.quest
 
 import android.util.Log
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -25,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,32 +34,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.offset
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import com.example.explory.R
 import com.example.explory.data.model.quest.FullReviewsDto
 import com.example.explory.data.model.quest.PointDto
-import com.example.explory.data.model.quest.ReviewDto
 import com.example.explory.presentation.screen.auth.onboarding.component.PageIndicator
-import com.example.explory.presentation.screen.map.component.Avatar
-import com.example.explory.presentation.screen.map.component.BarItem
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.DarkGray
-import com.example.explory.ui.theme.ExploryTheme
 import com.example.explory.ui.theme.Gray
 import com.example.explory.ui.theme.Green
-import com.example.explory.ui.theme.S12_W600
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
-import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.White
 
@@ -82,7 +65,7 @@ fun QuestSheet(
 ) {
     val state = rememberBottomSheetScaffoldState()
     val pagerState = rememberPagerState(pageCount = { images.size })
-    BottomSheetScaffold(sheetPeekHeight = 250.dp, scaffoldState = state, sheetContent = {
+    BottomSheetScaffold(sheetPeekHeight = 200.dp, scaffoldState = state, sheetContent = {
         Box(Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier
@@ -116,7 +99,7 @@ fun QuestSheet(
                                         color = White
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Icon(
+                                    Image(
                                         painter = painterResource(id = R.drawable.star),
                                         contentDescription = null,
                                         modifier = Modifier.size(16.dp)
@@ -145,7 +128,7 @@ fun QuestSheet(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         InfoBox(
-                            text = transportType
+                            text = transportType.toString()
                         )
                         InfoBox(text = "${distance.toInt()} метров")
                         InfoBox(text = difficulty)
@@ -224,113 +207,6 @@ fun QuestSheet(
             }
         }
     }) {}
-}
-
-@Composable
-fun ImagePage(
-    modifier: Modifier = Modifier,
-    image: String?,
-    shape: RoundedCornerShape = RoundedCornerShape(0.dp)
-) {
-    Box(modifier = modifier.background(DarkGray, shape)) {
-        SubcomposeAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(image).crossfade(true).build(),
-            loading = {
-                CircularProgressIndicator()
-            },
-            error = {
-                Icon(
-                    painter = painterResource(id = R.drawable.picture),
-                    contentDescription = null,
-                    modifier = Modifier.scale(0.5f)
-                )
-
-            },
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .fillMaxSize()
-                .clip(shape)
-        )
-    }
-}
-
-@Composable
-fun ReviewCard(modifier: Modifier = Modifier, review: ReviewDto) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Avatar(
-                image = review.profile.avatarUrl,
-                modifier = Modifier.size(40.dp),
-                border = review.profile.inventoryDto.avatarFrames
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = review.profile.username, style = S16_W600, color = White
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            BarItem(value = review.score, icon = R.drawable.star, textColor = White)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = review.message,
-            style = S16_W400,
-            color = Gray,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (review.reviewPhotos.isNotEmpty()) {
-            val sidePadding = (-16).dp
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.layout { measurable, constraints ->
-                    val placeable =
-                        measurable.measure(constraints.offset(horizontal = -sidePadding.roundToPx() * 2))
-
-                    layout(
-                        placeable.width + sidePadding.roundToPx() * 2, placeable.height
-                    ) {
-                        placeable.place(+sidePadding.roundToPx(), 0)
-                    }
-
-                }) {
-                items(review.reviewPhotos) { image ->
-                    ImagePage(
-                        image = image,
-                        modifier = Modifier.size(100.dp),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = review.date,
-            style = S12_W600,
-            color = Gray,
-        )
-    }
-}
-
-
-@Preview
-@Composable
-private fun PreviewQuestSheet() {
-    ExploryTheme {
-        QuestSheet(name = "Длинное название квеста квест квест квест",
-            images = emptyList(),
-            point = PointDto("0.0", "0.0"),
-            description = "Описание",
-            difficulty = "Сложность",
-            transportType = "Тип транспорта",
-            distance = 100.0,
-            onButtonClicked = { },
-            reviews = FullReviewsDto(
-                avg = 4.5,
-                reviews = emptyList()
-            ),
-            onDismissRequest = { })
-    }
 }
 
 

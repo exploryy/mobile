@@ -16,6 +16,7 @@ import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.model.quest.QuestListDto
 import com.example.explory.data.model.quest.RouteDto
+import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.model.requests.FriendRequest
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.statistic.AchievementDto
@@ -64,7 +65,7 @@ interface ApiService {
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
         @Path("quest_id") questId: String,
-        @Query("transport_type") transportType: String
+        @Query("transport_type") transportType: TransportType
     )
 
     @POST("/quest/{quest_id}/review")
@@ -85,6 +86,12 @@ interface ApiService {
 
     @GET("/quest/my/active")
     suspend fun getActiveQuests(): List<QuestDto?>
+
+    @POST("/quest/{quest_id}/review")
+    suspend fun sendReview(
+        @Path("quest_id") questId: String,
+        @Body body: RequestBody
+    )
 
     @GET("/quest/list")
     suspend fun getQuests(): QuestListDto
@@ -192,7 +199,7 @@ interface ApiService {
     )
 
     @GET("/coin/balance")
-    suspend fun getBalance() : BalanceDto
+    suspend fun getBalance(): BalanceDto
 
     @GET("/user")
     suspend fun getUserList(
@@ -209,7 +216,7 @@ interface ApiService {
     suspend fun getFriendStatistic(): List<LocationStatisticDto>
 
     @GET("/shop")
-    suspend fun getShop() : List<CosmeticItemInShopDto>
+    suspend fun getShop(): List<CosmeticItemInShopDto>
 
     @POST("/shop/{item_id}/buy")
     suspend fun buyItem(@Path("item_id") itemId: Long)
@@ -222,14 +229,14 @@ interface ApiService {
     suspend fun unEquipItem(@Path("item_id") itemId: Long)
 
     @GET("/inventory")
-    suspend fun getInventory() : List<CosmeticItemInInventoryDto>
+    suspend fun getInventory(): List<CosmeticItemInInventoryDto>
 
     @DELETE("/inventory/{item_id}/sell")
     suspend fun sellItem(@Path("item_id") itemId: Long)
 
     //battlepass
     @GET("/battle_pass/current")
-    suspend fun getCurrentBattlePass() : BattlePassDto
+    suspend fun getCurrentBattlePass(): BattlePassDto
 }
 
 

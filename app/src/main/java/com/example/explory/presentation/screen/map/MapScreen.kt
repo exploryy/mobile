@@ -40,6 +40,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
+import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
@@ -270,7 +271,7 @@ fun MapScreen(
                     }
 
                     if (mapState.showViewAnnotationIndex != null) {
-                        val quest = mapState.notCompletedQuests[mapState.showViewAnnotationIndex!!]
+                        val quest = mapState.completedQuests[mapState.showViewAnnotationIndex!!]
                         ViewAnnotation(options = viewAnnotationOptions {
                             geometry(
                                 Point.fromLngLat(
@@ -302,13 +303,26 @@ fun MapScreen(
                         PointAnnotation(point = point,
                             iconEmissiveStrength = 0.5,
                             iconHaloColorInt = White.toArgb(),
+                            iconSize = 0.2,
                             iconHaloWidth = 1.0,
                             iconImageBitmap = when (quest.difficultyType) {
-                                "EASY" -> easyTaskBitmap
-                                "MEDIUM" -> mediumTaskBitmap
-                                "HARD" -> hardTaskBitmap
-                                else -> taskBitmap
+                                DifficultyType.EASY -> easyTaskBitmap
+                                DifficultyType.MEDIUM -> mediumTaskBitmap
+                                DifficultyType.HARD -> hardTaskBitmap
                             },
+                            onClick = {
+                                viewModel.updateShowViewAnnotationIndex(index)
+                                true
+                            })
+                    }
+
+                    mapState.completedQuests.forEachIndexed { index, quest ->
+                        val point =
+                            Point.fromLngLat(quest.longitude.toDouble(), quest.latitude.toDouble())
+
+                        PointAnnotation(point = point,
+                            iconEmissiveStrength = 0.0,
+                            iconImageBitmap = taskBitmap,
                             onClick = {
                                 viewModel.updateShowViewAnnotationIndex(index)
                                 true

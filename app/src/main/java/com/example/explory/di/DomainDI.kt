@@ -30,6 +30,7 @@ import com.example.explory.domain.usecase.RefreshTokenUseCase
 import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
 import com.example.explory.domain.usecase.RemoveFriendUseCase
 import com.example.explory.domain.usecase.SellItemUseCase
+import com.example.explory.domain.usecase.SendReviewUseCase
 import com.example.explory.domain.usecase.UnEquipItemUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -67,4 +68,5 @@ fun domainModule() = module {
     factoryOf(::BuyItemUseCase)
     factoryOf(::SellItemUseCase)
     factoryOf(::GetCurrentBattlePassUseCase)
+    factoryOf(::SendReviewUseCase)
 }
