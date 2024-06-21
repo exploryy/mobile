@@ -48,6 +48,7 @@ import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
+import com.example.explory.presentation.screen.leaderboard.LeaderboardScreen
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ErrorScreen
 import com.example.explory.presentation.screen.map.component.EventDialog
@@ -531,7 +532,11 @@ fun MapScreen(
                 }
 
 
-                ButtonControlRow(mapViewportState = mapViewportState) { viewModel.updateShowFriendScreen() }
+                ButtonControlRow(
+                    mapViewportState = mapViewportState,
+                    onUpdateLeaderboardScreenState = { viewModel.updateLeaderboardOpen() },
+                    onUpdateProfileScreenState = { viewModel.updateShowFriendScreen() }
+                )
             }
 
             is UiState.Error -> {
@@ -654,6 +659,10 @@ fun MapScreen(
 
             mapState.isBattlePassOpen -> {
                 BattlePassScreen(onDismiss = { viewModel.updateBattlePassOpenScreen() })
+            }
+
+            mapState.isLeaderboardOpen -> {
+                LeaderboardScreen(onDismiss = { viewModel.updateLeaderboardOpen() })
             }
 
         }

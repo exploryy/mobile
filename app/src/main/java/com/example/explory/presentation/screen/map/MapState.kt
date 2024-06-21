@@ -51,7 +51,9 @@ data class MapState(
     val isCreateNoteOpen: Boolean = false,
     val noteList: List<CommonNoteDto> = emptyList(),
     val isNoteScreenOpen: Boolean = false,
-    val note: NoteDto? = null
+    val note: NoteDto? = null,
+
+    val isLeaderboardOpen: Boolean = false
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })

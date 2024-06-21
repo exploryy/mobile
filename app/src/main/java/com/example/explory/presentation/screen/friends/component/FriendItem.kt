@@ -65,7 +65,7 @@ fun FriendItem(
                 modifier = Modifier
             ){
                 Text(text = friend.name, style = MaterialTheme.typography.bodyMedium)
-                Text(text = friend.email, style = MaterialTheme.typography.bodyMedium)
+                Text(text = friend.email, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
             }
         }
 

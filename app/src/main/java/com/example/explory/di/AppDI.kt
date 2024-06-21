@@ -6,6 +6,7 @@ import com.example.explory.presentation.screen.battlepass.BattlePassViewModel
 import com.example.explory.presentation.screen.friendprofile.FriendProfileViewModel
 import com.example.explory.presentation.screen.friends.FriendViewModel
 import com.example.explory.presentation.screen.inventory.InventoryViewModel
+import com.example.explory.presentation.screen.leaderboard.LeaderboardViewModel
 import com.example.explory.presentation.screen.map.MapViewModel
 import com.example.explory.presentation.screen.map.component.EventViewModel
 import com.example.explory.presentation.screen.profile.ProfileViewModel
@@ -32,5 +33,5 @@ fun appModule() = module {
     viewModelOf(::InventoryViewModel)
     viewModelOf(::EventViewModel)
     viewModelOf(::BattlePassViewModel)
-
+    viewModelOf(::LeaderboardViewModel)
 }

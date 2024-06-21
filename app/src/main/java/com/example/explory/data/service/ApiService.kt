@@ -5,6 +5,7 @@ import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.battlepass.BattlePassDto
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
+import com.example.explory.data.model.leaderboard.TotalStatisticDto
 import com.example.explory.data.model.location.AreaDto
 import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.location.PolygonDto
@@ -243,6 +244,13 @@ interface ApiService {
 
     @POST("/note")
     suspend fun createNote(@Body body: RequestBody)
+
+    //leaderboard
+    @GET("/statistic/top/level/distance")
+    suspend fun getDistanceStatistic(@Query("count") count: Int) : TotalStatisticDto
+
+    @GET("/statistic/top/experience/distance")
+    suspend fun getExperienceStatistic(@Query("count") count: Int): TotalStatisticDto
 }
 
 

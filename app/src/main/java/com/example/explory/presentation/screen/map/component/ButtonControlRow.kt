@@ -33,7 +33,8 @@ import com.mapbox.maps.plugin.viewport.ViewportStatus
 @Composable
 fun ButtonControlRow(
     mapViewportState: MapViewportState,
-    onUpdateFriendScreenState: () -> Unit
+    onUpdateProfileScreenState: () -> Unit,
+    onUpdateLeaderboardScreenState: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -79,7 +80,7 @@ fun ButtonControlRow(
         ) {
             FloatingActionButton(
                 containerColor = Color.White,
-                onClick = { },
+                onClick = { onUpdateLeaderboardScreenState() },
                 modifier = Modifier
                     .clip(CircleShape)
             ) {
@@ -91,7 +92,7 @@ fun ButtonControlRow(
 
             FloatingActionButton(
                 containerColor = Color.White,
-                onClick = { onUpdateFriendScreenState() },
+                onClick = { onUpdateProfileScreenState() },
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)

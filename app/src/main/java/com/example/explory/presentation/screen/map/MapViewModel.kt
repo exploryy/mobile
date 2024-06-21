@@ -732,6 +732,10 @@ class MapViewModel(
         }
     }
 
+    fun updateLeaderboardOpen(){
+        _mapState.update { it.copy(isLeaderboardOpen = !it.isLeaderboardOpen) }
+    }
+
     fun acceptFriendRequest(friendId: String) {
         viewModelScope.launch {
             try {

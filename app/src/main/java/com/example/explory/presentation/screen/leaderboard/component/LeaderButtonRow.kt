@@ -1,39 +1,27 @@
-package com.example.explory.presentation.screen.profile
+package com.example.explory.presentation.screen.leaderboard.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SemiRoundedButtonsRow(
+fun LeaderButtonRow(
     onFirstButtonClick: () -> Unit,
     onSecondButtonClick: () -> Unit,
-    onThirdButtonClick: () -> Unit,
     selectedButton: Int,
-    notificationCount: Int
-) {
+){
     val buttonBaseColor = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -50,7 +38,7 @@ fun SemiRoundedButtonsRow(
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
             onClick = onFirstButtonClick,
@@ -66,7 +54,7 @@ fun SemiRoundedButtonsRow(
                 .weight(1f)
         ) {
             Text(
-                text = "Друзья",
+                text = "По дистанции",
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 15.sp
             )
@@ -75,59 +63,21 @@ fun SemiRoundedButtonsRow(
         Button(
             onClick = onSecondButtonClick,
             colors = if (selectedButton == 2) selectedButtonColor else buttonBaseColor,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(
+                topStart = 8.dp,
+                bottomStart = 8.dp,
+                topEnd = 16.dp,
+                bottomEnd = 16.dp
+            ),
             modifier = Modifier
                 .height(40.dp)
                 .weight(1f)
         ) {
             Text(
-                text = "Статистика",
+                text = "По уровню",
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 15.sp
             )
         }
-
-        Box(
-            modifier = Modifier
-                .height(40.dp)
-                .weight(1f)
-        ) {
-            Button(
-                onClick = onThirdButtonClick,
-                colors = if (selectedButton == 3) selectedButtonColor else buttonBaseColor,
-                shape = RoundedCornerShape(
-                    topStart = 8.dp,
-                    bottomStart = 8.dp,
-                    topEnd = 16.dp,
-                    bottomEnd = 16.dp
-                ),
-                modifier = Modifier
-                    .height(40.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Заявки",
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 15.sp
-                )
-            }
-
-            if (notificationCount > 0) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(Color.Red, CircleShape)
-                        .align(Alignment.TopEnd)
-                ) {
-                    Text(
-                        text = notificationCount.toString(),
-                        color = Color.White,
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
-        }
     }
-
 }
