@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.explory.presentation.screen.settings.component.ThemeButton
 import kotlinx.coroutines.launch
 
 
@@ -70,13 +71,9 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
-                Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = onThemeChangeClick,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.primary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.surface
-                    )
+                ThemeButton(
+                    onClick = { onThemeChangeClick(!isDarkTheme) },
+                    darkTheme = !isDarkTheme
                 )
             }
         }

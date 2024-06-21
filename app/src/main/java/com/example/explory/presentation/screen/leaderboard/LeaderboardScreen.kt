@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -69,9 +72,16 @@ fun LeaderboardScreen(
         }
 
         LazyColumn {
-            leaderboardState.leadersList?.let {
-                items(it.bestUsers) { leader ->
+            leaderboardState.leadersList?.let { leadersList ->
+                itemsIndexed(leadersList.bestUsers) { index, leader ->
                     LeaderItem(leader)
+                    if (index < leadersList.bestUsers.size - 1) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
         }
