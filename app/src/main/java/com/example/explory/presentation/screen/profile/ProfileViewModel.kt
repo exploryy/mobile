@@ -46,6 +46,7 @@ class ProfileViewModel(
 
     fun changeCurrentPage(newPage: Int) {
         _profileState.update { it.copy(profileScreenState = newPage) }
+        getNotificationCount()
     }
 
     fun changeOpenEditDialogState() {

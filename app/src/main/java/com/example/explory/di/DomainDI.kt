@@ -5,9 +5,11 @@ import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
 import com.example.explory.domain.usecase.BuyItemUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
+import com.example.explory.domain.usecase.CreateNoteUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.EquipItemUseCase
+import com.example.explory.domain.usecase.GetAllNotesUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetCurrentBattlePassUseCase
@@ -16,6 +18,7 @@ import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetInventoryUseCase
+import com.example.explory.domain.usecase.GetNoteUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
@@ -67,4 +70,7 @@ fun domainModule() = module {
     factoryOf(::BuyItemUseCase)
     factoryOf(::SellItemUseCase)
     factoryOf(::GetCurrentBattlePassUseCase)
+    factoryOf(::CreateNoteUseCase)
+    factoryOf(::GetNoteUseCase)
+    factoryOf(::GetAllNotesUseCase)
 }

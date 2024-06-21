@@ -111,6 +111,8 @@ fun FriendsScreen(
                 },
                 placeholder = { Text("Поиск") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                maxLines = 1,
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
                 }

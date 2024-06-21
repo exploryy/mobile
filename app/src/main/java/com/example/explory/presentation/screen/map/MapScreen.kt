@@ -6,8 +6,10 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -54,6 +57,8 @@ import com.example.explory.presentation.screen.map.component.RequestPermissionsS
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
 import com.example.explory.presentation.screen.map.component.TopInfoColumn
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
+import com.example.explory.presentation.screen.map.note.CreateNoteScreen
+import com.example.explory.presentation.screen.map.note.NoteSheet
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
 import com.example.explory.presentation.screen.profile.ProfileScreen
 import com.example.explory.presentation.screen.quest.InfoBox
@@ -149,11 +154,16 @@ fun MapScreen(
         )
     )
 
+
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
 
     val taskBitmap: Bitmap? = remember {
         drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
+    }
+
+    val noteBitmap: Bitmap? = remember {
+        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.note))
     }
 
     val easyTaskBitmap: Bitmap? = remember {
@@ -202,7 +212,9 @@ fun MapScreen(
     }
 
 
-    Box(Modifier.fillMaxSize()) {
+    Box(
+        Modifier.fillMaxSize()
+    ) {
         RequestLocationPermission(requestCount = mapState.permissionRequestCount,
             onPermissionDenied = {
                 viewModel.updateInfoText("You need to accept location permissions")
@@ -220,14 +232,21 @@ fun MapScreen(
 
         when (mapState.uiState) {
             is UiState.Default -> {
-                MapboxMap(Modifier.fillMaxSize(), onMapClickListener = {
+                MapboxMap(
+                    Modifier
+                        .fillMaxSize(),
+                    onMapClickListener = {
                     viewModel.updateShowViewAnnotationIndex(null)
                     true
                 }, scaleBar = {}, logo = {}, attribution = {}, compass = {
                     Compass(
                         contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
                     )
-                }, style = {
+                },
+                    onMapLongClickListener = {
+                        viewModel.updateCreateNoteScreen()
+                          true
+                    }, style = {
                     MapboxStandardStyle(
                         topSlot = {
                             FillLayer(
@@ -303,6 +322,7 @@ fun MapScreen(
                             iconEmissiveStrength = 0.5,
                             iconHaloColorInt = White.toArgb(),
                             iconHaloWidth = 1.0,
+                            iconSize = 0.2,
                             iconImageBitmap = when (quest.difficultyType) {
                                 "EASY" -> easyTaskBitmap
                                 "MEDIUM" -> mediumTaskBitmap
@@ -359,6 +379,19 @@ fun MapScreen(
                             textOffset = listOf(0.0, 2.0),
                             textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
                         )
+                    }
+
+                    mapState.noteList.forEach { note ->
+                        val point = Point.fromLngLat(note.longitude.toDouble(), note.latitude.toDouble())
+                        PointAnnotation(point = point,
+                            iconSize = 0.1,
+                            iconEmissiveStrength = 0.5,
+                            iconImageBitmap = noteBitmap,
+                            onClick = {
+                                viewModel.openNoteById(note.id)
+                                true
+                            })
+
                     }
 
                     if (mapState.p2pQuest != null) {
@@ -580,6 +613,20 @@ fun MapScreen(
                     onDismissRequest = { viewModel.updateDistanceQuest(null) },
                     reviews = mapState.distanceQuest!!.fullReviewDto,
                     questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null
+                )
+            }
+
+            mapState.isNoteScreenOpen && mapState.note != null -> {
+                NoteSheet(
+                    note = mapState.note!!,
+                    onDismissRequest = { viewModel.closeNote() }
+                )
+            }
+
+            mapState.isCreateNoteOpen -> {
+                CreateNoteScreen(
+                    onSave = { text, images -> viewModel.createNote(text, images) },
+                    onDismiss = { viewModel.updateCreateNoteScreen() }
                 )
             }
 

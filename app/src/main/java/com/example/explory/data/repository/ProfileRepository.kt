@@ -2,6 +2,7 @@ package com.example.explory.data.repository
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.profile.ProfileMultipart
 import com.example.explory.data.model.statistic.UserStatisticDto
@@ -32,6 +33,7 @@ class ProfileRepository(
                 requestBody.addFormDataPart("password", it)
         }
         profileRequest.avatar?.let {
+            Log.d("REPOSITORY22", it.toString())
             val file = it.createTempFile()
             requestBody.addFormDataPart(
                 "avatar",

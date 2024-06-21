@@ -8,6 +8,9 @@ import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.location.AreaDto
 import com.example.explory.data.model.location.LocationStatisticDto
 import com.example.explory.data.model.location.PolygonDto
+import com.example.explory.data.model.note.CommonNoteDto
+import com.example.explory.data.model.note.NoteDto
+import com.example.explory.data.model.note.NoteMultipart
 import com.example.explory.data.model.profile.FriendProfileDto
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.quest.DistanceQuestDto
@@ -230,6 +233,16 @@ interface ApiService {
     //battlepass
     @GET("/battle_pass/current")
     suspend fun getCurrentBattlePass() : BattlePassDto
+
+    //note
+    @GET("/note/all")
+    suspend fun getAllNotes(): List<CommonNoteDto>
+
+    @GET("/note/{note_id}")
+    suspend fun getNote(@Path("note_id") noteId: Long): NoteDto
+
+    @POST("/note")
+    suspend fun createNote(@Body body: RequestBody)
 }
 
 

@@ -9,6 +9,8 @@ import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.model.event.EventDto
+import com.example.explory.data.model.note.CommonNoteDto
+import com.example.explory.data.model.note.NoteDto
 import com.example.explory.domain.model.FriendProfile
 import com.example.explory.presentation.utils.UiState
 import com.mapbox.geojson.LineString
@@ -44,7 +46,12 @@ data class MapState(
     val isShopOpen: Boolean = false,
     val isInventoryOpen: Boolean = false,
     val currentUserFog: CosmeticItemInInventoryDto? = null,
-    val isBattlePassOpen: Boolean = false
+    val isBattlePassOpen: Boolean = false,
+
+    val isCreateNoteOpen: Boolean = false,
+    val noteList: List<CommonNoteDto> = emptyList(),
+    val isNoteScreenOpen: Boolean = false,
+    val note: NoteDto? = null
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })

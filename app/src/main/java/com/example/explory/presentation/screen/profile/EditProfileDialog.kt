@@ -81,14 +81,15 @@ fun EditProfileDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Редактировать профиль", style = MaterialTheme.typography.headlineMedium)
+                Text(text = "Редактировать профиль", style = MaterialTheme.typography.headlineSmall)
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text("Имя") }
+                    label = { Text("Имя") },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -96,7 +97,8 @@ fun EditProfileDialog(
                 OutlinedTextField(
                     value = email.value,
                     onValueChange = { email.value = it },
-                    label = { Text("Email") }
+                    label = { Text("Email") },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -105,14 +107,20 @@ fun EditProfileDialog(
                     value = password.value,
                     onValueChange = { password.value = it },
                     label = { Text("Пароль") },
+                    modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation()
                 )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth()
                 ) {
-                    Button(onClick = { launcher.launch("image/*") }) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = { launcher.launch("image/*") }
+                    ) {
                         Text("Выбрать аватарку")
                     }
                     Spacer(modifier = Modifier.width(16.dp))

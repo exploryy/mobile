@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.SET_COMPONENT_ENABLED_STATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
     <application
         android:name=".app.App"
         android:allowBackup="true"

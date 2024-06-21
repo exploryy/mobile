@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,8 @@ import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
 import com.example.explory.data.model.location.CreatePolygonRequestDto
 import com.example.explory.data.model.location.LocationRequest
+import com.example.explory.data.model.note.NoteDto
+import com.example.explory.data.model.note.NoteMultipart
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.repository.CoinsRepository
@@ -29,10 +32,13 @@ import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
 import com.example.explory.domain.model.FriendProfile
 import com.example.explory.domain.usecase.AcceptFriendUseCase
+import com.example.explory.domain.usecase.CreateNoteUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
+import com.example.explory.domain.usecase.GetAllNotesUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
+import com.example.explory.domain.usecase.GetNoteUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.presentation.utils.UiState
@@ -71,6 +77,9 @@ class MapViewModel(
     private val locationTracker: LocationTracker,
     private val getProfileUseCase: GetProfileUseCase,
     private val themePreferenceManager: ThemePreferenceManager,
+    private val getAllNotesUseCase: GetAllNotesUseCase,
+    private val getNoteUseCase: GetNoteUseCase,
+    private val createNoteUseCase: CreateNoteUseCase,
     private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
@@ -274,6 +283,7 @@ class MapViewModel(
                 fetchProfile()
                 startWebSockets()
                 getTheme()
+                fetchAllNotes()
             } catch (e: Exception) {
                 updateUiState(UiState.Error("Нет подключения к серверу"))
                 Log.e("MapViewModel", "Error getting start data", e)
@@ -661,28 +671,64 @@ class MapViewModel(
         _mapState.update { it.copy(isBattlePassOpen = !it.isBattlePassOpen) }
     }
 
-    fun setError(message: String?) {
-        if (message != null) {
-            _mapState.update { it.withErrorEnqueued(message) }
-            if (_mapState.value.currentError == null) {
-                showNextError()
+    fun createNote(text: String, list: List<Uri>){
+        val node = NoteMultipart(
+            text = text,
+            latitude = _mapState.value.userPoint?.latitude().toString(),
+            longitude = _mapState.value.userPoint?.longitude().toString(),
+            images = list
+        )
+        viewModelScope.launch {
+            try {
+                createNoteUseCase.execute(node)
+                fetchAllNotes()
+                updateCreateNoteScreen()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
-    private fun showNextError() {
-        val nextError = _mapState.value.errorQueue.peek()
-        if (nextError != null) {
-            _mapState.update { it.withCurrentError(nextError) }
-            clearErrorAfterDelay()
+    fun updateCreateNoteScreen() {
+        _mapState.update { it.copy(isCreateNoteOpen = !it.isCreateNoteOpen) }
+    }
+
+    private fun fetchAllNotes() {
+        viewModelScope.launch {
+            try {
+                val notes = getAllNotesUseCase.execute()
+                _mapState.update {
+                    it.copy(
+                        noteList = notes
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
-    private fun clearErrorAfterDelay() {
+    fun openNoteById(noteId: Long){
         viewModelScope.launch {
-            delay(4000)
-            _mapState.update { it.withNextErrorDequeued().withCurrentError(null) }
-            showNextError()
+            try {
+                val note = getNoteUseCase.execute(noteId)
+                _mapState.update {
+                    it.copy(
+                        isNoteScreenOpen = true,
+                        note = note
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun closeNote(){
+        _mapState.update {
+            it.copy(
+                isNoteScreenOpen = false
+            )
         }
     }
 
