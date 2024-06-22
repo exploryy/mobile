@@ -27,26 +27,22 @@ class ProfileViewModel(
     private val _profileState = MutableStateFlow(ProfileState())
     val profileState: StateFlow<ProfileState> = _profileState.asStateFlow()
 
-    init {
-        fetchProfile()
-        getNotificationCount()
-    }
 
     fun fetchProfile() {
         viewModelScope.launch {
-            _profileState.value = ProfileState(isLoading = true)
+            _profileState.value = _profileState.value.copy(isLoading = true, isFirstLoading = true)
             try {
                 val profile = getProfileUseCase.execute()
-                _profileState.value = ProfileState(profile = profile)
+                _profileState.value = _profileState.value.copy(profile = profile, isLoading = false, isFirstLoading = false)
             } catch (e: Exception) {
-                _profileState.value = ProfileState(error = e.message)
+                _profileState.value = _profileState.value.copy(error = e.message, isLoading = false, isFirstLoading = false)
             }
         }
     }
 
     fun changeCurrentPage(newPage: Int) {
         _profileState.update { it.copy(profileScreenState = newPage) }
-        getNotificationCount()
+//        getNotificationCount()
     }
 
     fun changeOpenEditDialogState() {

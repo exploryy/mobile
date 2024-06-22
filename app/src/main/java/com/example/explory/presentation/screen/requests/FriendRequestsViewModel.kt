@@ -20,9 +20,6 @@ class FriendRequestsViewModel(
     private val _friendRequests = MutableStateFlow(FriendRequest(emptyList(), emptyList()))
     val friendRequests: StateFlow<FriendRequest> = _friendRequests.asStateFlow()
 
-    init {
-        fetchFriendRequests()
-    }
 
     fun fetchFriendRequests() {
         viewModelScope.launch {

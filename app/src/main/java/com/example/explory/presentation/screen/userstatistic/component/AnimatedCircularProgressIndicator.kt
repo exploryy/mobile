@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.progressSemantics
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,22 +23,21 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.explory.ui.theme.S14_W600
 
 @Composable
 fun AnimatedCircularProgressIndicator(
+    modifier: Modifier = Modifier,
     currentValue: Int,
     maxValue: Int,
     progressBackgroundColor: Color,
     progressIndicatorColor: Color,
     completedColor: Color,
     circularIndicatorDiameter: Dp = 64.dp,
-    modifier: Modifier = Modifier
 ) {
     val stroke = with(LocalDensity.current) {
         Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
@@ -98,14 +96,15 @@ private fun ProgressStatus(
     currentValue: Int,
     maxValue: Int,
 ) {
-    val text = buildAnnotatedString {
-        append(AnnotatedString("$currentValue"))
-        append(AnnotatedString(text = "/"))
-        append(AnnotatedString(text = "$maxValue"))
-    }
+//    val text = buildAnnotatedString {
+//        append(AnnotatedString(formatNumber(currentValue)))
+//        append(AnnotatedString(text = "/"))
+//        append(AnnotatedString(text = formatNumber(maxValue)))
+//    }
+    val text = "еще ${maxValue - currentValue} опыта"
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyLarge,
+        style = S14_W600,
         textAlign = TextAlign.Center,
         maxLines = 2,
         overflow = TextOverflow.Clip,

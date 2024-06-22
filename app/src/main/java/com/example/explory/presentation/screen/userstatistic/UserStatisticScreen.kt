@@ -7,25 +7,32 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.userstatistic.component.AnimatedCircularProgressIndicator
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S20_W600
+import com.example.explory.ui.theme.S24_W600
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserStatisticScreen(
     viewModel: UserStatisticViewModel = koinViewModel()
@@ -47,98 +54,83 @@ fun UserStatisticScreen(
                 LoadingItem()
             }
         }
-        state.userStatisticDto != null -> {
-            val statistics = state.userStatisticDto
 
+        state.userStatisticDto != null -> {
             Column(
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = "Моя статистика",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
-                )
-
-                statistics?.let {
+                state.userStatisticDto?.let {
+                    Spacer(modifier = Modifier.height(32.dp))
                     Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        Card(
+                        StatsBox(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(end = 8.dp)
-                                .heightIn(min = 180.dp)
+                                .height(180.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "Уровень",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                )
-                                Text(
-                                    text = it.level.toString(),
-                                    fontSize = 85.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
+                            Text(
+                                text = "уровень",
+                                style = S20_W600
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = it.level.toString(),
+                                style = S24_W600
+                            )
                         }
-                        Card(
+                        StatsBox(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(start = 8.dp)
-                                .heightIn(min = 180.dp)
+                                .height(180.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "Опыт",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    textAlign = TextAlign.Center
-                                )
-                                AnimatedCircularProgressIndicator(
-                                    currentValue = it.experience,
-                                    maxValue = it.totalExperienceInLevel,
-                                    progressBackgroundColor = MaterialTheme.colorScheme.primary,
-                                    progressIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                                    completedColor = MaterialTheme.colorScheme.primary,
-                                    circularIndicatorDiameter = 110.dp
-                                )
-                            }
+//                            Text(
+//                                text = "опыт",
+//                                style = S20_W600,
+//                                textAlign = TextAlign.Center
+//                            )
+//                            Spacer(modifier = Modifier.height(8.dp))
+                            AnimatedCircularProgressIndicator(
+                                currentValue = it.experience,
+                                maxValue = it.totalExperienceInLevel,
+                                progressBackgroundColor = MaterialTheme.colorScheme.onSurface,
+                                progressIndicatorColor = MaterialTheme.colorScheme.primary,
+                                completedColor = MaterialTheme.colorScheme.primary,
+                                circularIndicatorDiameter = 125.dp
+                            )
                         }
                     }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                    TooltipBox(
+                        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider((-32).dp),
+                        tooltip = {
+                            Text(
+                                text = "${it.distance} метров",
+                                style = S16_W600,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        state = rememberTooltipState(),
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                        StatsBox(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
                         ) {
                             Text(
-                                text = "Дистанция",
-                                style = MaterialTheme.typography.headlineMedium,
+                                text = "пройдено",
+                                style = S20_W600,
                                 textAlign = TextAlign.Center
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "${it.distance} m",
-                                style = MaterialTheme.typography.displayMedium,
+                                text = getDistanceString(it.distance),
+                                style = S20_W600,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -149,3 +141,30 @@ fun UserStatisticScreen(
     }
 }
 
+fun getDistanceString(distance: Int): String {
+    return when {
+        distance < 1000 -> "$distance метров"
+        distance < 1000000 -> "${distance / 1000} километров"
+        else -> "${distance / 1000000} тыс. километров"
+    }
+}
+
+@Composable
+fun StatsBox(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onBackground
+        ),
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            content()
+        }
+    }
+}

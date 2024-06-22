@@ -4,6 +4,7 @@ import com.example.explory.data.model.profile.ProfileDto
 
 data class ProfileState(
     val profile: ProfileDto? = null,
+    val isFirstLoading: Boolean = true,
     val isLoading: Boolean = false,
     val error: String? = null,
     val isEditDialogOpen: Boolean = false,

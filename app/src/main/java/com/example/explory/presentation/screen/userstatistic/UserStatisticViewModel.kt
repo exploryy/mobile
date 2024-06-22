@@ -15,9 +15,6 @@ class UserStatisticViewModel(
     private val _state = MutableStateFlow(StatisticState())
     val state: StateFlow<StatisticState> = _state.asStateFlow()
 
-    init {
-        fetchUserStatistics()
-    }
 
     fun fetchUserStatistics() {
         viewModelScope.launch {

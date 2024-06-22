@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +21,6 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.example.explory.R
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
-import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.White
 
 @Composable
@@ -37,7 +37,7 @@ fun Avatar(
     ) {
         Box(
             modifier = modifier
-                .background(color = DarkGray, shape = CircleShape)
+                .background(color = MaterialTheme.colorScheme.surface, shape = CircleShape)
 //                .padding(4.dp)
         ) {
             SubcomposeAsyncImage(
@@ -102,6 +102,7 @@ fun Avatar(
                         is AsyncImagePainter.State.Success -> {
                             SubcomposeAsyncImageContent()
                         }
+
                         is AsyncImagePainter.State.Error -> {
                             Icon(
                                 painter = painterResource(id = R.drawable.picture),
@@ -110,6 +111,7 @@ fun Avatar(
                                 modifier = Modifier.scale(0.5f)
                             )
                         }
+
                         is AsyncImagePainter.State.Empty -> {}
                         is AsyncImagePainter.State.Loading -> {}
                     }

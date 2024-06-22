@@ -74,11 +74,6 @@ fun FriendsScreen(
                 })
             },
     ) {
-//        Text(
-//            text = "друзья",
-//            style = S24_W600,
-//            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
-//        )
         // todo позвать друзей + qr code?
         Button(
             onClick = { viewModel.changeFriendRequestDialogState() },

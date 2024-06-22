@@ -1,8 +1,6 @@
 package com.example.explory.presentation.screen.friends
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,12 +17,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.explory.data.model.friend.Friend
 import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S24_W600
 
 @Composable
 fun DeleteFriendDialog(
@@ -54,36 +52,24 @@ fun DeleteFriendDialog(
             ) {
                 Text(
                     text = "Удалить друга?",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = S24_W600
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                val imageUrl = friend.avatar
-
-                Box(
+                Avatar(
+                    image = friend.avatar,
+                    border = friend.inventoryDto.avatarFrames,
                     modifier = Modifier
-                        .size(64.dp)
-                        .background(Color.DarkGray, shape = CircleShape)
-                ) {
-                    Avatar(
-                        image = imageUrl,
-                        border = friend.inventoryDto.avatarFrames,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .align(Alignment.Center)
-                    )
-                }
+                        .size(100.dp)
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = friend.name,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = S16_W600
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
@@ -92,19 +78,22 @@ fun DeleteFriendDialog(
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.White
+                            contentColor = MaterialTheme.colorScheme.onBackground
                         )
                     ) {
-                        Text("Закрыть")
+                        Text(
+                            "отмена",
+                            style = S16_W600
+                        )
                     }
 
                     TextButton(
                         onClick = { deleteFriend(friend.userId) },
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.Red
+                            contentColor = MaterialTheme.colorScheme.onError
                         )
                     ) {
-                        Text("Удалить")
+                        Text("удалить", style = S16_W600)
                     }
                 }
             }

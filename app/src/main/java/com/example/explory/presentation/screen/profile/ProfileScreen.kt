@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.map.component.Avatar
@@ -55,84 +57,92 @@ fun ProfileScreen(
     }
 
     ModalBottomSheet(
+        modifier = Modifier.fillMaxSize(),
         onDismissRequest = { onBackClick() },
         sheetState = sheetState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                },
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Avatar(
-                    image = profileState.profile?.avatarUrl,
-                    border = profileState.profile?.inventoryDto?.avatarFrames,
-                    modifier = Modifier.size(100.dp)
-                )
+        when {
+            profileState.isFirstLoading -> {
+                LoadingItem()
+            }
 
+            else ->
                 Column(
-                    horizontalAlignment = Alignment.End
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = {
+                                focusManager.clearFocus()
+                            })
+                        },
                 ) {
-                    ProfileButton(
-                        onClick = { viewModel.changeOpenEditDialogState() },
-                        text = "редактировать",
-                        modifier = Modifier,
-                        contentColor = MaterialTheme.colorScheme.onBackground
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Avatar(
+                            image = profileState.profile?.avatarUrl,
+                            border = profileState.profile?.inventoryDto?.avatarFrames,
+                            modifier = Modifier.size(100.dp)
+                        )
+
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            ProfileButton(
+                                onClick = { viewModel.changeOpenEditDialogState() },
+                                text = "редактировать",
+                                modifier = Modifier,
+                                contentColor = MaterialTheme.colorScheme.onBackground
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            ProfileButton(
+                                onClick = { viewModel.logout() },
+                                text = "выйти",
+                                contentColor = MaterialTheme.colorScheme.onError
+                            )
+                        }
+
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    profileState.profile?.let {
+                        Text(
+                            text = it.username,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = S20_W600
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    profileState.profile?.let {
+                        Text(
+                            text = it.email,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = S18_W600
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    SemiRoundedButtonsRow(
+                        onFirstButtonClick = { viewModel.changeCurrentPage(1) },
+                        onSecondButtonClick = { viewModel.changeCurrentPage(2) },
+                        onThirdButtonClick = { viewModel.changeCurrentPage(3) },
+                        selectedButton = profileState.profileScreenState,
+                        notificationCount = profileState.notificationCount
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    ProfileButton(
-                        onClick = { viewModel.logout() },
-                        text = "выйти",
-                        contentColor = MaterialTheme.colorScheme.onError
-                    )
+
+                    when (profileState.profileScreenState) {
+                        1 -> FriendsScreen(
+                            onFriendProfileClick = { viewModel.onFriendMarkerClicked(friendId = it) }
+                        )
+
+                        2 -> UserStatisticScreen()
+                        3 -> FriendRequestsScreen()
+                    }
                 }
-
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            profileState.profile?.let {
-                Text(
-                    text = it.username,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = S20_W600
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            profileState.profile?.let {
-                Text(
-                    text = it.email,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = S18_W600
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SemiRoundedButtonsRow(
-                onFirstButtonClick = { viewModel.changeCurrentPage(1) },
-                onSecondButtonClick = { viewModel.changeCurrentPage(2) },
-                onThirdButtonClick = { viewModel.changeCurrentPage(3) },
-                selectedButton = profileState.profileScreenState,
-                notificationCount = profileState.notificationCount
-            )
-
-            when (profileState.profileScreenState) {
-                1 -> FriendsScreen(
-                    onFriendProfileClick = { viewModel.onFriendMarkerClicked(friendId = it) }
-                )
-
-                2 -> UserStatisticScreen()
-                3 -> FriendRequestsScreen()
-            }
         }
     }
 

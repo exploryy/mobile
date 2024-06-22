@@ -35,10 +35,6 @@ class FriendViewModel(
     private val _addFriendStatus = MutableStateFlow<AddFriendStatus>(AddFriendStatus.Idle)
     val addFriendStatus: StateFlow<AddFriendStatus> = _addFriendStatus.asStateFlow()
 
-    init {
-        fetchFriends()
-        fetchFriendRequests()
-    }
 
     fun fetchFriends() {
         viewModelScope.launch {
@@ -106,7 +102,8 @@ class FriendViewModel(
     fun toggleFavoriteFriend(userId: String) {
         viewModelScope.launch {
             try {
-                val isFavorite = _friendsState.value.friends.find { it.userId == userId }?.isBestFriend ?: false
+                val isFavorite =
+                    _friendsState.value.friends.find { it.userId == userId }?.isBestFriend ?: false
                 if (isFavorite) {
                     removeFavoriteFriendUseCase.execute(userId)
                 } else {
@@ -124,11 +121,11 @@ class FriendViewModel(
         }
     }
 
-    fun changeRemoveFriendState(){
-        _friendsState.update { it.copy(isStartDeleteFriend = !it.isStartDeleteFriend ) }
+    fun changeRemoveFriendState() {
+        _friendsState.update { it.copy(isStartDeleteFriend = !it.isStartDeleteFriend) }
     }
 
-    fun removeFriend(userId: String){
+    fun removeFriend(userId: String) {
         viewModelScope.launch {
             _userListState.value = _userListState.value.copy(isLoading = true)
             try {
@@ -146,7 +143,7 @@ class FriendViewModel(
     }
 
     fun changeFriendRequestDialogState() {
-        _friendsState.update { it.copy(isFriendRequestDialogOpen = !it.isFriendRequestDialogOpen ) }
+        _friendsState.update { it.copy(isFriendRequestDialogOpen = !it.isFriendRequestDialogOpen) }
         _userListState.update { it.copy(users = emptyList()) }
     }
 }
