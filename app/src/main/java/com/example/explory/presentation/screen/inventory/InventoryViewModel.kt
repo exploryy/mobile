@@ -51,6 +51,7 @@ class InventoryViewModel(
                 closeItemDialog()
                 Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
+                Toast.makeText(context, "Сначала снимите другой предмет этого типа", Toast.LENGTH_SHORT).show()
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }
