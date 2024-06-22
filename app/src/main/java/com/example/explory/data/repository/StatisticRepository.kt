@@ -11,4 +11,8 @@ class StatisticRepository(private val apiService: ApiService) {
     suspend fun getDistanceStatistic(count: Int): TotalStatisticDto{
         return apiService.getDistanceStatistic(count)
     }
+
+    suspend fun setPrivacy(isPublic: Boolean) {
+        apiService.setPrivacy(isPublic)
+    }
 }

@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.example.explory.presentation.screen.settings.component.ConfidentialityButton
 import com.example.explory.presentation.screen.settings.component.ThemeButton
 import kotlinx.coroutines.launch
 
@@ -67,13 +66,30 @@ fun SettingsScreen(
                     .padding(vertical = 8.dp)
             ) {
                 Text(
-                    text = "Выбор темы",
+                    text = "Выбор темы карты",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
                 ThemeButton(
                     onClick = { onThemeChangeClick(!isDarkTheme) },
                     darkTheme = !isDarkTheme
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    text = "Приватность",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f)
+                )
+                ConfidentialityButton(
+                    onClick = { },
+                    isConfidentially = false
                 )
             }
         }

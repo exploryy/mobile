@@ -251,6 +251,10 @@ interface ApiService {
 
     @GET("/statistic/top/experience/distance")
     suspend fun getExperienceStatistic(@Query("count") count: Int): TotalStatisticDto
+
+    //конфиденциальность
+    @PATCH("/privacy")
+    suspend fun setPrivacy(@Query("isPublic") isPublic: Boolean)
 }
 
 
