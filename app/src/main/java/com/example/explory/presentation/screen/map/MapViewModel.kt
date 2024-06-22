@@ -26,6 +26,7 @@ import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
+import com.example.explory.data.repository.StatisticRepository
 import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
@@ -79,6 +80,7 @@ class MapViewModel(
     private val getAllNotesUseCase: GetAllNotesUseCase,
     private val getNoteUseCase: GetNoteUseCase,
     private val createNoteUseCase: CreateNoteUseCase,
+    private val statisticRepository: StatisticRepository,
     private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
@@ -283,6 +285,7 @@ class MapViewModel(
                 startWebSockets()
                 getTheme()
                 fetchAllNotes()
+                getPrivacy()
             } catch (e: Exception) {
                 updateUiState(UiState.Error("Нет подключения к серверу"))
                 Log.e("MapViewModel", "Error getting start data", e)
@@ -744,6 +747,28 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 declineFriendUseCase.execute(friendId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun getPrivacy(){
+        viewModelScope.launch {
+            try {
+                val privacy = statisticRepository.getPrivacy()
+                _mapState.update { it.copy(isPublicPrivacy = privacy.isPublic) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun setPrivacy(isPublic: Boolean){
+        viewModelScope.launch {
+            try {
+                statisticRepository.setPrivacy(isPublic)
+                getPrivacy()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -23,6 +23,7 @@ import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.statistic.AchievementDto
 import com.example.explory.data.model.statistic.BalanceDto
 import com.example.explory.data.model.statistic.CoinDto
+import com.example.explory.data.model.statistic.Privacy
 import com.example.explory.data.model.statistic.UserStatisticDto
 import com.example.explory.presentation.screen.map.component.BuffResponse
 import okhttp3.MultipartBody
@@ -265,15 +266,18 @@ interface ApiService {
     suspend fun createNote(@Body body: RequestBody)
 
     //leaderboard
-    @GET("/statistic/top/level/distance")
+    @GET("/statistic/top/distance")
     suspend fun getDistanceStatistic(@Query("count") count: Int) : TotalStatisticDto
 
-    @GET("/statistic/top/experience/distance")
+    @GET("/statistic/top/level")
     suspend fun getExperienceStatistic(@Query("count") count: Int): TotalStatisticDto
 
     // Privacy
     @PATCH("/privacy")
     suspend fun setPrivacy(@Query("isPublic") isPublic: Boolean)
+
+    @GET("/privacy")
+    suspend fun getPrivacy() : Privacy
 }
 
 

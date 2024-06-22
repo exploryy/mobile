@@ -53,7 +53,8 @@ data class MapState(
     val isNoteScreenOpen: Boolean = false,
     val note: NoteDto? = null,
 
-    val isLeaderboardOpen: Boolean = false
+    val isLeaderboardOpen: Boolean = false,
+    val isPublicPrivacy: Boolean = false
 ) {
     fun withErrorEnqueued(message: String): MapState {
         return copy(errorQueue = LinkedList(errorQueue).apply { add(message) })

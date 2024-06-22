@@ -1,6 +1,7 @@
 package com.example.explory.data.repository
 
 import com.example.explory.data.model.leaderboard.TotalStatisticDto
+import com.example.explory.data.model.statistic.Privacy
 import com.example.explory.data.service.ApiService
 
 class StatisticRepository(private val apiService: ApiService) {
@@ -14,5 +15,9 @@ class StatisticRepository(private val apiService: ApiService) {
 
     suspend fun setPrivacy(isPublic: Boolean) {
         apiService.setPrivacy(isPublic)
+    }
+
+    suspend fun getPrivacy() : Privacy{
+        return apiService.getPrivacy()
     }
 }

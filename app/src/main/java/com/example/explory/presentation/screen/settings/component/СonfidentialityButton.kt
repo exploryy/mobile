@@ -19,7 +19,7 @@ import com.example.explory.R
 
 @Composable
 fun ConfidentialityButton(
-    onClick: () -> Unit,
+    onClick: (Boolean) -> Unit,
     isConfidentially: Boolean
 ) {
     val iconId = R.drawable.like
@@ -31,7 +31,7 @@ fun ConfidentialityButton(
             .size(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        IconButton(onClick = { onClick() }) {
+        IconButton(onClick = { onClick(!isConfidentially) }) {
             Icon(
                 painter = painterResource(id = iconId),
                 contentDescription = null,

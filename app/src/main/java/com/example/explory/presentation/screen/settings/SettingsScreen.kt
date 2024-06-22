@@ -27,7 +27,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     isDarkTheme: Boolean,
+    isPublic: Boolean,
     onThemeChangeClick: (Boolean) -> Unit,
+    onPrivacyChangeClick: (Boolean) -> Unit,
     onBackClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -88,8 +90,8 @@ fun SettingsScreen(
                     modifier = Modifier.weight(1f)
                 )
                 ConfidentialityButton(
-                    onClick = { },
-                    isConfidentially = false
+                    onClick = { onPrivacyChangeClick(it) },
+                    isConfidentially = isPublic
                 )
             }
         }

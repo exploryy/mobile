@@ -616,10 +616,13 @@ fun MapScreen(
             }
 
             mapState.showSettingsScreen -> {
-                SettingsScreen(isDarkTheme = mapState.isDarkTheme,
+                SettingsScreen(
+                    isDarkTheme = mapState.isDarkTheme,
+                    isPublic = mapState.isPublicPrivacy,
                     onThemeChangeClick = { isDarkTheme ->
                         viewModel.updateTheme(isDarkTheme)
                     },
+                    onPrivacyChangeClick = { viewModel.setPrivacy(it) },
                     onBackClick = { viewModel.updateShowSettingsScreen() })
             }
 
