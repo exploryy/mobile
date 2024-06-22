@@ -49,10 +49,10 @@ class EventViewModel(
         }
     }
 
-    fun getBuffList() {
+    fun getBuffList(level: Int) {
         viewModelScope.launch {
             try {
-                val buffs = getBuffListUseCase.execute()
+                val buffs = getBuffListUseCase.execute(level)
                 _state.update { state ->
                     state.copy(buffs = buffs.map {
                         BuffDto(it.buffId, it.status.title, it.status.animationResource)

@@ -3,6 +3,7 @@ package com.example.explory.presentation.screen.map.component
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +29,11 @@ fun EventDialog(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val eventId = remember { mutableStateOf(null as Long?) }
     BasicAlertDialog(
-        onDismissRequest = onDismissRequest
+        onDismissRequest = {
+            if (event.type != EventType.UPDATE_LEVEL) {
+                onDismissRequest()
+            }
+        }
     ) {
         when (event.type) {
             EventType.COMPLETE_QUEST -> {
@@ -51,11 +56,16 @@ fun EventDialog(
             EventType.CHANGE_MONEY -> {}
             EventType.NEW_QUEST -> {}
             EventType.UPDATE_LEVEL -> {
-                viewModel.getBuffList()
+                LaunchedEffect(Unit) {
+                    viewModel.getBuffList(level = event.text.split(";")[0].toInt())
+                }
                 UpdateLevelContent(
                     event,
                     buffs = state.buffs,
-                    onBuffChoose = { viewModel.applyBuff(it) })
+                    onBuffChoose = {
+                        viewModel.applyBuff(it)
+                        onDismissRequest()
+                    })
             }
 
             EventType.UPDATE_EXPERIENCE -> {}

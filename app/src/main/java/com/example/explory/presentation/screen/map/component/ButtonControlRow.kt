@@ -1,28 +1,18 @@
 package com.example.explory.presentation.screen.map.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraEnhance
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
 import com.mapbox.maps.MapboxExperimental
@@ -37,8 +27,7 @@ fun ButtonControlRow(
     onUpdateLeaderboardScreenState: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -48,28 +37,17 @@ fun ButtonControlRow(
             contentAlignment = Alignment.TopCenter
         ) {
             if (mapViewportState.mapViewportStatus == ViewportStatus.Idle) {
-                FloatingActionButton(
+                MapBigButton(
+                    modifier = Modifier.size(70.dp),
+                    shape = RoundedCornerShape(45),
                     onClick = {
-                        mapViewportState.transitionToFollowPuckState(
-//                            followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
-//                                .pitch(0.0).build(),
-                        )
-
+                        mapViewportState.transitionToFollowPuckState()
                     },
-                    containerColor = Color.White,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(RoundedCornerShape(45))
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.location),
-                        contentDescription = "Locate button"
-                    )
-                }
+                    icon = R.drawable.location,
+                    tint = MaterialTheme.colorScheme.secondary
+                )
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier
@@ -78,30 +56,21 @@ fun ButtonControlRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            FloatingActionButton(
-                containerColor = Color.White,
-                onClick = { onUpdateLeaderboardScreenState() },
-                modifier = Modifier
-                    .clip(CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.crown),
-                    contentDescription = "Task button"
-                )
-            }
-
-            FloatingActionButton(
-                containerColor = Color.White,
-                onClick = { onUpdateProfileScreenState() },
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.user),
-                    contentDescription = "Profile button"
-                )
-            }
+            MapBigButton(
+                modifier = Modifier.size(60.dp),
+                shape = RoundedCornerShape(45),
+                onClick = onUpdateLeaderboardScreenState,
+                icon = R.drawable.crown,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            MapBigButton(
+                modifier = Modifier.size(60.dp),
+                shape = RoundedCornerShape(45),
+                onClick = onUpdateProfileScreenState,
+                icon = R.drawable.user,
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
+

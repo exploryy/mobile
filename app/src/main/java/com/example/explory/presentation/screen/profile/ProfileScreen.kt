@@ -1,10 +1,7 @@
 package com.example.explory.presentation.screen.profile
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,13 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -29,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
@@ -36,9 +32,11 @@ import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
-import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.DisabledBlackButtonColor
-import com.example.explory.ui.theme.DisabledWhiteContentColor
+import com.example.explory.ui.theme.ExploryTheme
+import com.example.explory.ui.theme.Red
+import com.example.explory.ui.theme.S14_W600
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,58 +80,57 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val imageUrl = profileState.profile?.avatarUrl
-                val borderUrl = profileState.profile?.inventoryDto?.avatarFrames
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .background(Color.DarkGray, shape = CircleShape)
-                ) {
-                    Avatar(
-                        image = imageUrl,
-                        border = borderUrl,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .align(Alignment.Center)
-                    )
-                }
+                Avatar(
+                    image = profileState.profile?.avatarUrl,
+                    border = profileState.profile?.inventoryDto?.avatarFrames,
+                    modifier = Modifier.size(100.dp)
+                )
 
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
-                    val buttonWidth = 175.dp
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = Color.White,
-                            containerColor = Black,
-                            disabledContentColor = DisabledWhiteContentColor,
-                            disabledContainerColor = DisabledBlackButtonColor
-                        ),
-                        border = BorderStroke(1.dp, Color.White),
+                    ProfileButton(
                         onClick = { viewModel.changeOpenEditDialogState() },
-                        modifier = Modifier.width(buttonWidth)
-                    ) {
-                        Text(text = "Редактировать")
-                    }
-
+                        text = "Редактировать",
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    )
                     Spacer(modifier = Modifier.height(4.dp))
-
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = Color.Red.copy(alpha = 0.7f),
-                            containerColor = Black,
-                            disabledContentColor = DisabledWhiteContentColor,
-                            disabledContainerColor = DisabledBlackButtonColor
-                        ),
-                        border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f)),
-                        onClick = {
-                            viewModel.logout()
-                        },
-                        modifier = Modifier.width(buttonWidth)
-                    ) {
-                        Text(text = "Выйти из аккаунта")
-                    }
+                    ProfileButton(
+                        onClick = { viewModel.logout() },
+                        text = "Выйти",
+                        contentColor = MaterialTheme.colorScheme.onError
+                    )
+//                    Button(
+//                        colors = ButtonDefaults.buttonColors(
+//                            contentColor = Color.White,
+//                            containerColor = Black,
+//                            disabledContentColor = DisabledWhiteContentColor,
+//                            disabledContainerColor = DisabledBlackButtonColor
+//                        ),
+//                        border = BorderStroke(1.dp, Color.White),
+//                        onClick = { viewModel.changeOpenEditDialogState() },
+//                        modifier = Modifier.width(175.dp)
+//                    ) {
+//                        Text(text = "Редактировать")
+//                    }
+//
+//                    Spacer(modifier = Modifier.height(4.dp))
+//
+//                    Button(
+//                        colors = ButtonDefaults.buttonColors(
+//                            contentColor = Color.Red.copy(alpha = 0.7f),
+//                            containerColor = Black,
+//                            disabledContentColor = DisabledWhiteContentColor,
+//                            disabledContainerColor = DisabledBlackButtonColor
+//                        ),
+//                        border = BorderStroke(1.dp, Color.Red.copy(alpha = 0.7f)),
+//                        onClick = {
+//                            viewModel.logout()
+//                        },
+//                        modifier = Modifier.width(175.dp)
+//                    ) {
+//                        Text(text = "Выйти из аккаунта")
+//                    }
                 }
 
             }
@@ -142,8 +139,8 @@ fun ProfileScreen(
             profileState.profile?.let {
                 Text(
                     text = it.username,
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineLarge
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = S16_W600
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -151,8 +148,8 @@ fun ProfileScreen(
             profileState.profile?.let {
                 Text(
                     text = it.email,
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodyLarge
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = S14_W600
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -188,5 +185,40 @@ fun ProfileScreen(
             friendId = profileState.selectedFriendId!!,
             onBackClick = { viewModel.closeFriendProfileScreen() }
         )
+    }
+}
+
+@Composable
+fun ProfileButton(
+    modifier: Modifier = Modifier, onClick: () -> Unit, text: String, contentColor: Color
+) {
+    OutlinedButton(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            contentColor = contentColor,
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        modifier = modifier
+    ) {
+        Text(text = text, style = S16_W600)
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewButton2() {
+    ExploryTheme {
+        Column {
+            ProfileButton(
+                onClick = { },
+                text = "Редактировать",
+                contentColor = White,
+            )
+            ProfileButton(
+                onClick = { },
+                text = "Выйти",
+                contentColor = Red,
+            )
+        }
     }
 }

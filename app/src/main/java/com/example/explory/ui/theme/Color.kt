@@ -3,7 +3,7 @@ package com.example.explory.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF1A1717)
-val White = Color(0xFFFFFFFF).copy(alpha = 0.8f)
+val White = Color(0xFFFFFFFF)
 val Transparent = Color(0x00000000)
 
 val DisabledBlackButtonColor = Black.copy(alpha = 0.4f)
@@ -16,7 +16,7 @@ val OffWhite = Color(0xFFF8F8F8)
 val OffBlack = Color(0xFF343434)
 val DarkGreen = Color(0xFF2A7E2E)
 
-val AccentColor = Color(0xFF4894FE).copy(alpha = 0.9f)
+val AccentColor = Color(0xFF60A2FF).copy(alpha = 0.9f)
 val AccentGradient = listOf(Color(0xFF4894FE), Color(0xFF7F7FD5))
 val GrayColor = Color(0xFFC4C8CC)
 

@@ -5,7 +5,7 @@ import com.example.explory.data.model.profile.ProfileDto
 data class ReviewDto(
     val profile: ProfileDto,
     val questId: Long,
-    val date: String,
+    val createdAt: String,
     val score: Int,
     val message: String,
     val reviewPhotos: List<String>

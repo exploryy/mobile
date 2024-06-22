@@ -4,5 +4,5 @@ import com.example.explory.data.repository.BuffRepository
 import com.example.explory.presentation.screen.map.component.BuffResponse
 
 class GetBuffListUseCase(private val buffRepository: BuffRepository) {
-    suspend fun execute(): List<BuffResponse> = buffRepository.getBuffList()
+    suspend fun execute(level: Int): List<BuffResponse> = buffRepository.getBuffList(level)
 }

@@ -17,7 +17,6 @@ fun drawableToBitmap(
     return if (sourceDrawable is BitmapDrawable) {
         sourceDrawable.bitmap
     } else {
-        // copying drawable object to not manipulate on the same reference
         val constantState = sourceDrawable.constantState ?: return null
         val drawable = constantState.newDrawable().mutate()
         val bitmap = Bitmap.createBitmap(

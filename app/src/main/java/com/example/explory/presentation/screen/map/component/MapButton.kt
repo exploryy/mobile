@@ -18,17 +18,17 @@ fun MapButton(modifier: Modifier = Modifier, onClick: () -> Unit, icon: ImageVec
     IconButton(
         onClick = onClick,
         colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.background
         ),
         modifier = modifier
-            .border(3.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.9f), CircleShape)
+            .border(3.dp, MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f), CircleShape)
             .clip(CircleShape)
             .size(48.dp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary
+            tint = MaterialTheme.colorScheme.onBackground
         )
     }
 }

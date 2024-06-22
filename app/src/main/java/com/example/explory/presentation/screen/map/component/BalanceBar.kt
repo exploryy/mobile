@@ -37,11 +37,14 @@ fun BalanceBar(
     }
 
     Column(
-        modifier = modifier
-            //            .background(Color.White.copy(0.15f), shape = RoundedCornerShape(8.dp))
-//            .clip(RoundedCornerShape(8.dp))
-//            .padding(8.dp)
-            .width(100.dp),
+        modifier = modifier.width(
+            when {
+                balance < 10 -> 80.dp
+                balance < 100 -> 100.dp
+                balance > 1000 && level > 10 -> 120.dp
+                else -> 110.dp
+            }
+        ),
         horizontalAlignment = Alignment.End
     ) {
         Row(
@@ -54,12 +57,16 @@ fun BalanceBar(
             )
             BarItem(value = level, icon = R.drawable.star)
         }
-        AnimatedVisibility(visible = isExpBarVisible) {
+        AnimatedVisibility(
+            visible = isExpBarVisible,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
+        ) {
             LinearProgressIndicator(
                 progress = { exp.toFloat() / expToNextLevel },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 color = AccentColor,
                 trackColor = Color.White,

@@ -23,6 +23,9 @@ import com.example.explory.R
 import com.example.explory.data.model.quest.ReviewDto
 import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.map.component.BarItem
+import com.example.explory.presentation.screen.map.note.formatDateTime
+import com.example.explory.ui.theme.Gray
+import com.example.explory.ui.theme.S12_W600
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.White
@@ -76,12 +79,11 @@ fun ReviewCard(modifier: Modifier = Modifier, review: ReviewDto) {
                 }
             }
         }
-        // todo date on backend
-//        Spacer(modifier = Modifier.height(8.dp))
-//        Text(
-//            text = review.date,
-//            style = S12_W600,
-//            color = Gray,
-//        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = formatDateTime(review.createdAt),
+            style = S12_W600,
+            color = Gray,
+        )
     }
 }

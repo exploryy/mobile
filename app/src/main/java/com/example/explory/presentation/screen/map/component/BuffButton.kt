@@ -23,7 +23,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.domain.model.BuffDto
 import com.example.explory.ui.theme.DarkGray
-import com.example.explory.ui.theme.S20_W600
+import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.White
 
 @Composable
@@ -51,7 +51,7 @@ fun BuffButton(
             modifier = Modifier.size(125.dp),
             progress = { progress },
         )
-        Text(text = buff.title, style = S20_W600, color = White, textAlign = TextAlign.Center)
+        Text(text = buff.title, style = S16_W600, color = White, textAlign = TextAlign.Center)
 //        Spacer(modifier = Modifier.height(16.dp))
 //        Text(text = buff.description, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
     }

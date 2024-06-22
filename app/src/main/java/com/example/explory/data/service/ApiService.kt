@@ -245,7 +245,9 @@ interface ApiService {
 
     // Buffs
     @GET("/buffs/available")
-    suspend fun getBuffList(): List<BuffResponse>
+    suspend fun getBuffList(
+        @Query("level") level: Int
+    ): List<BuffResponse>
 
     @GET("/buffs/my")
     suspend fun getMyBuffs(): List<BuffResponse>
@@ -253,8 +255,9 @@ interface ApiService {
     @Multipart
     @POST("/buffs/apply")
     suspend fun applyBuff(
-        @Part("buff_id") buffId: Long
+        @Part("buffId") buffId: Long
     )
+
     // Note
     @GET("/note/all")
     suspend fun getAllNotes(): List<CommonNoteDto>
@@ -267,7 +270,7 @@ interface ApiService {
 
     //leaderboard
     @GET("/statistic/top/distance")
-    suspend fun getDistanceStatistic(@Query("count") count: Int) : TotalStatisticDto
+    suspend fun getDistanceStatistic(@Query("count") count: Int): TotalStatisticDto
 
     @GET("/statistic/top/level")
     suspend fun getExperienceStatistic(@Query("count") count: Int): TotalStatisticDto
@@ -277,7 +280,7 @@ interface ApiService {
     suspend fun setPrivacy(@Query("isPublic") isPublic: Boolean)
 
     @GET("/privacy")
-    suspend fun getPrivacy() : Privacy
+    suspend fun getPrivacy(): Privacy
 }
 
 

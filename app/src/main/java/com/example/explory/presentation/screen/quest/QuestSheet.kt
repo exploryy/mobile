@@ -128,7 +128,7 @@ fun QuestSheet(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         InfoBox(
-                            text = transportType.toString()
+                            text = transportType
                         )
                         InfoBox(text = "${distance.toInt()} метров")
                         InfoBox(text = difficulty)

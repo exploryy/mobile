@@ -47,6 +47,7 @@ import com.example.explory.presentation.screen.battlepass.component.AnimatedButt
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
 import com.example.explory.presentation.screen.leaderboard.LeaderboardScreen
+import com.example.explory.presentation.screen.map.component.BalanceBar
 import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ErrorScreen
 import com.example.explory.presentation.screen.map.component.EventDialog
@@ -142,6 +143,7 @@ fun MapScreen(
         }
     }
 
+
     val withHolesSourceState = remember { GeoJsonSourceState() }
     val lineSourceData = remember { GeoJsonSourceState() }
     val circleSourceState = remember { GeoJsonSourceState() }
@@ -156,9 +158,9 @@ fun MapScreen(
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
 
-    val taskBitmap: Bitmap? = remember {
-        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
-    }
+//    val taskBitmap: Bitmap? = remember {
+//        drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.marker))
+//    }
 
     val noteBitmap: Bitmap? = remember {
         drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.note))
@@ -278,7 +280,6 @@ fun MapScreen(
                             defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()
                                 .maxDurationMs(0).build()
                         )
-
                     }
 
                     if (mapState.showViewAnnotationIndex != null) {
@@ -310,7 +311,6 @@ fun MapScreen(
                     mapState.notCompletedQuests.forEachIndexed { index, quest ->
                         val point =
                             Point.fromLngLat(quest.longitude.toDouble(), quest.latitude.toDouble())
-
                         PointAnnotation(point = point,
                             iconEmissiveStrength = 0.5,
                             iconSize = 0.15,
@@ -323,6 +323,7 @@ fun MapScreen(
                                 viewModel.updateShowViewAnnotationIndex(index)
                                 true
                             })
+
                     }
 
                     mapState.coins.forEach { coin ->
@@ -476,10 +477,6 @@ fun MapScreen(
                         modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
                         currentLocationName = mapState.currentLocationName,
                         currentLocationPercent = mapState.currentLocationPercent,
-                        coinCount = mapState.userBalance?.balance ?: 0,
-                        currentLevel = mapState.userBalance?.level ?: 0,
-                        exp = mapState.userBalance?.experience ?: 0,
-                        expToNextLevel = mapState.userBalance?.totalExperienceInLevel ?: 100
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Column(
@@ -503,6 +500,15 @@ fun MapScreen(
                         )
                     }
                 }
+                BalanceBar(
+                    modifier = Modifier
+                        .padding(top = 50.dp, end = 20.dp)
+                        .align(Alignment.TopEnd),
+                    balance = mapState.userBalance?.balance ?: 0,
+                    level = mapState.userBalance?.level ?: 0,
+                    exp = mapState.userBalance?.experience ?: 0,
+                    expToNextLevel = mapState.userBalance?.totalExperienceInLevel ?: 100
+                )
 
                 if (mapState.activeQuest != null) {
                     Box(modifier = Modifier
@@ -525,14 +531,17 @@ fun MapScreen(
             }
 
             is UiState.Error -> {
-                ErrorScreen(
-                    message = (mapState.uiState as UiState.Error).message,
+                ErrorScreen(message = (mapState.uiState as UiState.Error).message,
                     onReconnectClicked = {
                         viewModel.getStartData()
                     })
             }
 
-            UiState.Loading, UiState.PermissionGranted -> LoadingScreen()
+            UiState.Loading, UiState.PermissionGranted -> {
+                mapViewportState.idle()
+                LoadingScreen()
+            }
+
             UiState.NoPermissions -> RequestPermissionsScreen(onRequestAgain = {
                 viewModel.incrementPermissionRequestCount()
             }, onGoToSettings = {
@@ -616,8 +625,7 @@ fun MapScreen(
             }
 
             mapState.showSettingsScreen -> {
-                SettingsScreen(
-                    isDarkTheme = mapState.isDarkTheme,
+                SettingsScreen(isDarkTheme = mapState.isDarkTheme,
                     isPublic = mapState.isPublicPrivacy,
                     onThemeChangeClick = { isDarkTheme ->
                         viewModel.updateTheme(isDarkTheme)

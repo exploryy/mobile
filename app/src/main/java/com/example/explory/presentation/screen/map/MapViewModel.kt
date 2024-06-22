@@ -353,12 +353,6 @@ class MapViewModel(
         return listOf(coordinates)
     }
 
-//    fun getPointsForSquare(
-//        latitude: Double,
-//        longitude: Double,
-//        sideInMeters: Double
-//    ): List<Point> {
-//    }
 
     fun getNameByType(type: String): String {
         return when (type) {
@@ -370,6 +364,7 @@ class MapViewModel(
             else -> "Неизвестно"
         }
     }
+
     fun getCorrectTransportType(transportType: TransportType): String {
         return when (transportType) {
             TransportType.WALK -> "пешком"
@@ -434,7 +429,8 @@ class MapViewModel(
         try {
             val friendStats = getFriendStatisticUseCase.execute()
             val friendLocations = friendStats.associate {
-                it.profileDto.userId to ((it.previousLatitude?.toDouble() ?: 0.0) to (it.previousLongitude?.toDouble()
+                it.profileDto.userId to ((it.previousLatitude?.toDouble()
+                    ?: 0.0) to (it.previousLongitude?.toDouble()
                     ?: 0.0))
             }
 
@@ -669,7 +665,7 @@ class MapViewModel(
         _mapState.update { it.copy(isBattlePassOpen = !it.isBattlePassOpen) }
     }
 
-    fun createNote(text: String, list: List<Uri>){
+    fun createNote(text: String, list: List<Uri>) {
         val node = NoteMultipart(
             text = text,
             latitude = _mapState.value.userPoint?.latitude().toString(),
@@ -706,7 +702,7 @@ class MapViewModel(
         }
     }
 
-    fun openNoteById(noteId: Long){
+    fun openNoteById(noteId: Long) {
         viewModelScope.launch {
             try {
                 val note = getNoteUseCase.execute(noteId)
@@ -722,7 +718,7 @@ class MapViewModel(
         }
     }
 
-    fun closeNote(){
+    fun closeNote() {
         _mapState.update {
             it.copy(
                 isNoteScreenOpen = false
@@ -730,7 +726,7 @@ class MapViewModel(
         }
     }
 
-    fun updateLeaderboardOpen(){
+    fun updateLeaderboardOpen() {
         _mapState.update { it.copy(isLeaderboardOpen = !it.isLeaderboardOpen) }
     }
 
@@ -754,7 +750,7 @@ class MapViewModel(
         }
     }
 
-    private fun getPrivacy(){
+    private fun getPrivacy() {
         viewModelScope.launch {
             try {
                 val privacy = statisticRepository.getPrivacy()
@@ -765,7 +761,7 @@ class MapViewModel(
         }
     }
 
-    fun setPrivacy(isPublic: Boolean){
+    fun setPrivacy(isPublic: Boolean) {
         viewModelScope.launch {
             try {
                 statisticRepository.setPrivacy(isPublic)
