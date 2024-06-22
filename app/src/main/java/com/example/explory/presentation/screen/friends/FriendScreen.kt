@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,13 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.friends.component.FriendItem
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S18_W600
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -52,7 +55,7 @@ fun FriendsScreen(
         viewModel.fetchFriends()
     }
 
-    if (friendsState.isFriendRequestDialogOpen){
+    if (friendsState.isFriendRequestDialogOpen) {
         AddFriendDialog(
             onDismiss = { viewModel.changeFriendRequestDialogState() },
             addFriendStatus = addFriendStatus,
@@ -71,33 +74,34 @@ fun FriendsScreen(
                 })
             },
     ) {
-        Text(
-            text = "Друзья",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-        )
-
+//        Text(
+//            text = "друзья",
+//            style = S24_W600,
+//            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
+//        )
+        // todo позвать друзей + qr code?
         Button(
             onClick = { viewModel.changeFriendRequestDialogState() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(top = 24.dp),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Text("Позвать друзей")
+            Text("найти друзей", style = S16_W600)
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
-        if (friendsState.isLoading){
+        if (friendsState.isLoading) {
             LoadingItem()
-        } else if (friends.isEmpty()){
+        } else if (friends.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "У вас нет друзей :(",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    text = "у вас пока нет друзей :(",
+                    style = S18_W600,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         } else {
@@ -106,13 +110,19 @@ fun FriendsScreen(
                 onValueChange = { newText ->
                     searchText = newText
                 },
-                placeholder = { Text("Поиск") },
+                placeholder = { Text("поиск", style = S16_W600) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 maxLines = 1,
+                textStyle = S16_W600,
+                colors = OutlinedTextFieldDefaults.colors().copy(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
-                }
+                },
+                shape = RoundedCornerShape(8.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -122,12 +132,14 @@ fun FriendsScreen(
             }
 
             LazyColumn {
-                item {
-                    Text(
-                        text = "Лучшие друзья",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
+                if (filteredFriends.any { it.isBestFriend }) {
+                    item {
+                        Text(
+                            text = "лучшие друзья",
+                            style = S18_W600,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 }
 
                 items(filteredFriends.filter { it.isBestFriend }) { friend ->
@@ -143,8 +155,8 @@ fun FriendsScreen(
 
                 item {
                     Text(
-                        text = "Все друзья (${filteredFriends.size})",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = "все друзья - ${filteredFriends.size}",
+                        style = S18_W600,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }

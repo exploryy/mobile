@@ -1,30 +1,11 @@
 package com.example.explory.presentation.screen.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun SemiRoundedButtonsRow(
@@ -34,100 +15,31 @@ fun SemiRoundedButtonsRow(
     selectedButton: Int,
     notificationCount: Int
 ) {
-    val buttonBaseColor = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
-        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-        disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f)
-    )
-
-    val selectedButtonColor = ButtonDefaults.buttonColors(
-        containerColor = Color.White,
-        contentColor = MaterialTheme.colorScheme.primary,
-        disabledContainerColor = Color.White.copy(alpha = 0.4f),
-        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-    )
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Button(
+        ProfileTabButton(
+            modifier = Modifier.weight(1f),
             onClick = onFirstButtonClick,
-            colors = if (selectedButton == 1) selectedButtonColor else buttonBaseColor,
-            shape = RoundedCornerShape(
-                topStart = 16.dp,
-                bottomStart = 16.dp,
-                topEnd = 8.dp,
-                bottomEnd = 8.dp
-            ),
-            modifier = Modifier
-                .height(40.dp)
-                .weight(1f)
-        ) {
-            Text(
-                text = "Друзья",
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 15.sp
-            )
-        }
-
-        Button(
+            text = "друзья",
+            isSelected = selectedButton == 1,
+            notification = null
+        )
+        ProfileTabButton(
+            modifier = Modifier.weight(1f),
             onClick = onSecondButtonClick,
-            colors = if (selectedButton == 2) selectedButtonColor else buttonBaseColor,
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .height(40.dp)
-                .weight(1f)
-        ) {
-            Text(
-                text = "Статистика",
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 15.sp
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .height(40.dp)
-                .weight(1f)
-        ) {
-            Button(
-                onClick = onThirdButtonClick,
-                colors = if (selectedButton == 3) selectedButtonColor else buttonBaseColor,
-                shape = RoundedCornerShape(
-                    topStart = 8.dp,
-                    bottomStart = 8.dp,
-                    topEnd = 16.dp,
-                    bottomEnd = 16.dp
-                ),
-                modifier = Modifier
-                    .height(40.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Заявки",
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 15.sp
-                )
-            }
-
-            if (notificationCount > 0) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(Color.Red, CircleShape)
-                        .align(Alignment.TopEnd)
-                ) {
-                    Text(
-                        text = notificationCount.toString(),
-                        color = Color.White,
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
-        }
+            text = "инфо",
+            isSelected = selectedButton == 2,
+            notification = null
+        )
+        ProfileTabButton(
+            modifier = Modifier.weight(1f),
+            onClick = onThirdButtonClick,
+            text = "заявки",
+            isSelected = selectedButton == 3,
+            notification = notificationCount
+        )
     }
-
 }
+
