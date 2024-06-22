@@ -81,7 +81,9 @@ fun InventoryItemCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = getRarityColor(item.rarityType),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(4.dp))

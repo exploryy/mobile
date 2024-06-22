@@ -102,11 +102,12 @@ fun InventoryItemDialog(
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Цена продажи: ${cosmeticItem.price} монеток",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        if (cosmeticItem.isSellable) {
+                            Text(
+                                text = "Цена продажи: ${cosmeticItem.price} монеток",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -131,13 +132,15 @@ fun InventoryItemDialog(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 
-                        TextButton(
-                            onClick = { onSellClick(cosmeticItem.itemId) },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = Color.Red
-                            )
-                        ) {
-                            Text("Продать")
+                        if (cosmeticItem.isSellable) {
+                            TextButton(
+                                onClick = { onSellClick(cosmeticItem.itemId) },
+                                colors = ButtonDefaults.textButtonColors(
+                                    contentColor = Color.Red
+                                )
+                            ) {
+                                Text("Продать")
+                            }
                         }
                     }
                 }
