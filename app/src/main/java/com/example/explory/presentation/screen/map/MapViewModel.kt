@@ -434,7 +434,8 @@ class MapViewModel(
         try {
             val friendStats = getFriendStatisticUseCase.execute()
             val friendLocations = friendStats.associate {
-                it.profileDto.userId to (it.previousLatitude.toDouble() to it.previousLongitude.toDouble())
+                it.profileDto.userId to ((it.previousLatitude?.toDouble() ?: 0.0) to (it.previousLongitude?.toDouble()
+                    ?: 0.0))
             }
 
             val friendAvatars = friendStats.associate { friendStat ->

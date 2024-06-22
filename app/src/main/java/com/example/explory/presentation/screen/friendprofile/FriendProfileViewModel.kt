@@ -25,4 +25,11 @@ class FriendProfileViewModel(
             }
         }
     }
+
+    fun checkUserPrivacy(): Boolean {
+        return !(_friendProfile.value?.level == null
+                || _friendProfile.value?.distance == null
+                || _friendProfile.value?.experience == null
+                || _friendProfile.value?.totalExperienceInLevel == null)
+    }
 }

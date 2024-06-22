@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.explory.R
+import com.example.explory.presentation.screen.auth.onboarding.component.PageContent
 import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.userstatistic.component.AnimatedCircularProgressIndicator
 import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
@@ -104,40 +106,75 @@ fun FriendProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                friendProfileDto?.let {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Card(
+                if (!viewModel.checkUserPrivacy()){
+                    EmptyFriendStatistic()
+                } else {
+                    friendProfileDto?.let {
+                        Row(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp)
-                                .heightIn(min = 180.dp)
+                                .fillMaxWidth()
                         ) {
-                            Column(
+                            Card(
                                 modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
+                                    .weight(1f)
+                                    .padding(end = 8.dp)
+                                    .heightIn(min = 180.dp)
                             ) {
-                                Text(
-                                    text = "Уровень",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                )
-                                Text(
-                                    text = it.level.toString(),
-                                    fontSize = 85.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "Уровень",
+                                        style = MaterialTheme.typography.headlineMedium,
+                                    )
+                                    Text(
+                                        text = it.level.toString(),
+                                        fontSize = 85.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                            Card(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 8.dp)
+                                    .heightIn(min = 180.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "Опыт",
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    it.experience?.let { it1 ->
+                                        it.totalExperienceInLevel?.let { it2 ->
+                                            AnimatedCircularProgressIndicator(
+                                                currentValue = it1,
+                                                maxValue = it2,
+                                                progressBackgroundColor = MaterialTheme.colorScheme.primary,
+                                                progressIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                                                completedColor = MaterialTheme.colorScheme.primary,
+                                                circularIndicatorDiameter = 110.dp
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                         Card(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 8.dp)
-                                .heightIn(min = 180.dp)
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
                         ) {
                             Column(
                                 modifier = Modifier
@@ -147,47 +184,35 @@ fun FriendProfileScreen(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    text = "Опыт",
+                                    text = "Дистанция",
                                     style = MaterialTheme.typography.headlineMedium,
                                     textAlign = TextAlign.Center
                                 )
-                                AnimatedCircularProgressIndicator(
-                                    currentValue = it.experience,
-                                    maxValue = it.totalExperienceInLevel,
-                                    progressBackgroundColor = MaterialTheme.colorScheme.primary,
-                                    progressIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                                    completedColor = MaterialTheme.colorScheme.primary,
-                                    circularIndicatorDiameter = 110.dp
+                                Text(
+                                    text = "${it.distance} m",
+                                    style = MaterialTheme.typography.displayMedium,
+                                    textAlign = TextAlign.Center
                                 )
                             }
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Дистанция",
-                                style = MaterialTheme.typography.headlineMedium,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = "${it.distance} m",
-                                style = MaterialTheme.typography.displayMedium,
-                                textAlign = TextAlign.Center
-                            )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun EmptyFriendStatistic(){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        PageContent(
+            title = "Статистика скрыта",
+            description = "Данный пользователь предпочел скрыть свою статистику",
+            animation = R.raw.lock
+        )
     }
 }

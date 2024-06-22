@@ -43,6 +43,7 @@ fun PageContent(
             modifier = Modifier.size(200.dp),
             progress = { progress },
         )
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = title,
             style = S24_W600,
