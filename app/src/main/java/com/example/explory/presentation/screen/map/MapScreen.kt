@@ -6,10 +6,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +40,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
+import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.PointDto
 import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
@@ -155,7 +153,6 @@ fun MapScreen(
         )
     )
 
-
     // https://3djungle.ru/textures/ https://txtrs.ru/
 
 
@@ -233,47 +230,42 @@ fun MapScreen(
 
         when (mapState.uiState) {
             is UiState.Default -> {
-                MapboxMap(
-                    Modifier
-                        .fillMaxSize(),
-                    onMapClickListener = {
-                        viewModel.updateShowViewAnnotationIndex(null)
-                        true
-                    }, scaleBar = {}, logo = {}, attribution = {}, compass = {
-                        Compass(
-                            contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
-                        )
-                    },
-                    onMapLongClickListener = {
-                        viewModel.updateCreateNoteScreen()
-                        true
-                    }, style = {
-                        MapboxStandardStyle(
-                            topSlot = {
-                                FillLayer(
-                                    sourceState = withHolesSourceState,
-                                    layerId = OPENED_WORLD_LAYER,
-                                    fillColor = FillColor(Black),
-                                    fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
+                MapboxMap(Modifier.fillMaxSize(), onMapClickListener = {
+                    viewModel.updateShowViewAnnotationIndex(null)
+                    true
+                }, scaleBar = {}, logo = {}, attribution = {}, compass = {
+                    Compass(
+                        contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
+                    )
+                }, onMapLongClickListener = {
+                    viewModel.updateCreateNoteScreen()
+                    true
+                }, style = {
+                    MapboxStandardStyle(
+                        topSlot = {
+                            FillLayer(
+                                sourceState = withHolesSourceState,
+                                layerId = OPENED_WORLD_LAYER,
+                                fillColor = FillColor(Black),
+                                fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
 
-                                        FillPattern(
-                                            StyleImage(
-                                                "fog",
-                                                when (mapState.currentUserFog!!.itemId) {
-                                                    2L -> fogGrassBitmap
-                                                    5L -> fogWaterBitmap
-                                                    6L -> fogCloudBitmap
-                                                    7L -> fogSnowBitmap
-                                                    else -> fogGrassBitmap
-                                                }
-                                            )
-                                        ),
-                                    fillAntialias = FillAntialias(true),
-                                )
-                            },
-                            lightPreset = if (mapState.isDarkTheme) LightPreset.DUSK else LightPreset.DAY
-                        )
-                    }, mapViewportState = mapViewportState
+                                    FillPattern(
+                                        StyleImage(
+                                            "fog", when (mapState.currentUserFog!!.itemId) {
+                                                2L -> fogGrassBitmap
+                                                5L -> fogWaterBitmap
+                                                6L -> fogCloudBitmap
+                                                7L -> fogSnowBitmap
+                                                else -> fogGrassBitmap
+                                            }
+                                        )
+                                    ),
+                                fillAntialias = FillAntialias(true),
+                            )
+                        },
+                        lightPreset = if (mapState.isDarkTheme) LightPreset.DUSK else LightPreset.DAY
+                    )
+                }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
                         mapView.location.updateSettings {
@@ -380,7 +372,8 @@ fun MapScreen(
                     }
 
                     mapState.noteList.forEach { note ->
-                        val point = Point.fromLngLat(note.longitude.toDouble(), note.latitude.toDouble())
+                        val point =
+                            Point.fromLngLat(note.longitude.toDouble(), note.latitude.toDouble())
                         PointAnnotation(point = point,
                             iconSize = 0.1,
                             iconEmissiveStrength = 0.5,
@@ -506,34 +499,29 @@ fun MapScreen(
                         )
                         AnimatedButton(
                             onClick = { viewModel.updateBattlePassOpenScreen() },
-                            modifier = Modifier
-                                .size(48.dp)
+                            modifier = Modifier.size(48.dp)
                         )
                     }
                 }
 
                 if (mapState.activeQuest != null) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 110.dp)
-                            .align(Alignment.TopCenter)
-                            .clickable {
-                                viewModel.getQuestDetails(
-                                    mapState.activeQuest!!.questId.toString(),
-                                    mapState.activeQuest!!.questType
-                                )
-                            }
-                    ) {
+                    Box(modifier = Modifier
+                        .padding(top = 110.dp)
+                        .align(Alignment.TopCenter)
+                        .clickable {
+                            viewModel.getQuestDetails(
+                                mapState.activeQuest!!.questId.toString(),
+                                mapState.activeQuest!!.questType
+                            )
+                        }) {
                         InfoBox(text = "квест", containerColor = Green)
                     }
                 }
 
 
-                ButtonControlRow(
-                    mapViewportState = mapViewportState,
+                ButtonControlRow(mapViewportState = mapViewportState,
                     onUpdateLeaderboardScreenState = { viewModel.updateLeaderboardOpen() },
-                    onUpdateProfileScreenState = { viewModel.updateShowFriendScreen() }
-                )
+                    onUpdateProfileScreenState = { viewModel.updateShowFriendScreen() })
             }
 
             is UiState.Error -> {
@@ -619,22 +607,16 @@ fun MapScreen(
             }
 
             mapState.isNoteScreenOpen && mapState.note != null -> {
-                NoteSheet(
-                    note = mapState.note!!,
-                    onDismissRequest = { viewModel.closeNote() }
-                )
+                NoteSheet(note = mapState.note!!, onDismissRequest = { viewModel.closeNote() })
             }
 
             mapState.isCreateNoteOpen -> {
-                CreateNoteScreen(
-                    onSave = { text, images -> viewModel.createNote(text, images) },
-                    onDismiss = { viewModel.updateCreateNoteScreen() }
-                )
+                CreateNoteScreen(onSave = { text, images -> viewModel.createNote(text, images) },
+                    onDismiss = { viewModel.updateCreateNoteScreen() })
             }
 
             mapState.showSettingsScreen -> {
-                SettingsScreen(
-                    isDarkTheme = mapState.isDarkTheme,
+                SettingsScreen(isDarkTheme = mapState.isDarkTheme,
                     onThemeChangeClick = { isDarkTheme ->
                         viewModel.updateTheme(isDarkTheme)
                     },
@@ -665,11 +647,9 @@ fun MapScreen(
         }
         SnackbarHost(snackBarHostState, modifier = Modifier.align(Alignment.BottomCenter)) {
             Popup(
-                alignment = Alignment.BottomCenter,
-                onDismissRequest = {
+                alignment = Alignment.BottomCenter, onDismissRequest = {
                     it.dismiss()
-                },
-                properties = PopupProperties(focusable = false)
+                }, properties = PopupProperties(focusable = false)
             ) {
                 Snackbar(it)
             }

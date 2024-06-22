@@ -13,15 +13,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.explory.R
-import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
 import com.example.explory.data.model.location.CreatePolygonRequestDto
 import com.example.explory.data.model.location.LocationRequest
-import com.example.explory.data.model.note.NoteDto
 import com.example.explory.data.model.note.NoteMultipart
+import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
+import com.example.explory.data.model.quest.TransportType
+import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository
@@ -42,14 +43,12 @@ import com.example.explory.domain.usecase.GetNoteUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.presentation.utils.UiState
-import com.example.explory.ui.theme.AccentColor
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Yellow
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -358,16 +357,16 @@ class MapViewModel(
 //    ): List<Point> {
 //    }
 
-    fun getCorrectTransportType(transportType: String): String {
-        return when (transportType) {
-            "WALK" -> "пешком"
-            "CAR" -> "на машине"
-            "BICYCLE" -> "на велосипеде"
-            "MOTORCYCLE" -> "на мотоцикле"
-            else -> "неизвестно"
+    fun getNameByType(type: String): String {
+        return when (type) {
+            "POINT_TO_POINT" -> "Добраться до точки"
+            "FIND" -> "Найти"
+            "PHOTO" -> "Сделать фото"
+            "ANSWER" -> "Ответить на вопрос"
+            "DISTANCE" -> "Пройти расстояние"
+            else -> "Неизвестно"
         }
     }
-
     fun getCorrectTransportType(transportType: TransportType): String {
         return when (transportType) {
             TransportType.WALK -> "пешком"
