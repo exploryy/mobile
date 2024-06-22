@@ -55,9 +55,13 @@ class FriendViewModel(
         viewModelScope.launch {
             _userListState.value = _userListState.value.copy(isLoading = true)
             try {
+                Log.d("query", query)
                 val userListResponse = getUserListUseCase.execute(query)
+                Log.d("userListResponse", userListResponse.toString())
                 val friendIds = _friendsState.value.friends.map { it.userId }
+                Log.d("friendIds", friendIds.toString())
                 val filteredUsers = userListResponse.filter { it.userId !in friendIds }
+                Log.d("filteredUsers", filteredUsers.toString())
                 _userListState.value = _userListState.value.copy(users = filteredUsers)
             } catch (e: Exception) {
                 _userListState.value = _userListState.value.copy(error = e.message)

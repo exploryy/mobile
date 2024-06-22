@@ -98,7 +98,7 @@ fun FriendProfileScreen(
 
                 friendProfileDto?.let {
                     Text(
-                        text = it.profileDto.email,
+                        text = it.profileDto.email.toString(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyLarge,
                     )

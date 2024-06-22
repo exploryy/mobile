@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,19 +24,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
-import coil.compose.AsyncImage
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.profile.ProfileRequest
+import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.Value.BasePadding
-import com.example.explory.ui.theme.Value.LittleRound
 
 
 @Composable
@@ -72,7 +67,7 @@ fun EditProfileDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(BasePadding),
-            shape = RoundedCornerShape(LittleRound),
+            shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.surface
         ) {
             Column(
@@ -81,60 +76,52 @@ fun EditProfileDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Редактировать профиль", style = MaterialTheme.typography.headlineSmall)
+                Text(text = "редактирование", style = S20_W600)
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
+                Spacer(modifier = Modifier.height(32.dp))
+                EditField(
+                    label = "username",
                     value = name.value,
-                    onValueChange = { name.value = it },
-                    label = { Text("Имя") },
-                    modifier = Modifier.fillMaxWidth()
+                    onValueChange = { name.value = it }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
+                EditField(
+                    label = "email",
                     value = email.value,
-                    onValueChange = { email.value = it },
-                    label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth()
+                    onValueChange = { email.value = it }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
+                EditField(
+                    label = "пароль",
                     value = password.value,
                     onValueChange = { password.value = it },
-                    label = { Text("Пароль") },
-                    modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation()
+                    isPassword = true
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(top = 16.dp)
                         .fillMaxWidth()
                 ) {
                     Button(
                         modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(8.dp),
                         onClick = { launcher.launch("image/*") }
                     ) {
-                        Text("Выбрать аватарку")
+                        Text("выбрать файл", style = S16_W600)
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    AsyncImage(
-                        model = avatarUri.value,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
+                    Avatar(
+                        image = avatarUri.value,
+                        modifier = Modifier.size(40.dp),
+                        border = profile?.inventoryDto?.avatarFrames
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -142,12 +129,12 @@ fun EditProfileDialog(
                 ) {
                     TextButton(
                         onClick = onDismiss,
-                        colors = ButtonDefaults.textButtonColors(contentColor = Color.White)
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onError)
                     ) {
-                        Text("Отменить")
+                        Text("отменить", style = S16_W600)
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
 
                     TextButton(
                         onClick = {
@@ -160,9 +147,9 @@ fun EditProfileDialog(
                                 )
                             )
                         },
-                        colors = ButtonDefaults.textButtonColors(contentColor = Color.White)
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onBackground)
                     ) {
-                        Text("Сохранить")
+                        Text("сохранить", style = S16_W600)
                     }
                 }
             }

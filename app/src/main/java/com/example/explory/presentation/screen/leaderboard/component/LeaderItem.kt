@@ -49,7 +49,7 @@ fun LeaderItem(user: LocationStatisticDto) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = user.profileDto.email,
+                    text = user.profileDto.email.toString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
                     overflow = TextOverflow.Ellipsis

@@ -96,7 +96,7 @@ fun FriendsScreen(
                 Text(
                     text = "у вас пока нет друзей :(",
                     style = S18_W600,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         } else {

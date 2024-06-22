@@ -39,7 +39,7 @@ fun AppNavigation() {
         composable(Screen.Map.route) {
             MapScreen(onLogout = {
                 navController.navigate(Screen.Welcome.route) {
-                    popUpTo(Screen.Welcome.route) {
+                    popUpTo(Screen.Splash.route) {
                         inclusive = true
                     }
                 }

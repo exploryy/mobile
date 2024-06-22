@@ -9,7 +9,7 @@ object FriendMapper {
         return Friend(
             userId = profileDto.userId,
             name = profileDto.username,
-            email = profileDto.email,
+            email = profileDto.email.toString(),
             avatar = profileDto.avatarUrl,
             isBestFriend = isBestFriend,
             inventoryDto = profileDto.inventoryDto

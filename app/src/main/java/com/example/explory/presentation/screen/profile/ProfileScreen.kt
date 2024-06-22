@@ -41,6 +41,7 @@ fun ProfileScreen(
     onLogout: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    // todo friend requests
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -119,7 +120,7 @@ fun ProfileScreen(
 
                     profileState.profile?.let {
                         Text(
-                            text = it.email,
+                            text = it.email.toString(),
                             color = MaterialTheme.colorScheme.onSurface,
                             style = S18_W600
                         )

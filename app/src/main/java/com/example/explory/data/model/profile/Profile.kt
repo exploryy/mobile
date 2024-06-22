@@ -7,11 +7,11 @@ data class Profile(
     val avatarUri: String? = null
 )
 
-fun ProfileDto.toProfile(): Profile {
-    return Profile(
-        id = this.userId,
-        name = this.username,
-        email = this.email,
-        avatarUri = this.avatarUrl
-    )
-}
+//fun ProfileDto.toProfile(): Profile {
+//    return Profile(
+//        id = this.userId,
+//        name = this.username,
+//        email = this.email,
+//        avatarUri = this.avatarUrl
+//    )
+//}
