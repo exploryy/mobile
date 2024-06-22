@@ -168,7 +168,7 @@ class MapViewModel(
                     _mapState.update { it.copy(infoText = "Вы слишком далеко от квеста") }
                     return@launch
                 }
-                questRepository.startQuest(questId, "WALK")
+                questRepository.startQuest(questId, TransportType.CAR)
                 _mapState.update { it ->
                     it.copy(infoText = "Квест начат",
                         activeQuest = quest,
@@ -368,32 +368,27 @@ class MapViewModel(
         }
     }
 
-    fun getCorrectDifficulty(difficulty: String): String {
-        return when (difficulty) {
-            "EASY" -> "легкий"
-            "MEDIUM" -> "среднняя сложность"
-            "HARD" -> "сложный"
-            else -> "неизвестно"
+    fun getCorrectTransportType(transportType: TransportType): String {
+        return when (transportType) {
+            TransportType.WALK -> "пешком"
+            TransportType.CAR -> "на машине"
+            TransportType.BICYCLE -> "на велосипеде"
         }
     }
 
-    fun getColorByDifficulty(difficulty: String): Color {
+    fun getCorrectDifficulty(difficulty: DifficultyType): String {
         return when (difficulty) {
-            "EASY" -> Green
-            "MEDIUM" -> Yellow
-            "HARD" -> Red
-            else -> AccentColor
+            DifficultyType.EASY -> "легкий"
+            DifficultyType.MEDIUM -> "среднняя сложность"
+            DifficultyType.HARD -> "сложный"
         }
     }
 
-    fun getNameByType(type: String): String {
-        return when (type) {
-            "POINT_TO_POINT" -> "Добраться до точки"
-            "FIND" -> "Найти"
-            "PHOTO" -> "Сделать фото"
-            "ANSWER" -> "Ответить на вопрос"
-            "DISTANCE" -> "Пройти расстояние"
-            else -> "Неизвестно"
+    fun getColorByDifficulty(difficulty: DifficultyType): Color {
+        return when (difficulty) {
+            DifficultyType.EASY -> Green
+            DifficultyType.MEDIUM -> Yellow
+            DifficultyType.HARD -> Red
         }
     }
 

@@ -31,21 +31,13 @@ import com.example.explory.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateLevelContent(event: EventDto, onBuffChoose: (Long) -> Unit) {
+fun UpdateLevelContent(
+    event: EventDto,
+    onBuffChoose: (Long) -> Unit,
+    buffs: List<BuffDto>,
+) {
     val info = event.text.split(";")
     val level = info[0].toInt()
-    val buffs = listOf(
-        BuffDto(
-            id = 1,
-            title = "Увеличение опыта",
-            animation = R.raw.exp
-        ),
-        BuffDto(
-            id = 2,
-            title = "Увеличение монет",
-            animation = R.raw.coins
-        )
-    )
     Column(
         Modifier
             .size(DIALOG_WIDTH.dp, 350.dp)
@@ -81,6 +73,28 @@ fun UpdateLevelContent(event: EventDto, onBuffChoose: (Long) -> Unit) {
     }
 }
 
+data class BuffResponse(
+    val buffId: Long,
+    val valueFactor: Double,
+    val status: BuffType,
+    val levelNumber: Int
+)
+
+enum class BuffType(val animationResource: Int, val title: String) {
+    COINS(R.raw.coins, "Увеличение монет"),
+    EXPERIENCE(R.raw.exp, "Увеличение опыта");
+
+    companion object {
+        fun getAnimationResource(buffType: BuffType): Int {
+            return buffType.animationResource
+        }
+
+        fun getTitle(buffType: BuffType): String {
+            return buffType.title
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun PreviewLevelEvent() {
@@ -90,7 +104,8 @@ private fun PreviewLevelEvent() {
                 type = EventType.UPDATE_LEVEL,
                 text = "2;1"
             ),
-            onBuffChoose = {}
+            onBuffChoose = {},
+            buffs = emptyList()
         )
     }
 }

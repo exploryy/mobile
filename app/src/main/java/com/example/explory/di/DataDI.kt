@@ -8,13 +8,11 @@ import com.example.explory.data.repository.BattlePassRepository
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.FriendRepository
 import com.example.explory.data.repository.InventoryRepository
-import com.example.explory.data.repository.NoteRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.ProfileRepository
 import com.example.explory.data.repository.QuestRepository
 import com.example.explory.data.repository.RegisterRepository
 import com.example.explory.data.repository.ShopRepository
-import com.example.explory.data.repository.StatisticRepository
 import com.example.explory.data.service.ApiService
 import com.example.explory.data.service.AuthService
 import com.example.explory.data.storage.LocalStorage
@@ -51,8 +49,9 @@ fun dataModule() = module {
     singleOf(::LocalStorage)
     singleOf(::ThemePreferenceManager)
     singleOf(::LocationTracker)
-    singleOf(::NoteRepository)
-    singleOf(::StatisticRepository)
+    singleOf(com.example.explory.data.repository::NoteRepository)
+    singleOf(com.example.explory.data.repository::StatisticRepository)
+    singleOf(::BuffRepository)
 
     single<Interceptor> { AuthInterceptor(get(), get()) }
 

@@ -1,8 +1,8 @@
 package com.example.explory.data.repository
 
 import android.util.Log
-import com.example.explory.data.model.BalanceDto
-import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.statistic.BalanceDto
+import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.service.ApiService
 
 class CoinsRepository(private val apiService: ApiService) {
@@ -15,7 +15,7 @@ class CoinsRepository(private val apiService: ApiService) {
         apiService.consumeCoin(coinId)
     }
 
-    suspend fun getBalance() : BalanceDto{
+    suspend fun getBalance() : BalanceDto {
         return apiService.getBalance()
     }
 }

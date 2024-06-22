@@ -4,9 +4,12 @@ import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
+import com.example.explory.presentation.screen.map.component.review.SendReviewDialog
 import org.koin.androidx.compose.koinViewModel
 
 const val DIALOG_WIDTH = 400
@@ -23,12 +26,14 @@ fun EventDialog(
     onFriendDecline: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val eventId = remember { mutableStateOf(null as Long?) }
     BasicAlertDialog(
         onDismissRequest = onDismissRequest
     ) {
         when (event.type) {
             EventType.COMPLETE_QUEST -> {
-                CompleteQuestContent(event = event, onDismiss = onDismissRequest)
+                CompleteQuestContent(event = event,
+                    onSendReview = { eventId.value = it })
 
             }
 
@@ -46,11 +51,24 @@ fun EventDialog(
             EventType.CHANGE_MONEY -> {}
             EventType.NEW_QUEST -> {}
             EventType.UPDATE_LEVEL -> {
-                UpdateLevelContent(event, { onDismissRequest() })
+                viewModel.getBuffList()
+                UpdateLevelContent(
+                    event,
+                    buffs = state.buffs,
+                    onBuffChoose = { viewModel.applyBuff(it) })
             }
 
             EventType.UPDATE_EXPERIENCE -> {}
             EventType.UPDATE_BATTLE_PASS_LEVEL -> TODO()
         }
+    }
+    if (eventId.value != null) {
+        SendReviewDialog(onSendReviewClicked = { rating, review, images ->
+            viewModel.sendReview(eventId.value!!, rating, review, images)
+        }, onDismiss = {
+            eventId.value = null
+            onDismissRequest()
+        })
+
     }
 }

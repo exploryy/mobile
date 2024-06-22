@@ -1,14 +1,12 @@
 package com.example.explory.data.model.quest
 
-import java.time.OffsetDateTime
-
 class CompletedQuestDto(
     val questId: Long,
     val name: String,
     val description: String,
-    val difficultyType: String,
+    val difficultyType: DifficultyType,
     val questType: String,
-    val transportType: String,
+    val transportType: TransportType,
     val latitude: String,
     val longitude: String,
     val images: List<String>,

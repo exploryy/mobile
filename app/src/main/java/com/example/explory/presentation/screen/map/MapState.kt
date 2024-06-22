@@ -1,8 +1,8 @@
 package com.example.explory.presentation.screen.map
 
 import android.graphics.Bitmap
-import com.example.explory.data.model.BalanceDto
-import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.statistic.BalanceDto
+import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.data.model.quest.CompletedQuestDto
 import com.example.explory.data.model.quest.DistanceQuestDto

@@ -237,43 +237,43 @@ fun MapScreen(
                     Modifier
                         .fillMaxSize(),
                     onMapClickListener = {
-                    viewModel.updateShowViewAnnotationIndex(null)
-                    true
-                }, scaleBar = {}, logo = {}, attribution = {}, compass = {
-                    Compass(
-                        contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
-                    )
-                },
+                        viewModel.updateShowViewAnnotationIndex(null)
+                        true
+                    }, scaleBar = {}, logo = {}, attribution = {}, compass = {
+                        Compass(
+                            contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
+                        )
+                    },
                     onMapLongClickListener = {
                         viewModel.updateCreateNoteScreen()
-                          true
+                        true
                     }, style = {
-                    MapboxStandardStyle(
-                        topSlot = {
-                            FillLayer(
-                                sourceState = withHolesSourceState,
-                                layerId = OPENED_WORLD_LAYER,
-                                fillColor = FillColor(Black),
-                                fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
+                        MapboxStandardStyle(
+                            topSlot = {
+                                FillLayer(
+                                    sourceState = withHolesSourceState,
+                                    layerId = OPENED_WORLD_LAYER,
+                                    fillColor = FillColor(Black),
+                                    fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
 
-                                    FillPattern(
-                                        StyleImage(
-                                            "fog",
-                                            when (mapState.currentUserFog!!.itemId) {
-                                                2L -> fogGrassBitmap
-                                                5L -> fogWaterBitmap
-                                                6L -> fogCloudBitmap
-                                                7L -> fogSnowBitmap
-                                                else -> fogGrassBitmap
-                                            }
-                                        )
-                                    ),
-                                fillAntialias = FillAntialias(true),
-                            )
-                        },
-                        lightPreset = if (mapState.isDarkTheme) LightPreset.DUSK else LightPreset.DAY
-                    )
-                }, mapViewportState = mapViewportState
+                                        FillPattern(
+                                            StyleImage(
+                                                "fog",
+                                                when (mapState.currentUserFog!!.itemId) {
+                                                    2L -> fogGrassBitmap
+                                                    5L -> fogWaterBitmap
+                                                    6L -> fogCloudBitmap
+                                                    7L -> fogSnowBitmap
+                                                    else -> fogGrassBitmap
+                                                }
+                                            )
+                                        ),
+                                    fillAntialias = FillAntialias(true),
+                                )
+                            },
+                            lightPreset = if (mapState.isDarkTheme) LightPreset.DUSK else LightPreset.DAY
+                        )
+                    }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
                         mapView.location.updateSettings {
@@ -321,14 +321,11 @@ fun MapScreen(
 
                         PointAnnotation(point = point,
                             iconEmissiveStrength = 0.5,
-                            iconHaloColorInt = White.toArgb(),
-                            iconHaloWidth = 1.0,
-                            iconSize = 0.2,
+                            iconSize = 0.15,
                             iconImageBitmap = when (quest.difficultyType) {
-                                "EASY" -> easyTaskBitmap
-                                "MEDIUM" -> mediumTaskBitmap
-                                "HARD" -> hardTaskBitmap
-                                else -> taskBitmap
+                                DifficultyType.EASY -> easyTaskBitmap
+                                DifficultyType.MEDIUM -> mediumTaskBitmap
+                                DifficultyType.HARD -> hardTaskBitmap
                             },
                             onClick = {
                                 viewModel.updateShowViewAnnotationIndex(index)

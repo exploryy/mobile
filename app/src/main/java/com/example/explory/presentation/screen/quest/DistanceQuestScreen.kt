@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.explory.R
+import com.example.explory.data.model.quest.TransportType
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.White
 
@@ -25,7 +26,7 @@ fun DistanceQuestScreen(
     name: String,
     description: String,
     difficulty: String,
-    transportType: String,
+    transportType: TransportType,
     distance: Double,
     image: String?,
     onNavigateBack: () -> Unit

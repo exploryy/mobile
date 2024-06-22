@@ -2,20 +2,18 @@ package com.example.explory.presentation.screen.map.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,29 +31,31 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
-import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.ExploryTheme
-import com.example.explory.ui.theme.Gray
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
-import com.example.explory.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
+fun CompleteQuestContent(
+    event: EventDto,
+    onSendReview: (Long) -> Unit
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
     val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever
+        composition, iterations = LottieConstants.IterateForever
     )
     val info = event.text.split(";")
     val name = info[0].lowercase()
     val exp = info[1].toInt()
     val coins = info[2].toInt()
+    val questId = info[3].toLong()
     Column(
         Modifier
             .size(DIALOG_WIDTH.dp, DIALOG_HEIGHT.dp)
-            .background(BottomSheetDefaults.ContainerColor, shape = RoundedCornerShape(DIALOG_SHAPE.dp))
+            .background(
+                MaterialTheme.colorScheme.background, shape = RoundedCornerShape(DIALOG_SHAPE.dp)
+            )
             .clip(RoundedCornerShape(DIALOG_SHAPE.dp))
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -69,13 +69,11 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
             text = "Квест «%s» завершён!".format(name),
             style = S20_W600,
             textAlign = TextAlign.Center,
-            color = White
+            color = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Ваши награды",
-            style = S16_W600,
-            color = Gray
+            text = "Ваши награды", style = S16_W600, color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.weight(1f))
         Row(
@@ -83,8 +81,7 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RewardBox(
-                count = coins,
-                icon = R.drawable.coin
+                count = coins, icon = R.drawable.coin
             )
             RewardBox(count = exp, icon = R.drawable.exp)
         }
@@ -94,14 +91,16 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
                 .height(16.dp)
         )
         Button(
-            onClick = onDismiss,
+            onClick = {
+                onSendReview(questId)
+            },
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(
-                contentColor = Black,
-                containerColor = White
+                contentColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Text(text = "Забрать", style = S16_W600)
@@ -110,24 +109,16 @@ fun CompleteQuestContent(event: EventDto, onDismiss: () -> Unit) {
     }
 }
 
+
 @Preview
 @Composable
 private fun PreviewQuestCompletedDialog() {
     ExploryTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Black)
-        ) {
-            EventDialog(
-                event = EventDto(
-                    text = "Тайны города;100;50",
-                    type = EventType.COMPLETE_QUEST
-                ),
-                onDismissRequest = {},
-                onFriendAccept = {},
-                onFriendDecline = {}
+        CompleteQuestContent(
+            event = EventDto(
+                text = "1;2;3;1", type = EventType.COMPLETE_QUEST
             )
+        ) {
         }
     }
 }

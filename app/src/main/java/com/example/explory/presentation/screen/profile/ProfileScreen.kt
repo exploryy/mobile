@@ -36,7 +36,7 @@ import com.example.explory.presentation.screen.friends.FriendsScreen
 import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
-import com.example.explory.ui.theme.BlackButtonColor
+import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.DisabledBlackButtonColor
 import com.example.explory.ui.theme.DisabledWhiteContentColor
 import org.koin.androidx.compose.koinViewModel
@@ -106,7 +106,7 @@ fun ProfileScreen(
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             contentColor = Color.White,
-                            containerColor = BlackButtonColor,
+                            containerColor = Black,
                             disabledContentColor = DisabledWhiteContentColor,
                             disabledContainerColor = DisabledBlackButtonColor
                         ),
@@ -122,7 +122,7 @@ fun ProfileScreen(
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             contentColor = Color.Red.copy(alpha = 0.7f),
-                            containerColor = BlackButtonColor,
+                            containerColor = Black,
                             disabledContentColor = DisabledWhiteContentColor,
                             disabledContainerColor = DisabledBlackButtonColor
                         ),

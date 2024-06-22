@@ -1,7 +1,7 @@
 package com.example.explory.domain.usecase
 
 import com.example.explory.data.repository.CoinsRepository
-import com.example.explory.data.model.CoinDto
+import com.example.explory.data.model.statistic.CoinDto
 
 class GetCoinsUseCase(private val coinsRepository: CoinsRepository) {
     suspend fun execute(): List<CoinDto> {
