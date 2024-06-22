@@ -46,6 +46,7 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.example.explory.presentation.screen.map.component.review.RemovableImage
 import com.example.explory.ui.theme.Value
 import com.example.explory.ui.theme.Value.CenterPadding
 
@@ -112,33 +113,17 @@ fun CreateNoteScreen(
                     Text("Выбрать фото")
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 if (imageUris.value.isNotEmpty()) {
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         items(imageUris.value) { uri ->
-                            Box {
-                                Image(
-                                    painter = rememberAsyncImagePainter(uri),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                )
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = "Удалить",
-                                    modifier = Modifier
-                                        .align(Alignment.TopEnd)
-                                        .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape)
-                                        .padding(4.dp)
-                                        .size(16.dp)
-                                        .clickable {
-                                            removeImage(uri)
-                                        }
-                                )
+                            Box(
+                                modifier = Modifier.size(56.dp)
+                            ) {
+                                RemovableImage(image = uri.toString(),
+                                    onRemove = { removeImage(uri) })
                             }
                         }
                     }
