@@ -5,6 +5,7 @@ import com.example.explory.common.Constants.Companion.BASE_URL_WEBSOCKET
 import com.example.explory.data.AuthInterceptor
 import com.example.explory.data.repository.AuthRepository
 import com.example.explory.data.repository.BattlePassRepository
+import com.example.explory.data.repository.BuffRepository
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.FriendRepository
 import com.example.explory.data.repository.InventoryRepository
@@ -49,6 +50,7 @@ fun dataModule() = module {
     singleOf(::LocalStorage)
     singleOf(::ThemePreferenceManager)
     singleOf(::LocationTracker)
+    singleOf(::BuffRepository)
 
     single<Interceptor> { AuthInterceptor(get(), get()) }
 

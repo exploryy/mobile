@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.explory.R
-import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
 import com.example.explory.data.model.location.CreatePolygonRequestDto
@@ -21,6 +20,7 @@ import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.TransportType
+import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.repository.CoinsRepository
 import com.example.explory.data.repository.PolygonRepository
 import com.example.explory.data.repository.QuestRepository

@@ -3,12 +3,14 @@ package com.example.explory.di
 import com.example.explory.domain.usecase.AcceptFriendUseCase
 import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
+import com.example.explory.domain.usecase.ApplyBuffUseCase
 import com.example.explory.domain.usecase.BuyItemUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
 import com.example.explory.domain.usecase.EquipItemUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
+import com.example.explory.domain.usecase.GetBuffListUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetCurrentBattlePassUseCase
 import com.example.explory.domain.usecase.GetFriendProfileUseCase
@@ -69,4 +71,7 @@ fun domainModule() = module {
     factoryOf(::SellItemUseCase)
     factoryOf(::GetCurrentBattlePassUseCase)
     factoryOf(::SendReviewUseCase)
+    factoryOf(::GetBuffListUseCase)
+//    factoryOf(GetMyBuffsUseCase)
+    factoryOf(::ApplyBuffUseCase)
 }

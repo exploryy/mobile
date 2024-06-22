@@ -3,6 +3,10 @@ package com.example.explory.presentation.screen.map.component
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.explory.data.model.review.SendReviewRequest
+import com.example.explory.domain.model.BuffDto
+import com.example.explory.domain.usecase.ApplyBuffUseCase
+import com.example.explory.domain.usecase.GetBuffListUseCase
 import com.example.explory.domain.usecase.GetFriendProfileUseCase
 import com.example.explory.domain.usecase.SendReviewUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +16,9 @@ import kotlinx.coroutines.launch
 
 class EventViewModel(
     private val getFriendProfileUseCase: GetFriendProfileUseCase,
-    private val sendReviewUseCase: SendReviewUseCase
+    private val sendReviewUseCase: SendReviewUseCase,
+    private val getBuffListUseCase: GetBuffListUseCase,
+    private val applyBuffUseCase: ApplyBuffUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(EventState())
     val state = _state.asStateFlow()
@@ -42,11 +48,30 @@ class EventViewModel(
             }
         }
     }
+
+    fun getBuffList() {
+        viewModelScope.launch {
+            try {
+                val buffs = getBuffListUseCase.execute()
+                _state.update { state ->
+                    state.copy(buffs = buffs.map {
+                        BuffDto(it.buffId, it.status.title, it.status.animationResource)
+                    })
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun applyBuff(buffId: Long) {
+        viewModelScope.launch {
+            try {
+                applyBuffUseCase.execute(buffId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
 
-data class SendReviewRequest(
-    val eventId: Long,
-    val rating: Int,
-    val reviewText: String?,
-    val images: List<Uri>
-)

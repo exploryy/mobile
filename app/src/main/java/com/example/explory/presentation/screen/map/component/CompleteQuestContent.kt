@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,18 +31,14 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
 import com.example.explory.data.model.event.EventDto
 import com.example.explory.data.model.event.EventType
-import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.ExploryTheme
-import com.example.explory.ui.theme.Gray
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
-import com.example.explory.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompleteQuestContent(
     event: EventDto,
-    onDismiss: () -> Unit,
     onSendReview: (Long) -> Unit
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.success))
@@ -58,7 +54,7 @@ fun CompleteQuestContent(
         Modifier
             .size(DIALOG_WIDTH.dp, DIALOG_HEIGHT.dp)
             .background(
-                BottomSheetDefaults.ContainerColor, shape = RoundedCornerShape(DIALOG_SHAPE.dp)
+                MaterialTheme.colorScheme.background, shape = RoundedCornerShape(DIALOG_SHAPE.dp)
             )
             .clip(RoundedCornerShape(DIALOG_SHAPE.dp))
             .padding(horizontal = 16.dp),
@@ -73,11 +69,11 @@ fun CompleteQuestContent(
             text = "Квест «%s» завершён!".format(name),
             style = S20_W600,
             textAlign = TextAlign.Center,
-            color = White
+            color = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Ваши награды", style = S16_W600, color = Gray
+            text = "Ваши награды", style = S16_W600, color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.weight(1f))
         Row(
@@ -103,7 +99,8 @@ fun CompleteQuestContent(
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(
-                contentColor = Black, containerColor = White
+                contentColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Text(text = "Забрать", style = S16_W600)
@@ -119,11 +116,9 @@ private fun PreviewQuestCompletedDialog() {
     ExploryTheme {
         CompleteQuestContent(
             event = EventDto(
-                text = "1;2;3", type = EventType.COMPLETE_QUEST
-            ),
-            onDismiss = { }
+                text = "1;2;3;1", type = EventType.COMPLETE_QUEST
+            )
         ) {
-
         }
     }
 }

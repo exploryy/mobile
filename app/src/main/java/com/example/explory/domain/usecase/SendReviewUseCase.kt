@@ -1,7 +1,7 @@
 package com.example.explory.domain.usecase
 
 import com.example.explory.data.repository.QuestRepository
-import com.example.explory.presentation.screen.map.component.SendReviewRequest
+import com.example.explory.data.model.review.SendReviewRequest
 
 class SendReviewUseCase(
     private val questRepository: QuestRepository

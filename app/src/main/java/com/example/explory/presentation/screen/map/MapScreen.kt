@@ -271,7 +271,7 @@ fun MapScreen(
                     }
 
                     if (mapState.showViewAnnotationIndex != null) {
-                        val quest = mapState.completedQuests[mapState.showViewAnnotationIndex!!]
+                        val quest = mapState.notCompletedQuests[mapState.showViewAnnotationIndex!!]
                         ViewAnnotation(options = viewAnnotationOptions {
                             geometry(
                                 Point.fromLngLat(
@@ -302,27 +302,12 @@ fun MapScreen(
 
                         PointAnnotation(point = point,
                             iconEmissiveStrength = 0.5,
-                            iconHaloColorInt = White.toArgb(),
-                            iconSize = 0.2,
-                            iconHaloWidth = 1.0,
+                            iconSize = 0.15,
                             iconImageBitmap = when (quest.difficultyType) {
                                 DifficultyType.EASY -> easyTaskBitmap
                                 DifficultyType.MEDIUM -> mediumTaskBitmap
                                 DifficultyType.HARD -> hardTaskBitmap
                             },
-                            onClick = {
-                                viewModel.updateShowViewAnnotationIndex(index)
-                                true
-                            })
-                    }
-
-                    mapState.completedQuests.forEachIndexed { index, quest ->
-                        val point =
-                            Point.fromLngLat(quest.longitude.toDouble(), quest.latitude.toDouble())
-
-                        PointAnnotation(point = point,
-                            iconEmissiveStrength = 0.0,
-                            iconImageBitmap = taskBitmap,
                             onClick = {
                                 viewModel.updateShowViewAnnotationIndex(index)
                                 true

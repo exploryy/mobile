@@ -1,4 +1,4 @@
-package com.example.explory.data.model
+package com.example.explory.data.model.statistic
 
 data class BalanceDto(
     val balance: Int,

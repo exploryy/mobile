@@ -6,7 +6,7 @@ import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.QuestListDto
 import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.service.ApiService
-import com.example.explory.presentation.screen.map.component.SendReviewRequest
+import com.example.explory.data.model.review.SendReviewRequest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody

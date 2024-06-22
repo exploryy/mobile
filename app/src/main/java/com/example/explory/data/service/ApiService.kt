@@ -1,7 +1,5 @@
 package com.example.explory.data.service
 
-import com.example.explory.data.model.BalanceDto
-import com.example.explory.data.model.CoinDto
 import com.example.explory.data.model.battlepass.BattlePassDto
 import com.example.explory.data.model.friend.FriendsResponse
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
@@ -20,7 +18,10 @@ import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.model.requests.FriendRequest
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.statistic.AchievementDto
+import com.example.explory.data.model.statistic.BalanceDto
+import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.model.statistic.UserStatisticDto
+import com.example.explory.presentation.screen.map.component.BuffResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -221,7 +222,7 @@ interface ApiService {
     @POST("/shop/{item_id}/buy")
     suspend fun buyItem(@Path("item_id") itemId: Long)
 
-    //inventory
+    // Inventory
     @POST("/inventory/{item_id}/equip")
     suspend fun equipItem(@Path("item_id") itemId: Long)
 
@@ -234,9 +235,22 @@ interface ApiService {
     @DELETE("/inventory/{item_id}/sell")
     suspend fun sellItem(@Path("item_id") itemId: Long)
 
-    //battlepass
+    // Battle pass
     @GET("/battle_pass/current")
     suspend fun getCurrentBattlePass(): BattlePassDto
+
+    // Buffs
+    @GET("/buffs/available")
+    suspend fun getBuffList(): List<BuffResponse>
+
+    @GET("/buffs/my")
+    suspend fun getMyBuffs(): List<BuffResponse>
+
+    @Multipart
+    @POST("/buffs/apply")
+    suspend fun applyBuff(
+        @Part("buff_id") buffId: Long
+    )
 }
 
 

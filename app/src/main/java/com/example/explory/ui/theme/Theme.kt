@@ -14,24 +14,23 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = OffBlack,
-    secondary = MediumGray,
-    background = DarkGray,
-    surface = BlackButtonColor,
-    onPrimary = WhiteContentColor,
+    primary = White,
+    secondary = DarkGray,
+    background = Black,
+    surface = Black,
+    onPrimary = White,
     onSecondary = OffWhite,
-    onBackground = LightGray,
-    onSurface = OffWhite,
+    onBackground = Gray,
+    onSurface = Gray,
     surfaceContainer = Black,
-
-    )
+)
 
 private val LightColorScheme = lightColorScheme(
     primary = OffWhite,
     secondary = LightGray,
-    background = WhiteContentColor,
+    background = White,
     surface = OffWhite,
-    onPrimary = BlackButtonColor,
+    onPrimary = Black,
     onSecondary = MediumGray,
     onBackground = DarkGray,
     onSurface = OffBlack

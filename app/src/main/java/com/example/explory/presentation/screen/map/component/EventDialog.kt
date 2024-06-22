@@ -33,7 +33,6 @@ fun EventDialog(
         when (event.type) {
             EventType.COMPLETE_QUEST -> {
                 CompleteQuestContent(event = event,
-                    onDismiss = onDismissRequest,
                     onSendReview = { eventId.value = it })
 
             }
@@ -52,7 +51,11 @@ fun EventDialog(
             EventType.CHANGE_MONEY -> {}
             EventType.NEW_QUEST -> {}
             EventType.UPDATE_LEVEL -> {
-                UpdateLevelContent(event) { onDismissRequest() }
+                viewModel.getBuffList()
+                UpdateLevelContent(
+                    event,
+                    buffs = state.buffs,
+                    onBuffChoose = { viewModel.applyBuff(it) })
             }
 
             EventType.UPDATE_EXPERIENCE -> {}
