@@ -24,4 +24,4 @@ val Red = Color(0xFFE57373)
 val Green = Color(0xFF81C784)
 val Yellow = Color(0xFFFFC107)
 
-
+val BattlePass = Color(0xFFD2F0BB)

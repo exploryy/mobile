@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +35,12 @@ fun LevelCard(level: BattlePassLevelDto, currentLevel: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
+            colors = CardColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.White,
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = Color.White
+            ),
             shape = RoundedCornerShape(8.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -51,7 +58,7 @@ fun LevelCard(level: BattlePassLevelDto, currentLevel: Int) {
                 modifier = Modifier
                     .matchParentSize()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0x8056F556))
+                    .background(Color(0x8056F556).copy(0.4f))
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
