@@ -1,18 +1,12 @@
 package com.example.explory.presentation.screen.shop
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -23,10 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -35,10 +26,11 @@ import com.example.explory.R
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.model.shop.RarityType
+import com.example.explory.presentation.screen.map.component.BarItem
 import com.example.explory.presentation.screen.shop.component.CategorySelectionRow
 import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
 import com.example.explory.presentation.screen.shop.component.HorizontalPagerImages
-import com.example.explory.ui.theme.S20_W600
+import com.example.explory.ui.theme.S24_W600
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +57,7 @@ fun ShopScreen(
 
     LaunchedEffect(Unit) {
         viewModel.fetchShopItems()
+        viewModel.fetchBalance()
     }
 
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
@@ -91,44 +84,27 @@ fun ShopScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Магазин",
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineLarge
+            Row(Modifier.padding(16.dp)) {
+                Text(text = "Магазин", style = S24_W600)
+                Spacer(modifier = Modifier.weight(1f))
+                BarItem(
+                    value = shopState.balance,
+                    icon = R.drawable.coin,
+                    formatValue = false,
+                    modifier = Modifier
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row {
-                    Image(
-                        painter = painterResource(id = R.drawable.money),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = shopState.balance.toString(),
-                        color = Color.White,
-                        style = S20_W600,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
             }
+
 
             HorizontalPagerImages()
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Категории товаров",
-                color = Color.White,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Text(
+//                text = "товары",
+//                color = MaterialTheme.colorScheme.onBackground,
+//                style = S20_W600,
+//                modifier = Modifier.padding(horizontal = 16.dp)
+//            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

@@ -31,6 +31,7 @@ import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Yellow
 
+// todo refactor
 @Composable
 fun InventoryItemDialog(
     onDismiss: () -> Unit,

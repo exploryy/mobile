@@ -21,12 +21,12 @@ fun getRarityColor(rarityType: RarityType): Color {
 @Composable
 fun getTranslateCategoryName(name: String): String {
     return when (name) {
-        "Все" -> "все"
-        "FOOTPRINT" -> "следы"
-        "AVATAR_FRAMES" -> "рамки"
-        "APPLICATION_IMAGE" -> "иконки"
-        "FOG" -> "дым"
-        else -> "Unknown"
+        "Все" -> "Все"
+        "FOOTPRINT" -> "Следы"
+        "AVATAR_FRAMES" -> "Рамки"
+        "APPLICATION_IMAGE" -> "Иконки"
+        "FOG" -> "Дым"
+        else -> "Неизвестно"
     }
 }
 

@@ -22,14 +22,15 @@ fun BarItem(
     modifier: Modifier = Modifier,
     value: Int,
     icon: Int,
-    textColor: Color = Yellow
+    textColor: Color = Yellow,
+    formatValue: Boolean = true
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = formatNumber(value),
+            text = if (formatValue) formatNumber(value) else value.toString(),
             color = textColor,
             style = S18_W600,
             maxLines = 1,
