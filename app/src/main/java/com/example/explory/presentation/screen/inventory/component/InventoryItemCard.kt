@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.inventory.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,21 +13,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
-import com.example.explory.presentation.screen.common.getRarityColor
-import com.example.explory.presentation.screen.common.getTranslateRareName
-import com.example.explory.ui.theme.DarkGreen
+import com.example.explory.data.model.shop.RarityType
+import com.example.explory.presentation.screen.quest.ImagePage
+import com.example.explory.ui.theme.Blue
+import com.example.explory.ui.theme.Gray
+import com.example.explory.ui.theme.Purple
+import com.example.explory.ui.theme.S14_W600
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.Yellow
 
 @Composable
 fun InventoryItemCard(
@@ -38,9 +42,20 @@ fun InventoryItemCard(
     modifier: Modifier = Modifier
 ) {
     Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = MaterialTheme.colorScheme.secondary,
+        ),
+        border = BorderStroke(
+            3.dp, color = when (item.rarityType) {
+                RarityType.COMMON -> Gray
+                RarityType.RARE -> Blue
+                RarityType.EPIC -> Purple
+                RarityType.LEGENDARY -> Yellow
+            }
+        ),
         modifier = modifier
-            .padding(4.dp)
             .fillMaxWidth()
+            .height(200.dp)
             .clickable {
                 onCardClick()
             },
@@ -53,35 +68,35 @@ fun InventoryItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            AsyncImage(
-                model = item.url,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+            ImagePage(
+                image = item.url,
+                modifier = Modifier.size(96.dp),
+                shape = RoundedCornerShape(8.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = item.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = S14_W600,
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = "Редкость: ${getTranslateRareName(item.rarityType)}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = getRarityColor(item.rarityType),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
+//            Spacer(modifier = Modifier.height(4.dp))
+//            Text(
+//                text = "Редкость: ${getTranslateRareName(item.rarityType)}",
+//                style = MaterialTheme.typography.bodyMedium,
+//                color = getRarityColor(item.rarityType),
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = {
@@ -91,13 +106,14 @@ fun InventoryItemCard(
                         onEquipClick()
                     }
                 },
-                colors = if (item.isEquipped)
-                    ButtonDefaults.buttonColors(containerColor = Color.Gray)
-                else ButtonDefaults.buttonColors(containerColor = DarkGreen),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = if (item.isEquipped) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.primary),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = if (item.isEquipped) "Снять" else "Экипировать",
+                    text = if (item.isEquipped) "cнять" else "надеть",
+                    style = S16_W600,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

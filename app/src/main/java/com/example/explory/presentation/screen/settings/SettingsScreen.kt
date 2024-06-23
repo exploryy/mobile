@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -18,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.explory.presentation.screen.settings.component.ConfidentialityButton
-import com.example.explory.presentation.screen.settings.component.ThemeButton
+import com.example.explory.R
+import com.example.explory.presentation.screen.settings.component.AnimatedButton
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S24_W600
 import kotlinx.coroutines.launch
 
 
@@ -56,8 +57,8 @@ fun SettingsScreen(
                 },
         ) {
             Text(
-                text = "Настройки",
-                style = MaterialTheme.typography.titleLarge,
+                text = "настройки",
+                style = S24_W600,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -68,13 +69,15 @@ fun SettingsScreen(
                     .padding(vertical = 8.dp)
             ) {
                 Text(
-                    text = "Выбор темы карты",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "тема карты",
+                    style = S16_W600,
                     modifier = Modifier.weight(1f)
                 )
-                ThemeButton(
+                AnimatedButton(
                     onClick = { onThemeChangeClick(!isDarkTheme) },
-                    darkTheme = !isDarkTheme
+                    state = isDarkTheme,
+                    initIcon = R.drawable.sun,
+                    targetIcon = R.drawable.moon
                 )
             }
 
@@ -85,13 +88,15 @@ fun SettingsScreen(
                     .padding(vertical = 8.dp)
             ) {
                 Text(
-                    text = "Приватность",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "приватность",
+                    style = S16_W600,
                     modifier = Modifier.weight(1f)
                 )
-                ConfidentialityButton(
-                    onClick = { onPrivacyChangeClick(it) },
-                    isConfidentially = isPublic
+                AnimatedButton(
+                    onClick = { onPrivacyChangeClick(!isPublic) },
+                    state = isPublic,
+                    initIcon = R.drawable.lock,
+                    targetIcon = R.drawable.unlock
                 )
             }
         }

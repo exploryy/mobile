@@ -656,7 +656,7 @@ class MapViewModel(
     fun updateInventoryOpenScreen() {
         // todo event on this update
         viewModelScope.launch {
-            fetchProfile()
+//            fetchProfile()
             _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
         }
     }
@@ -765,7 +765,7 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 statisticRepository.setPrivacy(isPublic)
-                getPrivacy()
+//                getPrivacy()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

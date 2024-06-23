@@ -26,9 +26,9 @@ class InventoryViewModel(
     private val _inventoryState = MutableStateFlow(InventoryState())
     val inventoryState: StateFlow<InventoryState> = _inventoryState
 
-    init {
-        fetchInventory()
-    }
+//    init {
+//        fetchInventory()
+//    }
 
     fun fetchInventory() {
         viewModelScope.launch {
