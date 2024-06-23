@@ -25,7 +25,7 @@ fun ProfileTabButton(
     onClick: () -> Unit,
     text: String,
     isSelected: Boolean,
-    notification: Int?
+    notification: Int? = null
 ) {
     val buttonBaseColor = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.secondary,

@@ -144,8 +144,8 @@ fun UserStatisticScreen(
 fun getDistanceString(distance: Int): String {
     return when {
         distance < 1000 -> "$distance метров"
-        distance < 1000000 -> "${distance / 1000} километров"
-        else -> "${distance / 1000000} тыс. километров"
+        distance < 1000000 -> "${distance / 1000} км"
+        else -> "${distance / 1000000} тыс. км"
     }
 }
 
