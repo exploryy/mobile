@@ -23,21 +23,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
-import com.example.explory.data.model.shop.RarityType
+import com.example.explory.presentation.screen.common.getRarityColor
 import com.example.explory.presentation.screen.quest.ImagePage
-import com.example.explory.ui.theme.Blue
-import com.example.explory.ui.theme.Gray
-import com.example.explory.ui.theme.Purple
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W600
-import com.example.explory.ui.theme.Yellow
 
 @Composable
 fun InventoryItemCard(
     item: CosmeticItemInInventoryDto,
     onEquipClick: () -> Unit,
     onUnEquipClick: () -> Unit,
-    onSellClick: () -> Unit,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -46,12 +41,7 @@ fun InventoryItemCard(
             containerColor = MaterialTheme.colorScheme.secondary,
         ),
         border = BorderStroke(
-            3.dp, color = when (item.rarityType) {
-                RarityType.COMMON -> Gray
-                RarityType.RARE -> Blue
-                RarityType.EPIC -> Purple
-                RarityType.LEGENDARY -> Yellow
-            }
+            3.dp, color = getRarityColor(rarityType = item.rarityType)
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -87,15 +77,6 @@ fun InventoryItemCard(
                     .padding(horizontal = 8.dp)
             )
 
-//            Spacer(modifier = Modifier.height(4.dp))
-//            Text(
-//                text = "Редкость: ${getTranslateRareName(item.rarityType)}",
-//                style = MaterialTheme.typography.bodyMedium,
-//                color = getRarityColor(item.rarityType),
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//
             Spacer(modifier = Modifier.weight(1f))
 
             Button(

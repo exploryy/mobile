@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,6 +20,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.example.explory.R
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.White
 
 @Composable
@@ -31,7 +31,7 @@ fun RoundedSquareAvatar(
     val ctx = LocalContext.current
     val imageLoader = ImageLoader.Builder(ctx).build()
     Box(
-        modifier = modifier.background(color = DarkGray, shape = RoundedCornerShape(8.dp))
+        modifier = modifier.background(color = Transparent, shape = RoundedCornerShape(8.dp))
     ) {
         SubcomposeAsyncImage(
             model = image,

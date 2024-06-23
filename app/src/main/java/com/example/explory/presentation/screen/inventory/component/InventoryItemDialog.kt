@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -27,9 +26,10 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.presentation.screen.common.RoundedSquareAvatar
 import com.example.explory.presentation.screen.common.getRarityColor
-import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.common.getTranslateRareName
-import com.example.explory.ui.theme.DarkGreen
+import com.example.explory.ui.theme.S16_W400
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.Yellow
 
 @Composable
 fun InventoryItemDialog(
@@ -58,13 +58,8 @@ fun InventoryItemDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Описание предмета",
-                    style = MaterialTheme.typography.headlineSmall
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
                 RoundedSquareAvatar(
                     image = cosmeticItem.url,
                     modifier = Modifier
@@ -76,73 +71,77 @@ fun InventoryItemDialog(
 
                 Text(
                     text = cosmeticItem.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = S16_W600
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "Редкость: ${getTranslateRareName(cosmeticItem.rarityType)}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = getRarityColor(cosmeticItem.rarityType)
-                        )
+                Text(
+                    text = cosmeticItem.description,
+                    style = S16_W400,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Тип: ${getTranslateCategoryName(cosmeticItem.cosmeticType.name)}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Цена продажи: ${cosmeticItem.price} монеток",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Описание:",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = cosmeticItem.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.End
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        TextButton(
-                            onClick = { onSellClick(cosmeticItem.itemId) },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = Color.Red
-                            )
-                        ) {
-                            Text("Продать")
-                        }
-                    }
-                }
-
+//                Column(
+//                    modifier = Modifier.weight(1f)
+//                ) {
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "${getTranslateRareName(cosmeticItem.rarityType)} предмет",
+                    style = S16_W600,
+                    color = getRarityColor(cosmeticItem.rarityType)
+                )
+
+//                Spacer(modifier = Modifier.height(4.dp))
+//
+//                Text(
+//                    text = "тип: ${getTranslateCategoryName(cosmeticItem.cosmeticType.name)}",
+//                    style = S16_W600,
+//                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "${cosmeticItem.price} монеток",
+                    style = S16_W600,
+                    color = Yellow
+                )
+//                }
+
+//                Spacer(modifier = Modifier.width(16.dp))
+
+//                Column(
+//                    modifier = Modifier
+//                        .weight(1f),
+//                    horizontalAlignment = Alignment.End,
+//                    verticalArrangement = Arrangement.Center
+//                ) {
+//                    Text(
+//                        text = "описание",
+//                        style = S16_W600,
+//                    )
+//
+//                    Spacer(modifier = Modifier.height(4.dp))
+//
+//                    Text(
+//                        text = cosmeticItem.description,
+//                        style = S16_W600,
+//                        textAlign = TextAlign.End
+//                    )
+//                    Spacer(modifier = Modifier.width(4.dp))
+//
+//                    TextButton(
+//                        onClick = { onSellClick(cosmeticItem.itemId) },
+//                        colors = ButtonDefaults.textButtonColors(
+//                            contentColor = MaterialTheme.colorScheme.onError
+//                        )
+//                    ) {
+//                        Text("продать")
+//                    }
+//                }
+
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -151,33 +150,39 @@ fun InventoryItemDialog(
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.White
+                            contentColor = MaterialTheme.colorScheme.onBackground
                         )
                     ) {
-                        Text("Закрыть")
+                        Text("закрыть", style = S16_W600)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-
-                    if (cosmeticItem.isEquipped) {
-                        TextButton(
-                            onClick = { onUnEquipClick(cosmeticItem.itemId) },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = Color.Gray
-                            )
-                        ) {
-                            Text("Снять")
-                        }
+                    TextButton(
+                        onClick = { onSellClick(cosmeticItem.itemId) },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onError
+                        )
+                    ) {
+                        Text("продать", style = S16_W600)
                     }
-                    else {
-                        TextButton(
-                            onClick = { onEquipClick(cosmeticItem.itemId) },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = DarkGreen
-                            )
-                        ) {
-                            Text("Экипировать")
-                        }
-                    }
+//                    if (cosmeticItem.isEquipped) {
+//                        TextButton(
+//                            onClick = { onUnEquipClick(cosmeticItem.itemId) },
+//                            colors = ButtonDefaults.textButtonColors(
+//                                contentColor = MaterialTheme.colorScheme.onSurface
+//                            )
+//                        ) {
+//                            Text("cнять")
+//                        }
+//                    } else {
+//                        TextButton(
+//                            onClick = { onEquipClick(cosmeticItem.itemId) },
+//                            colors = ButtonDefaults.textButtonColors(
+//                                contentColor = MaterialTheme.colorScheme.secondary
+//                            )
+//                        ) {
+//                            Text("надеть")
+//                        }
+//                    }
                 }
             }
         }

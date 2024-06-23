@@ -75,18 +75,6 @@ fun InventoryScreen(
                 LoadingItem()
             }
 
-//            inventoryState.errorMessage != null -> {
-//                Text(
-//                    text = inventoryState.errorMessage!!,
-//                    style = S16_W600,
-//                    color = MaterialTheme.colorScheme.error,
-//                    textAlign = TextAlign.Center,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(16.dp)
-//                )
-//            }
-
             else -> {
                 Column(
                     modifier = Modifier
@@ -122,26 +110,20 @@ fun InventoryScreen(
                                         color = MaterialTheme.colorScheme.onBackground,
                                         modifier = Modifier
                                             .fillMaxWidth(),
-//                                    .background(MaterialTheme.colorScheme.secondary)
-//                                    .padding(8.dp),
                                         textAlign = TextAlign.Start
                                     )
-//                                    Spacer(modifier = Modifier.height(8.dp))
                                 }
                                 items.chunked(2).forEach { rowItems ->
                                     item {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
-//                                        .padding(8.dp),
-//                                    horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
                                             rowItems.forEach { item ->
                                                 InventoryItemCard(
                                                     item = item,
                                                     onEquipClick = { viewModel.equipItem(item.itemId) },
                                                     onUnEquipClick = { viewModel.unEquipItem(item.itemId) },
-                                                    onSellClick = { viewModel.sellItem(item.itemId) },
                                                     onCardClick = { viewModel.openItemDialog(item) },
                                                     modifier = Modifier.weight(1f)
                                                 )
