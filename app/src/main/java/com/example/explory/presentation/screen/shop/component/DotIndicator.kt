@@ -36,7 +36,7 @@ fun DotIndicator(
                 .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            repeat(3) { index ->
+            repeat(state.pageCount) { index ->
                 Box(
                     modifier = Modifier
                         .size(8.dp)

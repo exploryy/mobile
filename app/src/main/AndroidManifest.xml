@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
-    <uses-permission android:name="android.permission.SET_COMPONENT_ENABLED_STATE"/>
+    <uses-permission android:name="android.permission.SET_COMPONENT_ENABLED_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <application
@@ -36,7 +36,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Explory">
+            android:enabled="true"
+            android:theme="@style/Theme.Explory"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,13 +47,14 @@
             </intent-filter>
         </activity>
 
+
         <activity-alias
-            android:name=".MainActivityAlias"
+            android:name=".MainActivityAliasWorld"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/ic_world"
             android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_world_round"
             android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,11 +63,26 @@
         </activity-alias>
 
         <activity-alias
-            android:name=".MainActivityAlias1"
+            android:name=".MainActivityAliasTikTok"
             android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_tsu_round"
+            android:icon="@mipmap/ic_tiktok"
             android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_tiktok_round"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".MainActivityAliasTsu"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_tsu"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_tsu_round"
             android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

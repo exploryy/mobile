@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -26,10 +27,13 @@ import com.example.explory.R
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
 import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.model.shop.RarityType
+import com.example.explory.domain.model.ItemFullInfo
+import com.example.explory.presentation.screen.inventory.component.ItemFullInfoDialog
 import com.example.explory.presentation.screen.map.component.BarItem
 import com.example.explory.presentation.screen.shop.component.CategorySelectionRow
 import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
 import com.example.explory.presentation.screen.shop.component.HorizontalPagerImages
+import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.S24_W600
 import org.koin.androidx.compose.koinViewModel
 
@@ -61,6 +65,7 @@ fun ShopScreen(
     }
 
     val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
+//    val categories = listOf("Все", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
 
     val shopState by viewModel.shopState.collectAsState()
 
@@ -84,7 +89,7 @@ fun ShopScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(Modifier.padding(16.dp)) {
+            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Магазин", style = S24_W600)
                 Spacer(modifier = Modifier.weight(1f))
                 BarItem(
@@ -125,14 +130,31 @@ fun ShopScreen(
 
     if (shopState.isDialogVisible) {
         shopState.selectedItem?.let { item ->
-            BuyItemDialog(
+            ItemFullInfoDialog(
                 onDismiss = { viewModel.dismissDialog() },
-                onBuyClick = {
+                actionText = "купить",
+                onActionClicked = {
                     viewModel.buyItem(item)
                     viewModel.dismissDialog()
                 },
-                cosmeticItem = item
+                item = ItemFullInfo(
+                    itemId = item.itemId,
+                    name = item.name,
+                    description = item.description,
+                    rarity = item.rarityType,
+                    price = item.price,
+                    imageUrl = item.url
+                ),
+                actionColor = Green
             )
+//            BuyItemDialog(
+//                onDismiss = { viewModel.dismissDialog() },
+//                onBuyClick = {
+//                    viewModel.buyItem(item)
+//                    viewModel.dismissDialog()
+//                },
+//                cosmeticItem = item
+//            )
         }
     }
 }

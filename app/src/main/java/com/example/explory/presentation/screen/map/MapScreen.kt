@@ -275,6 +275,8 @@ fun MapScreen(
                             puckBearingEnabled = true
                             puckBearing = PuckBearing.HEADING
                             enabled = true
+                            pulsingEnabled = true
+                            pulsingColor = AccentColor.toArgb()
                         }
                         mapViewportState.transitionToFollowPuckState(
                             defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()

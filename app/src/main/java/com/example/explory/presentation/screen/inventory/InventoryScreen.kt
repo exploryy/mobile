@@ -27,10 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.explory.data.model.shop.CosmeticType
+import com.example.explory.domain.model.ItemFullInfo
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.inventory.component.InventoryItemCard
-import com.example.explory.presentation.screen.inventory.component.InventoryItemDialog
+import com.example.explory.presentation.screen.inventory.component.ItemFullInfoDialog
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import org.koin.androidx.compose.koinViewModel
@@ -122,8 +124,18 @@ fun InventoryScreen(
                                             rowItems.forEach { item ->
                                                 InventoryItemCard(
                                                     item = item,
-                                                    onEquipClick = { viewModel.equipItem(item.itemId) },
-                                                    onUnEquipClick = { viewModel.unEquipItem(item.itemId) },
+                                                    onEquipClick = {
+                                                        if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
+                                                            viewModel.changeIcon(item.name)
+                                                        }
+                                                        viewModel.equipItem(item.itemId)
+                                                    },
+                                                    onUnEquipClick = {
+                                                        if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
+                                                            viewModel.changeIcon("")
+                                                        }
+                                                        viewModel.unEquipItem(item.itemId)
+                                                    },
                                                     onCardClick = { viewModel.openItemDialog(item) },
                                                     modifier = Modifier.weight(1f)
                                                 )
@@ -144,13 +156,24 @@ fun InventoryScreen(
 
 
         if (inventoryState.isOpenDescriptionDialog && inventoryState.selectedItem != null) {
-            InventoryItemDialog(
+            ItemFullInfoDialog(
                 onDismiss = { viewModel.closeItemDialog() },
-                cosmeticItem = inventoryState.selectedItem!!,
-                onEquipClick = { viewModel.equipItem(it) },
-                onUnEquipClick = { viewModel.unEquipItem(it) },
-                onSellClick = { viewModel.sellItem(it) }
+                actionText = "продать",
+                onActionClicked = { viewModel.sellItem(it) },
+                item = ItemFullInfo(
+                    itemId = inventoryState.selectedItem!!.itemId,
+                    name = inventoryState.selectedItem!!.name,
+                    description = inventoryState.selectedItem!!.description,
+                    rarity = inventoryState.selectedItem!!.rarityType,
+                    imageUrl = inventoryState.selectedItem!!.url,
+                    price = inventoryState.selectedItem!!.price
+                )
             )
+//            InventoryItemDialog(
+//                onDismiss = { viewModel.closeItemDialog() },
+//                cosmeticItem = inventoryState.selectedItem!!,
+//                onSellClick = { viewModel.sellItem(it) }
+//            )
         }
     }
 }

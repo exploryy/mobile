@@ -3,6 +3,7 @@ package com.example.explory.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF1A1717)
+val FullBlack = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 val Transparent = Color(0x00000000)
 

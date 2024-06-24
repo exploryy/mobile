@@ -765,7 +765,7 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 statisticRepository.setPrivacy(isPublic)
-//                getPrivacy()
+                getPrivacy()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

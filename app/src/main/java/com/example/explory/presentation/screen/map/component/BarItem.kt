@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +33,7 @@ fun BarItem(
             color = textColor,
             style = S18_W600,
             maxLines = 1,
-            modifier = Modifier.widthIn(min = 0.dp, max = 55.dp)
+//            modifier = Modifier.widthIn(min = 0.dp, max = 55.dp)
         )
         Spacer(modifier = Modifier.width(4.dp))
         Image(

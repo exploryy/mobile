@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
+import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.domain.usecase.EquipItemUseCase
 import com.example.explory.domain.usecase.GetInventoryUseCase
 import com.example.explory.domain.usecase.SellItemUseCase
@@ -21,6 +22,7 @@ class InventoryViewModel(
     private val equipItemUseCase: EquipItemUseCase,
     private val unEquipItemUseCase: UnEquipItemUseCase,
     private val sellItemUseCase: SellItemUseCase,
+    private val sharedPreferenceManager: ThemePreferenceManager,
     private val context: Context
 ) : ViewModel() {
     private val _inventoryState = MutableStateFlow(InventoryState())
@@ -52,6 +54,31 @@ class InventoryViewModel(
                 Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
+            }
+        }
+    }
+
+    fun changeIcon(name: String) {
+        when (name) {
+            "Тик тик" -> {
+                sharedPreferenceManager.setCurrentIcon("com.example.explory.MainActivityAliasTikTok")
+            }
+
+            "Уникум" -> {
+                sharedPreferenceManager.setCurrentIcon("com.example.explory.MainActivityAliasTsu")
+            }
+
+//            "Главный спонсор" -> {
+//                sharedPreferenceManager.setCurrentIcon("com.example.explory.MainActivityAliasSponsor")
+//            }
+
+            "Open the world" -> {
+                sharedPreferenceManager.setCurrentIcon("com.example.explory.MainActivityAliasWorld")
+            }
+
+
+            else -> {
+                sharedPreferenceManager.setCurrentIcon("com.example.explory.MainActivity")
             }
         }
     }

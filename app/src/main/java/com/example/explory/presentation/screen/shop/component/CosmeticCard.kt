@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
@@ -35,6 +34,7 @@ import com.example.explory.data.model.shop.RarityType
 import com.example.explory.presentation.screen.common.RoundedSquareAvatar
 import com.example.explory.ui.theme.Blue
 import com.example.explory.ui.theme.Gray
+import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Purple
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Yellow
@@ -56,44 +56,10 @@ fun CosmeticCard(
                 shape = RoundedCornerShape(8.dp)
             )
             .height(225.dp)
-//                .background(getRarityBrush(cosmeticItem.rarityType))
             .let { it.clickable { onClick(cosmeticItem) } },
         contentAlignment = Alignment.Center
-//        } else {
-//            modifier
-//                .padding(8.dp)
-//                .clip(RoundedCornerShape(8.dp))
-//                .background(Color.Gray)
-//                .let { it.clickable { onClick(cosmeticItem) } }
-//        }
     ) {
-//        Card(
-//            modifier = if (!cosmeticItem.isOwned) {
-//                Modifier
-//                    .fillMaxSize()
-//                    .clip(RoundedCornerShape(8.dp))
-//                    .background(getRarityBrush(cosmeticItem.rarityType))
-//            } else {
-//                Modifier
-//                    .fillMaxSize()
-//                    .clip(RoundedCornerShape(8.dp))
-//                    .background(Color.Gray)
-//            }
-//        ) {
-//            Box(
-//                modifier = if (!cosmeticItem.isOwned) {
-//                    Modifier
-//                        .fillMaxSize()
-//                        .background(getRarityBrush(cosmeticItem.rarityType))
-//                } else {
-//                    Modifier
-//                        .fillMaxSize()
-//                        .background(Color.Gray)
-//                },
-//                contentAlignment = Alignment.Center
-//            ) {
         Column(
-//            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             RoundedSquareAvatar(image = cosmeticItem.url, modifier = Modifier.size(96.dp))
@@ -110,8 +76,6 @@ fun CosmeticCard(
                 style = S16_W600,
                 color = Yellow
             )
-//                }
-//            }
         }
 
         if (cosmeticItem.isOwned) {
@@ -119,15 +83,16 @@ fun CosmeticCard(
                 modifier = Modifier
                     .matchParentSize()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0x8056F556))
+                    .background(Green.copy(alpha = 0.4f), shape = RoundedCornerShape(8.dp))
             ) {
                 Icon(
-                    imageVector = Icons.Default.Check,
+                    imageVector = Icons.Rounded.Check,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(48.dp)
+                        .padding(8.dp)
+                        .align(Alignment.TopEnd)
+                        .size(32.dp)
                 )
             }
         }

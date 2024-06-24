@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,10 +29,12 @@ import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.model.shop.RarityType
 import com.example.explory.presentation.screen.common.RoundedSquareAvatar
 import com.example.explory.presentation.screen.common.getRarityColor
-import com.example.explory.presentation.screen.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.common.getTranslateRareName
-import com.example.explory.ui.theme.DarkGreen
+import com.example.explory.ui.theme.S16_W400
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.Yellow
 
+// todo refactor?
 @Composable
 fun BuyItemDialog(
     onDismiss: () -> Unit,
@@ -59,13 +60,8 @@ fun BuyItemDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Описание товара",
-                    style = MaterialTheme.typography.headlineSmall
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
                 RoundedSquareAvatar(
                     image = cosmeticItem.url,
                     modifier = Modifier
@@ -77,63 +73,35 @@ fun BuyItemDialog(
 
                 Text(
                     text = cosmeticItem.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = S16_W600
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "Редкость: ${getTranslateRareName(cosmeticItem.rarityType)}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = getRarityColor(cosmeticItem.rarityType)
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Тип: ${getTranslateCategoryName(cosmeticItem.cosmeticType.name)}",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Цена: ${cosmeticItem.price} монеток",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier
-                            .weight(1f),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Описание:",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = cosmeticItem.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.End
-                        )
-                    }
-                }
+                Text(
+                    text = cosmeticItem.description,
+                    style = S16_W400,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "${getTranslateRareName(cosmeticItem.rarityType)} предмет",
+                    style = S16_W600,
+                    color = getRarityColor(cosmeticItem.rarityType)
+                )
+
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "${cosmeticItem.price} монеток",
+                    style = S16_W600,
+                    color = Yellow
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -142,19 +110,19 @@ fun BuyItemDialog(
                     TextButton(
                         onClick = onDismiss,
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.White
+                            contentColor = MaterialTheme.colorScheme.onBackground
                         )
                     ) {
-                        Text("Закрыть")
+                        Text("закрыть", style = S16_W600)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = onBuyClick,
                         colors = ButtonDefaults.textButtonColors(
-                            contentColor = DarkGreen
+                            contentColor = MaterialTheme.colorScheme.onError
                         )
                     ) {
-                        Text("Купить")
+                        Text("продать", style = S16_W600)
                     }
                 }
             }
@@ -164,7 +132,7 @@ fun BuyItemDialog(
 
 @Preview
 @Composable
-fun BuyItemDialogPreview(){
+fun BuyItemDialogPreview() {
     BuyItemDialog(
         onDismiss = { },
         onBuyClick = { },
