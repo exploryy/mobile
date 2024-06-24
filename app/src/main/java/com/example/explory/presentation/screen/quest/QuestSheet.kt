@@ -63,6 +63,8 @@ fun QuestSheet(
     reviews: FullReviewsDto,
     questStatus: String? = null
 ) {
+    // todo выбор транспорта
+
     val state = rememberBottomSheetScaffoldState()
     val pagerState = rememberPagerState(pageCount = { images.size })
     BottomSheetScaffold(sheetPeekHeight = 200.dp, scaffoldState = state, sheetContent = {

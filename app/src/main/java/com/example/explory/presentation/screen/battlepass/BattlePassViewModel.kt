@@ -2,7 +2,6 @@ package com.example.explory.presentation.screen.battlepass
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.explory.data.model.profile.FriendProfileDto
 import com.example.explory.domain.usecase.GetCurrentBattlePassUseCase
 import com.example.explory.domain.usecase.GetUserStatisticUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,11 +15,6 @@ class BattlePassViewModel(
 ) : ViewModel() {
     private val _battlePassState = MutableStateFlow(BattlePassState())
     val battlePassState: StateFlow<BattlePassState> = _battlePassState.asStateFlow()
-
-    init {
-        loadBattlePass()
-        loadStatistic()
-    }
 
     fun loadBattlePass() {
         viewModelScope.launch {

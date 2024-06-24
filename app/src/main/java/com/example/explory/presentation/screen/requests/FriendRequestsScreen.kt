@@ -49,6 +49,7 @@ fun FriendRequestsScreen(viewModel: FriendRequestsViewModel = koinViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(friendRequests.other) { request ->
+                    // todo fix notification counter
                     FriendRequestCard(
                         request = request,
                         onAccept = { viewModel.acceptRequest(request.userId) },

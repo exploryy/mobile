@@ -25,6 +25,7 @@ class EventViewModel(
     fun getUserInfo(friendId: String) {
         viewModelScope.launch {
             try {
+                // todo сейчас если пользователь не друг, то прилетает ошибка
                 val user = getFriendProfileUseCase.invoke(friendId)
                 _state.update { it.copy(user = user) }
             } catch (e: Exception) {
