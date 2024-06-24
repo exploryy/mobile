@@ -1,12 +1,15 @@
 package com.example.explory.presentation.screen.shop
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -19,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -34,6 +38,7 @@ import com.example.explory.presentation.screen.shop.component.CategorySelectionR
 import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
 import com.example.explory.presentation.screen.shop.component.HorizontalPagerImages
 import com.example.explory.ui.theme.Green
+import com.example.explory.ui.theme.S18_W600
 import com.example.explory.ui.theme.S24_W600
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,7 +69,7 @@ fun ShopScreen(
         viewModel.fetchBalance()
     }
 
-    val categories = listOf("Все", "FOOTPRINT", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
+    val categories = listOf("Все", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG", "FOOTPRINT")
 //    val categories = listOf("Все", "AVATAR_FRAMES", "APPLICATION_IMAGE", "FOG")
 
     val shopState by viewModel.shopState.collectAsState()
@@ -121,10 +126,27 @@ fun ShopScreen(
                 }
             )
 
-            CosmeticItemsList(
-                cosmeticItems = filteredCosmeticItems.value,
-                onItemClick = { viewModel.selectItem(it) }
-            )
+
+            if (filteredCosmeticItems.value.isNotEmpty()){
+                CosmeticItemsList(
+                    cosmeticItems = filteredCosmeticItems.value,
+                    onItemClick = { viewModel.selectItem(it) }
+                )
+            }
+            else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "предметов такого типа\nпока нет",
+                        style = S18_W600,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 
@@ -144,7 +166,8 @@ fun ShopScreen(
                         description = item.description,
                         rarity = item.rarityType,
                         price = item.price,
-                        imageUrl = item.url
+                        imageUrl = item.url,
+                        isSellable = item.sellable
                     ),
                     actionColor = Green
                 )

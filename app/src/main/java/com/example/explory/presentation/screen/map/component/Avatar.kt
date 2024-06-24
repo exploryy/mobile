@@ -138,8 +138,8 @@ private fun PreviewAvatar() {
                 rarityType = RarityType.RARE,
                 cosmeticType = CosmeticType.AVATAR_FRAMES,
                 isEquipped = true,
-                isSellable = true,
-                url = "https://open-the-world-bucket.storage.yandexcloud.net/cosmetic_item_9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240622T191242Z&X-Amz-SignedHeaders=host&X-Amz-Credential=YCAJElQv7pUTWn_lWTr8GxNbm%2F20240622%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Expires=604800&X-Amz-Signature=6c80427c2f5001f8f63a1ca374b58f9b3dacd167b5ef029da6d41419d73f7aad"
+                url = "https://open-the-world-bucket.storage.yandexcloud.net/cosmetic_item_9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240622T191242Z&X-Amz-SignedHeaders=host&X-Amz-Credential=YCAJElQv7pUTWn_lWTr8GxNbm%2F20240622%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Expires=604800&X-Amz-Signature=6c80427c2f5001f8f63a1ca374b58f9b3dacd167b5ef029da6d41419d73f7aad",
+                isSellable = true
             ),
         )
     }

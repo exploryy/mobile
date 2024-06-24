@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -64,7 +65,7 @@ fun InventoryScreen(
     }
 
     val inventoryState by viewModel.inventoryState.collectAsState()
-
+    val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
@@ -102,7 +103,8 @@ fun InventoryScreen(
 
                         LazyColumn(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(24.dp)
+                            verticalArrangement = Arrangement.spacedBy(24.dp),
+                            state = listState
                         ) {
                             groupedItems.forEach { (type, items) ->
                                 stickyHeader {
@@ -166,7 +168,8 @@ fun InventoryScreen(
                     description = inventoryState.selectedItem!!.description,
                     rarity = inventoryState.selectedItem!!.rarityType,
                     imageUrl = inventoryState.selectedItem!!.url,
-                    price = inventoryState.selectedItem!!.price
+                    price = inventoryState.selectedItem!!.price,
+                    isSellable = inventoryState.selectedItem!!.isSellable
                 )
             )
 //            InventoryItemDialog(

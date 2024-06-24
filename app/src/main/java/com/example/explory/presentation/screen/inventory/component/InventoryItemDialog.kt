@@ -193,7 +193,9 @@ fun ItemFullInfoDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "${item.price} монеток",
+                    text =
+                    if (item.isSellable) "${item.price} монеток"
+                        else "эксклюзивный",
                     style = S16_W600,
                     color = Yellow
                 )
@@ -212,14 +214,17 @@ fun ItemFullInfoDialog(
                     ) {
                         Text("закрыть", style = S16_W600)
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
-                        onClick = { onActionClicked(item.itemId) },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = actionColor
-                        )
-                    ) {
-                        Text(actionText, style = S16_W600)
+
+                    if (!(actionText == "продать" && !item.isSellable)){
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(
+                            onClick = { onActionClicked(item.itemId) },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = actionColor
+                            )
+                        ) {
+                            Text(actionText, style = S16_W600)
+                        }
                     }
                 }
             }
