@@ -26,27 +26,27 @@ fun LevelProgressItem(level: BattlePassLevelDto, currentLevel: Int) {
             .padding(vertical = 8.dp)
             .fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .width(40.dp)
-                .padding(vertical = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(if (currentLevel == level.level) DarkGreen else MaterialTheme.colorScheme.primary, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "${level.level}",
-                    color = if (currentLevel == level.level) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
+//        Box(
+//            modifier = Modifier
+//                .width(40.dp)
+//                .padding(vertical = 8.dp),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .size(24.dp)
+//                    .background(if (currentLevel == level.level) DarkGreen else MaterialTheme.colorScheme.primary, CircleShape),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    text = "${level.level}",
+//                    color = if (currentLevel == level.level) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary,
+//                    style = MaterialTheme.typography.bodyMedium
+//                )
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.width(16.dp))
 
         LevelCard(level, currentLevel)
     }

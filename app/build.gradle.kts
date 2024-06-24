@@ -110,6 +110,7 @@ dependencies {
     implementation(libs.lottie.compose)
 
     implementation(libs.compose.ratingbar)
+    implementation(libs.stagestepbar)
 
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)

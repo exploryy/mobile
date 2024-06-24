@@ -27,4 +27,4 @@ val Yellow = Color(0xFFFFC107)
 val Blue = Color(0xFF64B5F6)
 val Purple = Color(0xFFBA68C8)
 
-
+val BattlePass = Color(0xFFD2F0BB)
