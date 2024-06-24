@@ -30,7 +30,7 @@ class NoteRepository(
         requestBody.addFormDataPart("latitude", note.latitude)
         requestBody.addFormDataPart("longitude", note.longitude)
         Log.d("REPOSITORY", note.images.toString())
-        note.images.forEachIndexed { index, uri ->
+        note.images.forEachIndexed { _, uri ->
             val file = uri.createTempFile()
             val fileBody = file.asRequestBody("application/octet-stream".toMediaTypeOrNull())
             requestBody.addFormDataPart("images", file.name, fileBody)

@@ -34,12 +34,12 @@
             android:foregroundServiceType="location" />
 
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
+            android:name="com.example.explory.MainActivity"
             android:enabled="true"
-            android:theme="@style/Theme.Explory"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round">
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/Theme.Explory">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,13 +49,13 @@
 
 
         <activity-alias
-            android:name=".MainActivityAliasWorld"
+            android:name="com.example.explory.MainActivityAliasWorld"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_world"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_world_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity="com.example.explory.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -63,13 +63,13 @@
         </activity-alias>
 
         <activity-alias
-            android:name=".MainActivityAliasTikTok"
+            android:name="com.example.explory.MainActivityAliasTikTok"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_tiktok"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_tiktok_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity="com.example.explory.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -77,13 +77,13 @@
         </activity-alias>
 
         <activity-alias
-            android:name=".MainActivityAliasTsu"
+            android:name="com.example.explory.MainActivityAliasTsu"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_tsu"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_tsu_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity="com.example.explory.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

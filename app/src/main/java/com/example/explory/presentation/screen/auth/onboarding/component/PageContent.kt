@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -27,7 +28,11 @@ import com.example.explory.ui.theme.White
 
 @Composable
 fun PageContent(
-    modifier: Modifier = Modifier, title: String, description: String, @RawRes animation: Int
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String,
+    @RawRes animation: Int,
+    iconSize: Dp = 200.dp
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
     val progress by animateLottieCompositionAsState(
@@ -40,7 +45,7 @@ fun PageContent(
     ) {
         LottieAnimation(
             composition = composition,
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier.size(iconSize),
             progress = { progress },
         )
         Spacer(modifier = Modifier.height(8.dp))

@@ -130,23 +130,24 @@ fun ShopScreen(
 
     if (shopState.isDialogVisible) {
         shopState.selectedItem?.let { item ->
-            ItemFullInfoDialog(
-                onDismiss = { viewModel.dismissDialog() },
-                actionText = "купить",
-                onActionClicked = {
-                    viewModel.buyItem(item)
-                    viewModel.dismissDialog()
-                },
-                item = ItemFullInfo(
-                    itemId = item.itemId,
-                    name = item.name,
-                    description = item.description,
-                    rarity = item.rarityType,
-                    price = item.price,
-                    imageUrl = item.url
-                ),
-                actionColor = Green
-            )
+            if (!item.isOwned)
+                ItemFullInfoDialog(
+                    onDismiss = { viewModel.dismissDialog() },
+                    actionText = "купить",
+                    onActionClicked = {
+                        viewModel.buyItem(item)
+                        viewModel.dismissDialog()
+                    },
+                    item = ItemFullInfo(
+                        itemId = item.itemId,
+                        name = item.name,
+                        description = item.description,
+                        rarity = item.rarityType,
+                        price = item.price,
+                        imageUrl = item.url
+                    ),
+                    actionColor = Green
+                )
 //            BuyItemDialog(
 //                onDismiss = { viewModel.dismissDialog() },
 //                onBuyClick = {

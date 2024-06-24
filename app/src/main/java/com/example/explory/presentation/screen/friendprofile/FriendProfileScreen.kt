@@ -1,81 +1,117 @@
 package com.example.explory.presentation.screen.friendprofile
 
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
+import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
+import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
+import com.example.explory.data.model.statistic.UserStatisticDto
 import com.example.explory.presentation.screen.auth.onboarding.component.PageContent
 import com.example.explory.presentation.screen.map.component.Avatar
-import com.example.explory.presentation.screen.userstatistic.component.AnimatedCircularProgressIndicator
-import com.skydoves.flexible.bottomsheet.material3.FlexibleBottomSheet
-import com.skydoves.flexible.core.FlexibleSheetSize
-import com.skydoves.flexible.core.rememberFlexibleBottomSheetState
+import com.example.explory.presentation.screen.userstatistic.UserStatisticContent
+import com.example.explory.ui.theme.Black
+import com.example.explory.ui.theme.S14_W600
+import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendProfileScreen(
     viewModel: FriendProfileViewModel = koinViewModel(),
     friendId: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isModal: Boolean = false
 ) {
-    val sheetState = rememberFlexibleBottomSheetState(
-        flexibleSheetSize = FlexibleSheetSize(
-            fullyExpanded = 0.9f,
-            intermediatelyExpanded = 0.6f,
-            slightlyExpanded = 0.2f,
-        ),
-        isModal = false,
-        skipSlightlyExpanded = false,
-    )
-    val focusManager = LocalFocusManager.current
     val friendProfileDto by viewModel.friendProfile.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadFriendProfile(friendId)
     }
 
-    FlexibleBottomSheet(
-        onDismissRequest = { onBackClick() },
-        sheetState = sheetState
-    ) {
+    Log.d("FriendProfileScreen", "friendProfileDto: $friendProfileDto")
+    if (isModal) {
+        ModalBottomSheet(onDismissRequest = onBackClick) {
+            FriendProfileContent(
+                imageUrl = friendProfileDto?.profileDto?.avatarUrl ?: "",
+                borderUrl = friendProfileDto?.profileDto?.inventoryDto?.avatarFrames,
+                username = friendProfileDto?.profileDto?.username,
+                email = friendProfileDto?.profileDto?.email,
+                isPrivate = !viewModel.checkUserPrivacy(),
+                userStatisticDto = UserStatisticDto(
+                    level = friendProfileDto?.level ?: 0,
+                    experience = friendProfileDto?.experience ?: 0,
+                    totalExperienceInLevel = friendProfileDto?.totalExperienceInLevel ?: 0,
+                    distance = friendProfileDto?.distance ?: 0
+                ),
+                onBackClick = onBackClick
+            )
+        }
+    } else {
+        BottomSheetScaffold(sheetPeekHeight = 200.dp, sheetContent = {
+            FriendProfileContent(
+                imageUrl = friendProfileDto?.profileDto?.avatarUrl ?: "",
+                borderUrl = friendProfileDto?.profileDto?.inventoryDto?.avatarFrames,
+                username = friendProfileDto?.profileDto?.username,
+                email = friendProfileDto?.profileDto?.email,
+                isPrivate = !viewModel.checkUserPrivacy(),
+                userStatisticDto = UserStatisticDto(
+                    level = friendProfileDto?.level ?: 0,
+                    experience = friendProfileDto?.experience ?: 0,
+                    totalExperienceInLevel = friendProfileDto?.totalExperienceInLevel ?: 0,
+                    distance = friendProfileDto?.distance ?: 0
+                ),
+                onBackClick = onBackClick
+            )
+        }) {
+        }
+    }
+}
+
+@Composable
+fun FriendProfileContent(
+    imageUrl: String,
+    borderUrl: CosmeticItemInInventoryDto?,
+    username: String?,
+    email: String?,
+    isPrivate: Boolean,
+    userStatisticDto: UserStatisticDto,
+    onBackClick: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val imageUrl = friendProfileDto?.profileDto?.avatarUrl
-                val borderUrl = friendProfileDto?.profileDto?.inventoryDto?.avatarFrames
 
                 Avatar(
                     image = imageUrl,
@@ -86,124 +122,63 @@ fun FriendProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                friendProfileDto?.let {
+                username?.let {
                     Text(
-                        text = it.profileDto.username,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineSmall
+                        text = it,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = S16_W600
                     )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                friendProfileDto?.let {
+                email?.let {
                     Text(
-                        text = it.profileDto.email.toString(),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodyLarge,
+                        text = email.toString(),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = S14_W600
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (!viewModel.checkUserPrivacy()){
+                Spacer(modifier = Modifier.height(32.dp))
+                Log.d("FriendProfileContent", "isPrivate: $isPrivate")
+                if (isPrivate) {
+                    Spacer(modifier = Modifier.height(32.dp))
                     EmptyFriendStatistic()
                 } else {
-                    friendProfileDto?.let {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Card(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(end = 8.dp)
-                                    .heightIn(min = 180.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = "Уровень",
-                                        style = MaterialTheme.typography.headlineMedium,
-                                    )
-                                    Text(
-                                        text = it.level.toString(),
-                                        fontSize = 85.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                            Card(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(start = 8.dp)
-                                    .heightIn(min = 180.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = "Опыт",
-                                        style = MaterialTheme.typography.headlineMedium,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    it.experience?.let { it1 ->
-                                        it.totalExperienceInLevel?.let { it2 ->
-                                            AnimatedCircularProgressIndicator(
-                                                currentValue = it1,
-                                                maxValue = it2,
-                                                progressBackgroundColor = MaterialTheme.colorScheme.primary,
-                                                progressIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                                                completedColor = MaterialTheme.colorScheme.primary,
-                                                circularIndicatorDiameter = 110.dp
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "Дистанция",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    textAlign = TextAlign.Center
-                                )
-                                Text(
-                                    text = "${it.distance} m",
-                                    style = MaterialTheme.typography.displayMedium,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                    }
+                    UserStatisticContent(
+                        userStatisticDto = UserStatisticDto(
+                            level = userStatisticDto.level,
+                            experience = userStatisticDto.experience,
+                            totalExperienceInLevel = userStatisticDto.totalExperienceInLevel,
+                            distance = userStatisticDto.distance,
+                        )
+                    )
                 }
             }
+        }
+        IconButton(colors = IconButtonDefaults.iconButtonColors(
+            contentColor = Black, containerColor = White
+        ),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .clip(CircleShape)
+                .padding(end = 24.dp),
+
+            onClick = {
+                onBackClick()
+            }) {
+            Icon(
+                painter = painterResource(id = R.drawable.close),
+                contentDescription = null,
+                tint = Black,
+            )
         }
     }
 }
 
 @Composable
-fun EmptyFriendStatistic(){
+fun EmptyFriendStatistic() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -212,7 +187,8 @@ fun EmptyFriendStatistic(){
         PageContent(
             title = "Статистика скрыта",
             description = "Данный пользователь предпочел скрыть свою статистику",
-            animation = R.raw.lock
+            animation = R.raw.lock,
+            iconSize = 64.dp
         )
     }
 }

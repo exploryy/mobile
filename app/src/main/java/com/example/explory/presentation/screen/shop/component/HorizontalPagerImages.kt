@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
-import com.example.explory.ui.theme.P_S18_W500
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.S24_W600
 import kotlinx.coroutines.delay
@@ -100,12 +98,12 @@ fun Banner() {
                 text = "сезон начат",
                 style = S24_W600
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "explore the world",
-                style = P_S18_W500,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Text(
+//                text = "explore the world",
+//                style = P_S18_W500,
+//                color = MaterialTheme.colorScheme.onSurface
+//            )
         }
     }
 }

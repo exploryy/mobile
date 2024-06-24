@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
             var isDarkTheme by remember { mutableStateOf(initialIsDarkTheme) }
 
             DisposableEffect(Unit) {
-                prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+                prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                     when (key) {
                         ThemePreferenceManager.KEY_ICON_CURRENT -> {
                             icons = ThemePreferenceManager(this@MainActivity).getIconsPair()
@@ -90,21 +90,25 @@ fun Activity.changeEnabledComponent(
     enabled: String,
     disabled: String,
 ) {
-    packageManager.setComponentEnabledSetting(
-        ComponentName(
-            this,
-            enabled
-        ),
-        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-        PackageManager.DONT_KILL_APP
-    )
+    try {
+        packageManager.setComponentEnabledSetting(
+            ComponentName(
+                this,
+                enabled
+            ),
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
 
-    packageManager.setComponentEnabledSetting(
-        ComponentName(
-            this,
-            disabled
-        ),
-        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-        PackageManager.DONT_KILL_APP
-    )
+        packageManager.setComponentEnabledSetting(
+            ComponentName(
+                this,
+                disabled
+            ),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

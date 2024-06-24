@@ -107,8 +107,6 @@ dependencies {
 
     implementation(libs.androidx.foundation)
 
-    implementation(libs.flexible.bottomsheet.material3)
-
     implementation(libs.lottie.compose)
 
     implementation(libs.compose.ratingbar)

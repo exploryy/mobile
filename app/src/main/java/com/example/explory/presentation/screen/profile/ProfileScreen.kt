@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
     onLogout: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     // todo friend requests
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -158,7 +158,8 @@ fun ProfileScreen(
     if (profileState.showFriendProfileScreen && profileState.selectedFriendId != null) {
         FriendProfileScreen(
             friendId = profileState.selectedFriendId!!,
-            onBackClick = { viewModel.closeFriendProfileScreen() }
+            onBackClick = { viewModel.closeFriendProfileScreen() },
+            isModal = true
         )
     }
 }

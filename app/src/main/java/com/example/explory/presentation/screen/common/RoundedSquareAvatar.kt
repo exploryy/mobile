@@ -37,7 +37,7 @@ fun RoundedSquareAvatar(
             model = image,
             imageLoader = imageLoader,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(8.dp))
