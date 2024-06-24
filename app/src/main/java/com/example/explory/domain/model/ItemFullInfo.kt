@@ -9,4 +9,5 @@ data class ItemFullInfo(
     val description: String,
     val rarity: RarityType,
     val price: Int,
+    val isSellable: Boolean
 )
