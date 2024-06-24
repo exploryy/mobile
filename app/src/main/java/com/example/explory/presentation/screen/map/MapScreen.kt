@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.R
 import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.domain.model.MapNote
 import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
@@ -240,7 +241,7 @@ fun MapScreen(
                         contentPadding = PaddingValues(vertical = 120.dp, horizontal = 20.dp),
                     )
                 }, onMapLongClickListener = {
-                    viewModel.updateCreateNoteScreen()
+                    viewModel.updateCreateNoteScreen(it)
                     true
                 }, style = {
                     MapboxStandardStyle(
@@ -250,7 +251,6 @@ fun MapScreen(
                                 layerId = OPENED_WORLD_LAYER,
                                 fillColor = FillColor(Black),
                                 fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
-
                                     FillPattern(
                                         StyleImage(
                                             "fog", when (mapState.currentUserFog!!.itemId) {
@@ -275,8 +275,9 @@ fun MapScreen(
                             puckBearingEnabled = true
                             puckBearing = PuckBearing.HEADING
                             enabled = true
-                            pulsingEnabled = true
+                            pulsingEnabled = mapState.currentTrace != null
                             pulsingColor = AccentColor.toArgb()
+                            pulsingMaxRadius = 50f
                         }
                         mapViewportState.transitionToFollowPuckState(
                             defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()
@@ -378,10 +379,16 @@ fun MapScreen(
                         val point =
                             Point.fromLngLat(note.longitude.toDouble(), note.latitude.toDouble())
                         PointAnnotation(point = point,
-                            iconSize = 0.1,
+                            iconSize = 0.4,
                             iconEmissiveStrength = 0.5,
                             iconImageBitmap = noteBitmap,
                             onClick = {
+                                viewModel.updateNote(
+                                    MapNote(
+                                        isOpened = true,
+                                        note = null
+                                    )
+                                )
                                 viewModel.openNoteById(note.id)
                                 true
                             })
@@ -617,13 +624,15 @@ fun MapScreen(
                 )
             }
 
-            mapState.isNoteScreenOpen && mapState.note != null -> {
-                NoteSheet(note = mapState.note!!, onDismissRequest = { viewModel.closeNote() })
+            mapState.note?.isOpened == true -> {
+                NoteSheet(
+                    mapNote = mapState.note!!,
+                    onDismissRequest = { viewModel.updateNote(null) })
             }
 
-            mapState.isCreateNoteOpen -> {
+            mapState.createNotePoint != null -> {
                 CreateNoteScreen(onSave = { text, images -> viewModel.createNote(text, images) },
-                    onDismiss = { viewModel.updateCreateNoteScreen() })
+                    onDismiss = { viewModel.updateCreateNoteScreen(null) })
             }
 
             mapState.showSettingsScreen -> {

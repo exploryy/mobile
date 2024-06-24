@@ -22,8 +22,9 @@ import androidx.compose.ui.unit.dp
 fun PageIndicator(
     modifier: Modifier = Modifier,
     pagerState: PagerState
-){
+) {
     val pageCount = pagerState.pageCount
+    if (pageCount <= 1) return
     Row(
         modifier
             .height(24.dp)

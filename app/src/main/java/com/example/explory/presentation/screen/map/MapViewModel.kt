@@ -33,6 +33,7 @@ import com.example.explory.data.websocket.FriendsLocationWebSocketClient
 import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
 import com.example.explory.domain.model.FriendProfile
+import com.example.explory.domain.model.MapNote
 import com.example.explory.domain.usecase.AcceptFriendUseCase
 import com.example.explory.domain.usecase.CreateNoteUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
@@ -120,7 +121,12 @@ class MapViewModel(
     private suspend fun fetchProfile() {
         try {
             val profile = getProfileUseCase.execute()
-            _mapState.update { it.copy(currentUserFog = profile.inventoryDto.fog) }
+            _mapState.update {
+                it.copy(
+                    currentUserFog = profile.inventoryDto.fog,
+                    currentTrace = profile.inventoryDto.footprint
+                )
+            }
         } catch (e: Exception) {
             _mapState.update { it.copy(currentUserFog = null) }
         }
@@ -656,7 +662,7 @@ class MapViewModel(
     fun updateInventoryOpenScreen() {
         // todo event on this update
         viewModelScope.launch {
-//            fetchProfile()
+            fetchProfile()
             _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
         }
     }
@@ -668,23 +674,22 @@ class MapViewModel(
     fun createNote(text: String, list: List<Uri>) {
         val node = NoteMultipart(
             text = text,
-            latitude = _mapState.value.userPoint?.latitude().toString(),
-            longitude = _mapState.value.userPoint?.longitude().toString(),
+            latitude = _mapState.value.createNotePoint?.latitude().toString(),
+            longitude = _mapState.value.createNotePoint?.longitude().toString(),
             images = list
         )
         viewModelScope.launch {
             try {
                 createNoteUseCase.execute(node)
                 fetchAllNotes()
-                updateCreateNoteScreen()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    fun updateCreateNoteScreen() {
-        _mapState.update { it.copy(isCreateNoteOpen = !it.isCreateNoteOpen) }
+    fun updateCreateNoteScreen(point: Point?) {
+        _mapState.update { it.copy(createNotePoint = point) }
     }
 
     private fun fetchAllNotes() {
@@ -692,9 +697,7 @@ class MapViewModel(
             try {
                 val notes = getAllNotesUseCase.execute()
                 _mapState.update {
-                    it.copy(
-                        noteList = notes
-                    )
+                    it.copy(noteList = notes)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -707,10 +710,7 @@ class MapViewModel(
             try {
                 val note = getNoteUseCase.execute(noteId)
                 _mapState.update {
-                    it.copy(
-                        isNoteScreenOpen = true,
-                        note = note
-                    )
+                    it.copy(note = it.note?.copy(note = note))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -718,12 +718,8 @@ class MapViewModel(
         }
     }
 
-    fun closeNote() {
-        _mapState.update {
-            it.copy(
-                isNoteScreenOpen = false
-            )
-        }
+    fun updateNote(note: MapNote?) {
+        _mapState.update { it.copy(note = note) }
     }
 
     fun updateLeaderboardOpen() {
@@ -765,7 +761,8 @@ class MapViewModel(
         viewModelScope.launch {
             try {
                 statisticRepository.setPrivacy(isPublic)
-                getPrivacy()
+                _mapState.update { it.copy(isPublicPrivacy = isPublic) }
+//                getPrivacy()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
