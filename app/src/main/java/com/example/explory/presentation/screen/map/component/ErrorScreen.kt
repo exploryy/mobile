@@ -54,7 +54,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String, onReconnectClick
         Text(text = "Произошла ошибка", style = S20_W600, color = White)
         Spacer(modifier = Modifier.size(16.dp))
         Text(text = message, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = onReconnectClicked,
             shape = RoundedCornerShape(8.dp),
@@ -68,6 +68,7 @@ fun ErrorScreen(modifier: Modifier = Modifier, message: String, onReconnectClick
         ) {
             Text(text = "Переподключиться", style = S16_W600)
         }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 

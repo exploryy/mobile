@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +34,6 @@ import com.example.explory.ui.theme.ExploryTheme
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S20_W600
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompleteQuestContent(
     event: EventDto,
@@ -99,7 +97,7 @@ fun CompleteQuestContent(
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(
-                contentColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {

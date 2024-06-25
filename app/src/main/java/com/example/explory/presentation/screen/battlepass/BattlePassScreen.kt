@@ -38,7 +38,6 @@ fun BattlePassScreen(
 
     LaunchedEffect(Unit) {
         battlePassViewModel.loadBattlePass()
-        battlePassViewModel.loadStatistic()
     }
 
     ModalBottomSheet(
@@ -73,7 +72,7 @@ fun BattlePassScreen(
             BattlePassContent(
                 items = battlePassState.battlePass?.levels ?: emptyList(),
                 currentLevel = battlePassState.battlePass?.currentLevel ?: 0,
-                currentExp = battlePassState.userStatisticDto?.experience ?: 0
+                currentExp = battlePassState.battlePass?.currentExperience ?: 0
             )
         }
     }

@@ -159,7 +159,7 @@ class MapViewModel(
         }
     }
 
-    fun startQuest(questId: String) {
+    fun startQuest(questId: String, transportType: TransportType) {
         viewModelScope.launch {
             try {
                 Log.d("MapViewModel", "Quest id $questId")
@@ -175,7 +175,7 @@ class MapViewModel(
                     _mapState.update { it.copy(infoText = "Вы слишком далеко от квеста") }
                     return@launch
                 }
-                questRepository.startQuest(questId, TransportType.CAR)
+                questRepository.startQuest(questId, transportType)
                 _mapState.update { it ->
                     it.copy(infoText = "Квест начат",
                         activeQuest = quest,

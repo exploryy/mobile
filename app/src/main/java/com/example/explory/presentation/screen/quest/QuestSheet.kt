@@ -1,9 +1,8 @@
 package com.example.explory.presentation.screen.quest
 
 import android.util.Log
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +25,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.MusicNote
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,37 +38,41 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
 import com.example.explory.data.model.quest.FullReviewsDto
 import com.example.explory.data.model.quest.PointDto
+import com.example.explory.data.model.quest.TransportType
 import com.example.explory.presentation.screen.auth.onboarding.component.PageIndicator
+import com.example.explory.presentation.screen.shop.component.DotIndicator
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.Gray
 import com.example.explory.ui.theme.Green
+import com.example.explory.ui.theme.S10_W600
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S20_W600
+import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.White
 import kotlin.math.absoluteValue
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -83,14 +82,12 @@ fun QuestSheet(
     point: PointDto,
     description: String,
     difficulty: String,
-    transportType: String,
     distance: Double,
-    onButtonClicked: () -> Unit,
+    onButtonClicked: (TransportType) -> Unit,
     onDismissRequest: () -> Unit,
     reviews: FullReviewsDto,
     questStatus: String? = null
 ) {
-    // todo выбор транспорта
     val isSelectTransportDialogOpen = remember { mutableStateOf(false) }
     val state = rememberBottomSheetScaffoldState()
     val pagerState = rememberPagerState(pageCount = { images.size })
@@ -141,7 +138,7 @@ fun QuestSheet(
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        InfoBox(text = "${point.latitude}, ${point.longitude}")
+                        InfoBox(text = "${point.latitude}, ${point.longitude}", isCopyingEnabled = true)
                         if (questStatus != null) {
                             InfoBox(text = questStatus, containerColor = Green)
                         }
@@ -156,9 +153,9 @@ fun QuestSheet(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        InfoBox(
-                            text = transportType
-                        )
+//                        InfoBox(
+//                            text = transportType
+//                        )
                         InfoBox(text = "${distance.toInt()} метров")
                         InfoBox(text = difficulty)
                         InfoBox(text = "одиночный")
@@ -174,7 +171,7 @@ fun QuestSheet(
                             if (questStatus == null) {
                                 isSelectTransportDialogOpen.value = true
                             } else {
-                                onButtonClicked()
+                                onButtonClicked(TransportType.WALK)
                             }
                         },
                         modifier = Modifier
@@ -251,7 +248,27 @@ fun QuestSheet(
 }
 
 @Composable
-fun SelectTransportDialog(onDismissRequest: () -> Unit, onStartQuest: () -> Unit) {
+fun SelectTransportDialog(onDismissRequest: () -> Unit, onStartQuest: (TransportType) -> Unit) {
+    val transports = listOf(
+        SelectTransport(
+            "пешком",
+            "выполнение задания пешком или лёгким бегом",
+            R.raw.walk,
+            TransportType.WALK
+        ),
+        SelectTransport(
+            "на велосипеде",
+            "выполнение задания на велосипеде, роликах, самокате и так далее",
+            R.raw.bike,
+            TransportType.BICYCLE
+        ),
+        SelectTransport(
+            "на машине",
+            "выполнение задания на машине, мотоцикле, поезде и так далее",
+            R.raw.car,
+            TransportType.CAR
+        ),
+    )
     Dialog(
         onDismissRequest = { },
         properties = DialogProperties(
@@ -262,7 +279,6 @@ fun SelectTransportDialog(onDismissRequest: () -> Unit, onStartQuest: () -> Unit
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.onBackground)
         ) {
             val pagerState = rememberPagerState(pageCount = { 3 })
             HorizontalPager(
@@ -275,13 +291,34 @@ fun SelectTransportDialog(onDismissRequest: () -> Unit, onStartQuest: () -> Unit
                     TransportInformationCard(
                         modifier = Modifier
                             .padding(32.dp)
-                            .align(Alignment.Center),
+                            .align(Alignment.Center)
+                            .clickable {
+                                onStartQuest(transports[page].transportType)
+                                onDismissRequest()
+                            },
                         pagerState = pagerState,
-                        page = page
+                        page = page,
+                        transport = transports[page],
                     )
                 }
-
             }
+
+            Text(
+                text = "выберите транспорт",
+                style = S24_W600,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 64.dp),
+            )
+
+            DotIndicator(
+                state = pagerState,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 64.dp)
+            )
+
+
         }
     }
 }
@@ -290,25 +327,31 @@ fun SelectTransportDialog(onDismissRequest: () -> Unit, onStartQuest: () -> Unit
 fun TransportInformationCard(
     pagerState: PagerState,
     page: Int,
+    transport: SelectTransport,
     modifier: Modifier = Modifier
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(transport.animation))
+    val progress by animateLottieCompositionAsState(
+        composition, iterations = LottieConstants.IterateForever
+    )
     Card(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .padding(16.dp)
             .shadow(16.dp, ambientColor = MaterialTheme.colorScheme.onBackground),
         shape = RoundedCornerShape(32.dp),
         colors = elevatedCardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
-        Column(modifier = Modifier) {
+        Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
             val pageOffset = pagerState.getOffsetDistanceInPages(page).absoluteValue
             Log.d("dribble", "Page: $page pageOffset $pageOffset")
-            Image(
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
                 modifier = Modifier
-                    .padding(32.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                    .size(200.dp)
                     .aspectRatio(1f)
-                    .background(Color.LightGray)
                     .graphicsLayer {
                         // get a scale value between 1 and 1.75f, 1.75 will be when its resting,
                         // 1f is the smallest it'll be when not the focused page
@@ -317,121 +360,47 @@ fun TransportInformationCard(
                         scaleX *= scale
                         scaleY *= scale
                     },
-                painter = rememberAsyncImagePainter(
-                    model = "https://i.imgur.com/YsPlS5K.jpeg",
-                ),
-                contentScale = ContentScale.Crop,
-                contentDescription = null
             )
-            SongDetails()
-            DragToListen(pageOffset)
+            TransportDetails(transport = transport)
         }
     }
 }
 
 @Composable
-private fun DragToListen(pageOffset: Float) {
-    Box(
+private fun TransportDetails(transport: SelectTransport) {
+    Text(
+        transport.title,
+        style = S20_W600,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+    Spacer(modifier = Modifier.padding(16.dp))
+    Text(
+        transport.description,
+        style = S16_W400,
         modifier = Modifier
-            .height(150.dp * (1 - pageOffset))
             .fillMaxWidth()
-            .graphicsLayer {
-                alpha = 1 - pageOffset
-            }
-    ) {
-        Column(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                Icons.Rounded.MusicNote, contentDescription = "",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(36.dp)
-            )
-            Text("DRAG TO LISTEN")
-            Spacer(modifier = Modifier.size(4.dp))
-            DragArea()
-        }
-    }
-}
-
-@Composable
-private fun DragArea() {
-    Box {
-        Canvas(
-            modifier = Modifier
-                .padding(0.dp)
-                .fillMaxWidth()
-                .height(60.dp)
-                .clip(RoundedCornerShape(bottomEnd = 32.dp, bottomStart = 32.dp))
-        ) {
-            val sizeGap = 16.dp.toPx()
-            val numberDotsHorizontal = size.width / sizeGap + 1
-            val numberDotsVertical = size.height / sizeGap + 1
-            repeat(numberDotsHorizontal.roundToInt()) { horizontal ->
-                repeat(numberDotsVertical.roundToInt()) { vertical ->
-                    drawCircle(
-                        Color.LightGray.copy(alpha = 0.5f), radius = 2.dp.toPx
-                            (), center =
-                        Offset(horizontal * sizeGap + sizeGap, vertical * sizeGap + sizeGap)
-                    )
-                }
-            }
-        }
-        Icon(
-            Icons.Rounded.ExpandMore, "down",
-            modifier = Modifier
-                .size(height = 24.dp, width = 48.dp)
-                .align(Alignment.Center)
-                .background(Color.White)
-        )
-    }
-}
-
-@Composable
-private fun SongDetails() {
-    Spacer(modifier = Modifier.padding(8.dp))
-    Text(
-        "Artist",
-        fontSize = 16.sp,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
+            .padding(horizontal = 16.dp),
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onSurface
     )
-    Spacer(modifier = Modifier.padding(4.dp))
+    Spacer(modifier = Modifier.padding(16.dp))
     Text(
-        "A Song Title",
-        fontSize = 24.sp,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
-    Spacer(modifier = Modifier.padding(8.dp))
-    StarRating(3)
-}
-
-@Composable
-fun StarRating(stars: Int, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
+        text = "если система обнаружит, что вы двигаетесь не так, как указано, квест будет отменён",
+        style = S10_W600,
+        color = MaterialTheme.colorScheme.onError,
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        val yellowColor = Color(0xFFFF9800)
-        for (i in 0 until stars) {
-            Icon(
-                Icons.Rounded.Star,
-                contentDescription = "Star",
-                tint = yellowColor,
-                modifier = Modifier.size(36.dp)
-            )
-        }
-        for (i in 0 until (5 - stars)) {
-            Icon(
-                Icons.Rounded.Star, contentDescription = "Star empty",
-                modifier = Modifier.size(36.dp),
-                tint = yellowColor.copy(alpha = 0.25f)
-            )
-        }
-    }
+            .padding(horizontal = 16.dp),
+        textAlign = TextAlign.Center,
+    )
+    Spacer(modifier = Modifier.padding(16.dp))
 }
+
+data class SelectTransport(
+    val title: String,
+    val description: String,
+    val animation: Int,
+    val transportType: TransportType
+)

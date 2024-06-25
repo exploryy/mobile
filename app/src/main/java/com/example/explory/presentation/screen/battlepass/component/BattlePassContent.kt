@@ -28,7 +28,7 @@ fun BattlePassContent(items: List<BattlePassLevelDto>, currentLevel: Int, curren
                 items[index],
                 currentLevel,
                 currentExp,
-                if (index == items.size - 1) -1 else items[index + 1].experienceNeeded
+                if (index == 0) 0 else items[index - 1].experienceNeeded
             )
             HorizontalDivider(
                 modifier = Modifier.clip(RoundedCornerShape(8.dp)),

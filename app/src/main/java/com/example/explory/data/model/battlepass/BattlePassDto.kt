@@ -7,5 +7,6 @@ data class BattlePassDto(
     val startDate: String,
     val endDate: String,
     val currentLevel: Int,
+    val currentExperience: Int,
     val levels: List<BattlePassLevelDto>
 )

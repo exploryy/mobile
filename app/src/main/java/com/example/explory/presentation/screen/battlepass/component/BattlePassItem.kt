@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.battlepass.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +27,7 @@ fun BattlePassItem(
     quest: BattlePassLevelDto,
     currentLevel: Int,
     currentExp: Int,
-    nextLevelExp: Int
+    prevLevelExp: Int
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -53,17 +54,21 @@ fun BattlePassItem(
         }
         Spacer(modifier = Modifier.weight(1f))
         val progress = when {
-            nextLevelExp == -1 -> if (quest.level == currentLevel) 100f else 0f
+//            nextLevelExp == -1 -> if (quest.level == currentLevel) 100f else 0f
             quest.experienceNeeded <= currentExp -> 100f
-            quest.level + 1 == currentLevel -> {
+            quest.level - 1 == currentLevel -> {
                 min(
-                    ((quest.experienceNeeded - currentExp) / (nextLevelExp - quest.experienceNeeded)).toFloat(),
-                    100f
+                    (currentExp.toFloat() / (quest.experienceNeeded - prevLevelExp).toFloat()),
+                    1f
                 )
             }
 
             else -> 0f
         }
+        Log.d(
+            "BattlePassItem",
+            "level ${quest.level} progress $progress this level exp ${quest.experienceNeeded} current exp $currentExp next level exp $prevLevelExp"
+        )
         CustomBar(
             progress = progress,
             backgroundColor = MaterialTheme.colorScheme.secondary

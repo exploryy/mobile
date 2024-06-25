@@ -5,3 +5,4 @@ data class BuffDto(
     val title: String,
     val animation: Int
 )
+// todo бафф может быть пустым. ... . . . . .

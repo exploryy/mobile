@@ -17,11 +17,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -372,9 +373,9 @@ fun MapScreen(
                                 viewModel.onFriendMarkerClicked(userId)
                                 true
                             },
-                            textField = friendName,
-                            textOffset = listOf(0.0, 2.0),
-                            textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
+//                            textField = friendName,
+//                            textOffset = listOf(0.0, 2.0),
+//                            textColorInt = MaterialTheme.colorScheme.onSurface.toArgb()
                         )
                     }
 
@@ -508,7 +509,9 @@ fun MapScreen(
                         )
                         AnimatedButton(
                             onClick = { viewModel.updateBattlePassOpenScreen() },
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
                         )
                     }
                 }
@@ -581,13 +584,15 @@ fun MapScreen(
                     point = mapState.p2pQuest!!.route.points.first(),
                     description = mapState.p2pQuest!!.commonQuestDto.description,
                     difficulty = viewModel.getCorrectDifficulty(mapState.p2pQuest!!.commonQuestDto.difficultyType),
-                    transportType = viewModel.getCorrectTransportType(mapState.p2pQuest!!.commonQuestDto.transportType),
                     distance = mapState.p2pQuest!!.route.distance,
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
                         } else {
-                            viewModel.startQuest(mapState.p2pQuest!!.commonQuestDto.questId.toString())
+                            viewModel.startQuest(
+                                mapState.p2pQuest!!.commonQuestDto.questId.toString(),
+                                it
+                            )
                         }
                         viewModel.updateDistanceQuest(null)
 
@@ -608,13 +613,15 @@ fun MapScreen(
                     ),
                     description = mapState.distanceQuest!!.commonQuestDto.description,
                     difficulty = viewModel.getCorrectDifficulty(mapState.distanceQuest!!.commonQuestDto.difficultyType),
-                    transportType = viewModel.getCorrectTransportType(mapState.distanceQuest!!.commonQuestDto.transportType),
                     distance = mapState.distanceQuest!!.distance,
                     onButtonClicked = {
                         if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) {
                             viewModel.cancelQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
                         } else {
-                            viewModel.startQuest(mapState.distanceQuest!!.commonQuestDto.questId.toString())
+                            viewModel.startQuest(
+                                mapState.distanceQuest!!.commonQuestDto.questId.toString(),
+                                it
+                            )
                         }
                         viewModel.updateP2PQuest(null)
 

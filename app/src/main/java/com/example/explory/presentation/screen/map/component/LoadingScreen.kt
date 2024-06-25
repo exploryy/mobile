@@ -32,13 +32,6 @@ fun LoadingScreen() {
     val progress by animateLottieCompositionAsState(
         composition, iterations = LottieConstants.IterateForever
     )
-//    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//        LottieAnimation(
-//            composition = composition,
-//            modifier = Modifier.size(200.dp),
-//            progress = { progress },
-//        )
-//    }
 
     Box(
         modifier = Modifier

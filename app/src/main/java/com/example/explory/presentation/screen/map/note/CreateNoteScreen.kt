@@ -144,7 +144,7 @@ fun CreateNoteScreen(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(
-                        enabled = text.value.isNotEmpty() && imageUris.value.isNotEmpty(),
+                        enabled = text.value.isNotEmpty(),
                         onClick = {
                             onSave(
                                 text.value,
