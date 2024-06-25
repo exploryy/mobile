@@ -79,6 +79,7 @@ class LocationWebSocketClient(
     private fun createWebSocketListener(client: OkHttpClient) = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             Log.d("Connected", "WebSocket connected")
+            _isConnected.tryEmit(true)
             reconnectAttempts = 0
         }
 
