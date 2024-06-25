@@ -32,7 +32,7 @@ fun AppNavigation() {
             })
         }
         composable(Screen.Welcome.route) {
-            OnBoardingScreen(animatedVisibilityScope = this, onClickNavigation = {
+            OnBoardingScreen(onClickNavigation = {
                 navController.navigate(Screen.Login.route)
             })
         }
@@ -46,7 +46,7 @@ fun AppNavigation() {
             })
         }
         composable(Screen.Login.route) {
-            LoginScreen(animatedVisibilityScope = this, onBackClick = {
+            LoginScreen(onBackClick = {
                 navController.popBackStack()
             }, onRegistrationClick = {
                 navController.navigate(Screen.Registration.route) {
@@ -61,7 +61,7 @@ fun AppNavigation() {
             })
         }
         composable(Screen.Registration.route) {
-            RegistrationScreen(animatedVisibilityScope = this, onBackClick = {
+            RegistrationScreen(onBackClick = {
                 navController.popBackStack()
             }, onSuccessNavigation = {
                 navController.navigate(Screen.Map.route) {
@@ -69,12 +69,11 @@ fun AppNavigation() {
                         inclusive = true
                     }
                 }
-            },
-                onLoginClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Welcome.route)
-                    }
+            }, onLoginClick = {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(Screen.Welcome.route)
                 }
+            }
             )
         }
     }

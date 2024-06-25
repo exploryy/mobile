@@ -96,9 +96,33 @@ dependencies {
     implementation(libs.squareup.retrofit)
     implementation(libs.converter.gson)
 
-    implementation(libs.mapbox.android)
+    implementation(libs.mapbox.android) {
+        exclude(
+            group = "com.mapbox.plugin",
+            module = "attribution"
+        )
+        exclude(
+            group = "com.mapbox.plugin",
+            module = "scalebar"
+        )
+        exclude(
+            group = "com.mapbox.plugin",
+            module = "logo"
+        )
+        exclude(
+            group = "com.mapbox.extension",
+            module = "androidauto"
+        )
+        exclude(
+            group = "com.mapbox.extension",
+            module = "localization"
+        )
+        exclude(
+            group = "com.mapbox.extension",
+            module = "compose"
+        )
+    }
     implementation(libs.maps.compose)
-    implementation(libs.mapbox.sdk.turf)
     implementation(libs.material.icons)
     implementation(libs.androidx.compose.animation)
     implementation(libs.kotlinx.serialization.json)
@@ -110,7 +134,6 @@ dependencies {
     implementation(libs.lottie.compose)
 
     implementation(libs.compose.ratingbar)
-    implementation(libs.stagestepbar)
 
     implementation(libs.androidx.activity)
     implementation(libs.jetbrains.kotlinx.serialization.json)

@@ -28,9 +28,7 @@ class LoginViewModel(
         when (intent) {
             is LoginIntent.Login -> {
                 processIntent(LoginIntent.UpdateErrorText(null))
-                performLogin(_state.value.login, _state.value.password) {
-                    clearData()
-                }
+                performLogin(_state.value.login, _state.value.password)
             }
 
             LoginIntent.GoBack -> {
@@ -85,7 +83,7 @@ class LoginViewModel(
     }
 
 
-    private fun performLogin(username: String, password: String, routeAfterLogin: () -> Unit) {
+    private fun performLogin(username: String, password: String) {
         val request = AuthRequest(username, password)
         processIntent(LoginIntent.UpdateLoading)
         viewModelScope.launch(Dispatchers.IO) {

@@ -46,9 +46,7 @@ fun CosmeticCard(
     modifier: Modifier = Modifier
 ) {
     Box(
-//        modifier = if (!cosmeticItem.isOwned) {
         modifier
-            .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
             .border(
                 4.dp,
@@ -56,7 +54,8 @@ fun CosmeticCard(
                 shape = RoundedCornerShape(8.dp)
             )
             .height(225.dp)
-            .let { it.clickable { onClick(cosmeticItem) } },
+            .let { it.clickable { onClick(cosmeticItem) } }
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(

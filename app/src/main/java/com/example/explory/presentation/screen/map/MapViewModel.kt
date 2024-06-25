@@ -292,12 +292,12 @@ class MapViewModel(
                 getTheme()
                 fetchAllNotes()
                 getPrivacy()
+//                updateUiState(UiState.Default)
             } catch (e: Exception) {
                 updateUiState(UiState.Error("Нет подключения к серверу"))
                 Log.e("MapViewModel", "Error getting start data", e)
             } finally {
                 Log.d("MapViewModel", "Data loaded")
-                updateUiState(UiState.Default)
             }
         }
     }
@@ -692,16 +692,14 @@ class MapViewModel(
         _mapState.update { it.copy(createNotePoint = point) }
     }
 
-    private fun fetchAllNotes() {
-        viewModelScope.launch {
-            try {
-                val notes = getAllNotesUseCase.execute()
-                _mapState.update {
-                    it.copy(noteList = notes)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private suspend fun fetchAllNotes() {
+        try {
+            val notes = getAllNotesUseCase.execute()
+            _mapState.update {
+                it.copy(noteList = notes)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -746,15 +744,9 @@ class MapViewModel(
         }
     }
 
-    private fun getPrivacy() {
-        viewModelScope.launch {
-            try {
-                val privacy = statisticRepository.getPrivacy()
-                _mapState.update { it.copy(isPublicPrivacy = privacy.isPublic) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    private suspend fun getPrivacy() {
+        val privacy = statisticRepository.getPrivacy()
+        _mapState.update { it.copy(isPublicPrivacy = privacy.isPublic) }
     }
 
     fun setPrivacy(isPublic: Boolean) {

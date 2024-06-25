@@ -27,7 +27,7 @@ import com.example.explory.ui.theme.P_S18_W500
 import com.example.explory.ui.theme.White
 
 @Composable
-fun LoadingScreen(modifier: Modifier = Modifier) {
+fun LoadingScreen() {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.compass))
     val progress by animateLottieCompositionAsState(
         composition, iterations = LottieConstants.IterateForever

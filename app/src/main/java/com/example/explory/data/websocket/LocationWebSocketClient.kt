@@ -123,7 +123,7 @@ class LocationWebSocketClient(
                     connect()
                 }
             } else {
-                _isConnected.tryEmit(true)
+//                _isConnected.tryEmit(true)
                 Log.d("Reconnecting failed", "Max reconnect attempts reached")
                 close()
             }

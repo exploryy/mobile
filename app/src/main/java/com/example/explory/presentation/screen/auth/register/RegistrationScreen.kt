@@ -1,6 +1,5 @@
 package com.example.explory.presentation.screen.auth.register
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -15,12 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -31,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -47,6 +46,7 @@ import com.example.explory.presentation.screen.auth.component.PasswordTextField
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
+import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.Value
 import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
@@ -55,7 +55,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = koinViewModel(),
-    animatedVisibilityScope: AnimatedVisibilityScope,
     onBackClick: () -> Unit,
     onSuccessNavigation: () -> Unit,
     onLoginClick: () -> Unit
@@ -90,13 +89,20 @@ fun RegistrationScreen(
                 .fillMaxSize()
         )
 
-        TopAppBar(title = { Text(text = "") }, navigationIcon = {
-            IconButton(onClick = {
-                onBackClick()
-            }) {
-                Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Back")
-            }
-        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent))
+        TopAppBar(
+            title = { Text(text = "") },
+            navigationIcon = {
+                IconButton(onClick = {
+                    onBackClick()
+                }) {
+                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = "Back")
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Transparent,
+                navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+            )
+        )
 
         Column(
             modifier = Modifier
@@ -108,19 +114,13 @@ fun RegistrationScreen(
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-//                    .sharedElement(state = rememberSharedContentState(key = "column"),
-//                        animatedVisibilityScope = animatedVisibilityScope,
-//                        boundsTransform = { _, _ ->
-//                            tween(durationMillis = 500)
-//                        })
-                , verticalArrangement = Arrangement.Bottom
+                    .fillMaxSize(), verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                        .background(Color.Black)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(16.dp)
                 ) {
                     Column(
@@ -158,9 +158,7 @@ fun RegistrationScreen(
                             isError = state.error != null,
                             onValueChange = {
                                 viewModel.processIntent(
-                                    RegistrationIntent.UpdateName(
-                                        it
-                                    )
+                                    RegistrationIntent.UpdateName(it)
                                 )
                             },
                             modifier = Modifier
@@ -171,9 +169,7 @@ fun RegistrationScreen(
                             value = state.password,
                             onValueChange = {
                                 viewModel.processIntent(
-                                    RegistrationIntent.UpdatePassword(
-                                        it
-                                    )
+                                    RegistrationIntent.UpdatePassword(it)
                                 )
                             },
                             errorText = state.error,
@@ -201,7 +197,14 @@ fun RegistrationScreen(
                                 .height(56.dp),
                             enabled = !state.isLoading && viewModel.isContinueButtonAvailable(),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.White
+                                containerColor = MaterialTheme.colorScheme.onBackground,
+                                contentColor = MaterialTheme.colorScheme.surface,
+                                disabledContentColor = MaterialTheme.colorScheme.surface.copy(
+                                    alpha = 0.5f
+                                ),
+                                disabledContainerColor = MaterialTheme.colorScheme.onBackground.copy(
+                                    alpha = 0.5f
+                                )
                             )
                         ) {
                             Text(

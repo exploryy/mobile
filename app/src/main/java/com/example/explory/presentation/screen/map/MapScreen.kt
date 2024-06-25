@@ -137,12 +137,6 @@ fun MapScreen(
 
 
     val context = LocalContext.current
-    val mapViewportState = rememberMapViewportState {
-        setCameraOptions {
-            zoom(ZOOM)
-            pitch(PITCH)
-        }
-    }
 
 
     val withHolesSourceState = remember { GeoJsonSourceState() }
@@ -233,6 +227,12 @@ fun MapScreen(
 
         when (mapState.uiState) {
             is UiState.Default -> {
+                val mapViewportState = rememberMapViewportState {
+                    setCameraOptions {
+                        zoom(ZOOM)
+                        pitch(PITCH)
+                    }
+                }
                 MapboxMap(Modifier.fillMaxSize(), onMapClickListener = {
                     viewModel.updateShowViewAnnotationIndex(null)
                     true
@@ -271,16 +271,20 @@ fun MapScreen(
                 ) {
                     MapEffect(Unit) { mapView ->
                         mapView.location.updateSettings {
+                            enabled = false
+                        }
+                        mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
                             puckBearingEnabled = true
                             puckBearing = PuckBearing.HEADING
                             enabled = true
-                            pulsingEnabled = mapState.currentTrace != null
-                            pulsingColor = AccentColor.toArgb()
-                            pulsingMaxRadius = 50f
+//                            pulsingEnabled = mapState.currentTrace != null
+//                            pulsingColor = AccentColor.toArgb()
+//                            pulsingMaxRadius = 50f
                         }
                         mapViewportState.transitionToFollowPuckState(
-                            defaultTransitionOptions = DefaultViewportTransitionOptions.Builder()
+                            defaultTransitionOptions =
+                            DefaultViewportTransitionOptions.Builder()
                                 .maxDurationMs(0).build()
                         )
                     }
@@ -547,7 +551,6 @@ fun MapScreen(
             }
 
             UiState.Loading, UiState.PermissionGranted -> {
-                mapViewportState.idle()
                 LoadingScreen()
             }
 
@@ -561,7 +564,6 @@ fun MapScreen(
                     )
                 )
             })
-
         }
         Log.d("MapScreen", "p2p quest state is ${mapState.p2pQuest}")
         when {

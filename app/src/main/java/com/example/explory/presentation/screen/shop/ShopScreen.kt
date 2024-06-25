@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +35,6 @@ import com.example.explory.presentation.screen.inventory.component.ItemFullInfoD
 import com.example.explory.presentation.screen.map.component.BarItem
 import com.example.explory.presentation.screen.shop.component.CategorySelectionRow
 import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
-import com.example.explory.presentation.screen.shop.component.HorizontalPagerImages
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.S18_W600
 import com.example.explory.ui.theme.S24_W600
@@ -105,16 +103,6 @@ fun ShopScreen(
                 )
             }
 
-
-            HorizontalPagerImages()
-
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Text(
-//                text = "товары",
-//                color = MaterialTheme.colorScheme.onBackground,
-//                style = S20_W600,
-//                modifier = Modifier.padding(horizontal = 16.dp)
-//            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

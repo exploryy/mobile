@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.spanStyleAccent
@@ -32,18 +34,22 @@ fun AdviceText(
                 append("$baseText ")
             }
 
-            withStyle(style = spanStyleAccent) {
-                append(clickableText)
-            }
+
+            withLink(
+                link = LinkAnnotation.Clickable(
+                    tag = "clickable",
+                    linkInteractionListener = {
+                        onClick()
+                    }
+                ),
+                block = {
+                    withStyle(style = spanStyleAccent) {
+                        append(clickableText)
+                    }
+                }
+            )
         }
 
-        ClickableText(
-            onClick = { offset ->
-                if (offset >= 16) {
-                    onClick()
-                }
-            },
-            text = highlightedText
-        )
+        Text(text = highlightedText)
     }
 }

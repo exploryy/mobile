@@ -1,6 +1,5 @@
 package com.example.explory.presentation.screen.auth.onboarding
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -43,7 +42,7 @@ import com.example.explory.ui.theme.Value
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnBoardingScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope, onClickNavigation: () -> Unit
+    onClickNavigation: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val spacerHeight = 300.dp
@@ -80,13 +79,7 @@ fun OnBoardingScreen(
             )
 
             Column(modifier = Modifier
-                .fillMaxSize()
-//                .sharedElement(state = rememberSharedContentState(key = "column"),
-//                    animatedVisibilityScope = animatedVisibilityScope,
-//                    boundsTransform = { _, _ ->
-//                        tween(durationMillis = 500)
-//                    })
-                ,
+                .fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
