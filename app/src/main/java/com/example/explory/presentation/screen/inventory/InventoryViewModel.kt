@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
+import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.domain.usecase.EquipItemUseCase
 import com.example.explory.domain.usecase.GetInventoryUseCase
@@ -44,14 +45,17 @@ class InventoryViewModel(
         }
     }
 
-    fun equipItem(itemId: Long) {
+    fun equipItem(item: CosmeticItemInInventoryDto) {
         viewModelScope.launch {
             _inventoryState.update { it.copy(isLoading = true) }
             try {
-                equipItemUseCase.execute(itemId)
+                equipItemUseCase.execute(item.itemId)
                 fetchInventory()
                 closeItemDialog()
                 Toast.makeText(context, "Предмет экипирован", Toast.LENGTH_SHORT).show()
+                if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
+                    changeIcon(item.name)
+                }
             } catch (e: Exception) {
                 Toast.makeText(context, "Сначала снимите другой предмет этого типа", Toast.LENGTH_SHORT).show()
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
@@ -84,14 +88,17 @@ class InventoryViewModel(
         }
     }
 
-    fun unEquipItem(itemId: Long) {
+    fun unEquipItem(item: CosmeticItemInInventoryDto) {
         viewModelScope.launch {
             _inventoryState.update { it.copy(isLoading = true) }
             try {
-                unEquipItemUseCase.execute(itemId)
+                unEquipItemUseCase.execute(item.itemId)
                 fetchInventory()
                 closeItemDialog()
                 Toast.makeText(context, "Предмет снят", Toast.LENGTH_SHORT).show()
+                if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
+                    changeIcon("")
+                }
             } catch (e: Exception) {
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
