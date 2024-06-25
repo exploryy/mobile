@@ -9,7 +9,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.R
@@ -32,7 +31,7 @@ fun AnimatedButton(
     ) {
         val progress by animateLottieCompositionAsState(
             composition = composition,
-            iterations = LottieConstants.IterateForever
+            iterations = 1
         )
         LottieAnimation(
             composition = composition,

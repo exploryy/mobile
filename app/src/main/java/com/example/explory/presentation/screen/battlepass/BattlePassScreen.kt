@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CropFree
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -42,7 +43,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.explory.data.model.battlepass.BattlePassDto
 import com.example.explory.data.model.battlepass.BattlePassLevelDto
 import com.example.explory.data.model.battlepass.BattlePassRewardDto
 import com.example.explory.data.model.shop.RarityType
@@ -114,16 +114,6 @@ fun BattlePassScreen(
     }
 }
 
-fun getExperienceNeededForNextLevels(battlePass: BattlePassDto): List<Int> {
-    val experienceNeededList = mutableListOf<Int>()
-    for (i in 0 until battlePass.levels.size - 1) {
-        val experienceNeeded =
-            battlePass.levels[i + 1].experienceNeeded - battlePass.levels[i].experienceNeeded
-        experienceNeededList.add(experienceNeeded)
-    }
-    return experienceNeededList
-}
-
 @Composable
 fun CountdownTimer(targetDateTime: String) {
     var remainingTime by remember { mutableStateOf<Duration?>(null) }
@@ -161,13 +151,11 @@ fun BattlePassContent(items: List<BattlePassLevelDto>, currentLevel: Int, curren
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .verticalScroll(rememberScrollState())
             .padding(16.dp)
             .border(10.dp, MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
 
     ) {
-//            items(items.size) { index ->
         items.forEachIndexed { index, _ ->
             BattlePassItem(
                 items[index],
@@ -196,6 +184,9 @@ fun BattlePassItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
+            .background(
+                if (quest.level <= currentLevel) BattlePass.copy(alpha = 0.4f) else Color.Transparent,
+            )
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.weight(1f))
@@ -214,8 +205,8 @@ fun BattlePassItem(
         }
         Spacer(modifier = Modifier.weight(1f))
         val progress = when {
-            nextLevelExp == -1 -> 0f
-            quest.experienceNeeded < currentExp -> 100f
+            nextLevelExp == -1 -> if (quest.level == currentLevel) 100f else 0f
+            quest.experienceNeeded <= currentExp -> 100f
             quest.level + 1 == currentLevel -> {
                 min(
                     ((quest.experienceNeeded - currentExp) / (nextLevelExp - quest.experienceNeeded)).toFloat(),
@@ -225,22 +216,40 @@ fun BattlePassItem(
 
             else -> 0f
         }
-        Log.d("BattlePassItem", "level = ${quest.level}, progress = $progress")
+        Log.d(
+            "BattlePassItem",
+            "level = ${quest.level}, progress = $progress, currentLevel = $currentLevel, currentExp = $currentExp, nextLevelExp = $nextLevelExp"
+        )
 //        if (quest.level - 1 == currentLevel) {
-        CustomBar(progress = progress, backgroundColor = MaterialTheme.colorScheme.secondary)
+        CustomBar(
+            progress = progress,
+            backgroundColor = MaterialTheme.colorScheme.secondary
+        )
 //        }
         Spacer(modifier = Modifier.weight(1f))
         if (quest.rewards.isNotEmpty()) {
-            BattlePassRewardItem(item = quest.rewards.first(), modifier = Modifier.size(80.dp))
+            BattlePassRewardItem(
+                item = quest.rewards.first(),
+                modifier = Modifier.size(80.dp),
+                isCollected = quest.level <= currentLevel
+            )
         } else {
-            BattlePassRewardItem(item = null, modifier = Modifier.size(80.dp))
+            BattlePassRewardItem(
+                item = null,
+                modifier = Modifier.size(80.dp),
+                isCollected = quest.level <= currentLevel
+            )
         }
         Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-fun BattlePassRewardItem(modifier: Modifier = Modifier, item: BattlePassRewardDto?) {
+fun BattlePassRewardItem(
+    modifier: Modifier = Modifier,
+    item: BattlePassRewardDto?,
+    isCollected: Boolean = false
+) {
     Box(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
@@ -279,6 +288,22 @@ fun BattlePassRewardItem(modifier: Modifier = Modifier, item: BattlePassRewardDt
                     .padding(8.dp)
             )
         }
+
+        if (isCollected) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.BottomEnd),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Rounded.Done,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = BattlePass
+                )
+            }
+        }
     }
 }
 
@@ -298,7 +323,7 @@ fun CustomBar(progress: Float, backgroundColor: Color) {
         drawRect(
             color = backgroundColor,
             size = Size(10.dp.toPx(), 125.dp.toPx()),
-            topLeft = Offset(0.dp.toPx(), 0.dp.toPx())
+            topLeft = Offset(0.dp.toPx(), (progress * 125).dp.toPx())
         )
     }
 }
