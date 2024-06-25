@@ -49,6 +49,10 @@ class ProfileViewModel(
         _profileState.update { it.copy(isEditDialogOpen = !it.isEditDialogOpen) }
     }
 
+    fun decreaseNotificationCount() {
+        _profileState.update { it.copy(notificationCount = it.notificationCount - 1) }
+    }
+
     fun getNotificationCount() {
         viewModelScope.launch {
             _profileState.value = _profileState.value.copy(isLoading = true)

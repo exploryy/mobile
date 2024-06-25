@@ -34,8 +34,8 @@ import com.example.explory.presentation.screen.auth.onboarding.component.PageCon
 import com.example.explory.presentation.screen.map.component.Avatar
 import com.example.explory.presentation.screen.userstatistic.UserStatisticContent
 import com.example.explory.ui.theme.Black
-import com.example.explory.ui.theme.S14_W600
-import com.example.explory.ui.theme.S16_W600
+import com.example.explory.ui.theme.S18_W600
+import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
@@ -126,7 +126,7 @@ fun FriendProfileContent(
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.onBackground,
-                        style = S16_W600
+                        style = S20_W600
                     )
                 }
 
@@ -136,7 +136,7 @@ fun FriendProfileContent(
                     Text(
                         text = email.toString(),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = S14_W600
+                        style = S18_W600
                     )
                 }
 

@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.shop.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,7 +19,12 @@ fun CosmeticItemsList(
 //    val screenWidth = configuration.screenWidthDp.dp
 //    val itemWidth = screenWidth / 7 * 3 + 40.dp
 
-    LazyVerticalGrid(columns = GridCells.Fixed(2), contentPadding = PaddingValues(4.dp)) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
         itemsIndexed(cosmeticItems) { _, cosmeticItem ->
             CosmeticCard(
                 cosmeticItem = cosmeticItem,

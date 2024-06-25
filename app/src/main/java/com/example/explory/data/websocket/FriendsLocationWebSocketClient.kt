@@ -40,7 +40,6 @@ class FriendsLocationWebSocketClient(
         Log.d("WebSocket URL", url)
         val request = Request.Builder()
             .url(url)
-            //.addHeader("Authorization", "Bearer $token")
             .build()
 
         synchronized(connectionLock) {
@@ -70,7 +69,9 @@ class FriendsLocationWebSocketClient(
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d("Received friend location", text)
             try {
-                val response = Json.decodeFromString<CreatePolygonRequestDto>(text.dropLast(1).drop(1).replace("\\", ""))
+                val response = Json.decodeFromString<CreatePolygonRequestDto>(
+                    text.dropLast(1).drop(1).replace("\\", "")
+                )
                 _messages.value = response
             } catch (e: Exception) {
                 e.printStackTrace()

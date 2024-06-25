@@ -22,7 +22,10 @@ import com.example.explory.ui.theme.S18_W600
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FriendRequestsScreen(viewModel: FriendRequestsViewModel = koinViewModel()) {
+fun FriendRequestsScreen(
+    viewModel: FriendRequestsViewModel = koinViewModel(),
+    onRequestAction: () -> Unit
+) {
     val friendRequests by viewModel.friendRequests.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -49,11 +52,16 @@ fun FriendRequestsScreen(viewModel: FriendRequestsViewModel = koinViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(friendRequests.other) { request ->
-                    // todo fix notification counter
                     FriendRequestCard(
                         request = request,
-                        onAccept = { viewModel.acceptRequest(request.userId) },
-                        onReject = { viewModel.rejectRequest(request.userId) }
+                        onAccept = {
+                            viewModel.acceptRequest(request.userId)
+                            onRequestAction()
+                        },
+                        onReject = {
+                            viewModel.rejectRequest(request.userId)
+                            onRequestAction()
+                        }
                     )
                 }
             }

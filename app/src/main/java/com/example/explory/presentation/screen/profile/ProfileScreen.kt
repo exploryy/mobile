@@ -41,7 +41,6 @@ fun ProfileScreen(
     onLogout: () -> Unit,
     onBackClick: () -> Unit,
 ) {
-    // todo friend requests
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -141,7 +140,9 @@ fun ProfileScreen(
                         )
 
                         2 -> UserStatisticScreen()
-                        3 -> FriendRequestsScreen()
+                        3 -> FriendRequestsScreen(onRequestAction = {
+                            viewModel.decreaseNotificationCount()
+                        })
                     }
                 }
         }

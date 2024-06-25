@@ -49,6 +49,9 @@ interface ApiService {
     @GET("/user/profile")
     suspend fun getProfile(): ProfileDto
 
+    @GET("/user/profile/{user_id}")
+    suspend fun getProfileById(@Path("user_id") userId: String): ProfileDto
+
     @POST("/user/profile")
     suspend fun updateProfile(
         @Body body: RequestBody

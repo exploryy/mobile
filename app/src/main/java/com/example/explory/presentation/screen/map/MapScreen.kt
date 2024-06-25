@@ -110,7 +110,6 @@ import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
 import org.koin.androidx.compose.koinViewModel
 
-// todo use error screen on error (when no internet)
 const val ZOOM: Double = 0.0
 const val PITCH: Double = 0.0
 const val OPENED_WORLD_LAYER = "opened-layer"
@@ -278,9 +277,9 @@ fun MapScreen(
                             puckBearingEnabled = true
                             puckBearing = PuckBearing.HEADING
                             enabled = true
-//                            pulsingEnabled = mapState.currentTrace != null
-//                            pulsingColor = AccentColor.toArgb()
-//                            pulsingMaxRadius = 50f
+                            pulsingEnabled = mapState.currentTrace != null
+                            pulsingColor = AccentColor.toArgb()
+                            pulsingMaxRadius = 50f
                         }
                         mapViewportState.transitionToFollowPuckState(
                             defaultTransitionOptions =

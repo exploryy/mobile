@@ -7,7 +7,7 @@ import com.example.explory.data.model.review.SendReviewRequest
 import com.example.explory.domain.model.BuffDto
 import com.example.explory.domain.usecase.ApplyBuffUseCase
 import com.example.explory.domain.usecase.GetBuffListUseCase
-import com.example.explory.domain.usecase.GetFriendProfileUseCase
+import com.example.explory.domain.usecase.GetUserProfileUseCase
 import com.example.explory.domain.usecase.SendReviewUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EventViewModel(
-    private val getFriendProfileUseCase: GetFriendProfileUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
     private val sendReviewUseCase: SendReviewUseCase,
     private val getBuffListUseCase: GetBuffListUseCase,
     private val applyBuffUseCase: ApplyBuffUseCase
@@ -25,8 +25,7 @@ class EventViewModel(
     fun getUserInfo(friendId: String) {
         viewModelScope.launch {
             try {
-                // todo сейчас если пользователь не друг, то прилетает ошибка
-                val user = getFriendProfileUseCase.invoke(friendId)
+                val user = getUserProfileUseCase.execute(friendId)
                 _state.update { it.copy(user = user) }
             } catch (e: Exception) {
                 e.printStackTrace()

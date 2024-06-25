@@ -59,12 +59,12 @@ fun UserStatisticContent(modifier: Modifier = Modifier, userStatisticDto: UserSt
                     .weight(1f)
                     .height(180.dp)
             ) {
-                Text(
-                    text = "опыт",
-                    style = S20_W600,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+//                Text(
+//                    text = "опыт",
+//                    style = S20_W600,
+//                    textAlign = TextAlign.Center
+//                )
+//                Spacer(modifier = Modifier.height(8.dp))
                 AnimatedCircularProgressIndicator(
                     currentValue = userStatisticDto.experience,
                     maxValue = userStatisticDto.totalExperienceInLevel,

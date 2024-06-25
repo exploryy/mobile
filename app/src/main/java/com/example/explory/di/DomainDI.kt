@@ -26,6 +26,7 @@ import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.domain.usecase.GetShopUseCase
 import com.example.explory.domain.usecase.GetUserListUseCase
+import com.example.explory.domain.usecase.GetUserProfileUseCase
 import com.example.explory.domain.usecase.GetUserStatisticUseCase
 import com.example.explory.domain.usecase.GetUserTokenUseCase
 import com.example.explory.domain.usecase.LogoutUseCase
@@ -80,4 +81,5 @@ fun domainModule() = module {
     factoryOf(::GetBuffListUseCase)
 //    factoryOf(GetMyBuffsUseCase)
     factoryOf(::ApplyBuffUseCase)
+    factoryOf(::GetUserProfileUseCase)
 }

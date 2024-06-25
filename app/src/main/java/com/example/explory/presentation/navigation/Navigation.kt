@@ -23,11 +23,15 @@ fun AppNavigation() {
         {
             SplashScreen(onNavigateToMap = {
                 navController.navigate(Screen.Map.route) {
-                    popUpTo(Screen.Splash.route)
+                    popUpTo(Screen.Splash.route) {
+                        inclusive = true
+                    }
                 }
             }, onNavigateToWelcome = {
                 navController.navigate(Screen.Welcome.route) {
-                    popUpTo(Screen.Splash.route)
+                    popUpTo(Screen.Splash.route) {
+                        inclusive = true
+                    }
                 }
             })
         }

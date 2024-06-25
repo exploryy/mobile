@@ -1,12 +1,10 @@
 package com.example.explory.presentation.screen.friends.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,7 +19,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.presentation.screen.map.component.Avatar
-import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W600
 
 @Composable
@@ -39,10 +36,7 @@ fun UserItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-            Log.d(
-                "UserItem",
-                "profile.avatarUrl: ${profile.avatarUrl} profile.inventoryDto.avatarFrames: ${profile.inventoryDto.avatarFrames}"
-            )
+
             Avatar(
                 image = profile.avatarUrl,
                 border = profile.inventoryDto.avatarFrames,
@@ -52,10 +46,6 @@ fun UserItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Log.d(
-                "UserItem",
-                "profile.username: ${profile.username} profile.email: ${profile.email}"
-            )
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -66,16 +56,16 @@ fun UserItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (profile.email?.isNotBlank() == true) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = profile.email,
-                        style = S14_W600,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+//                if (profile.email?.isNotBlank() == true) {
+//                    Spacer(modifier = Modifier.height(4.dp))
+//                    Text(
+//                        text = profile.email,
+//                        style = S14_W600,
+//                        color = MaterialTheme.colorScheme.onSurface,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis
+//                    )
+//                }
             }
         }
 

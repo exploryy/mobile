@@ -20,6 +20,10 @@ class ProfileRepository(
         return apiService.getProfile()
     }
 
+    suspend fun getProfileById(userId: String): ProfileDto {
+        return apiService.getProfileById(userId)
+    }
+
     suspend fun editProfile(profileRequest: ProfileMultipart) {
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
         profileRequest.username?.let {
@@ -49,7 +53,7 @@ class ProfileRepository(
         )
     }
 
-    suspend fun getUserStatistic() : UserStatisticDto {
+    suspend fun getUserStatistic(): UserStatisticDto {
         return apiService.getUserStatistic()
     }
 
