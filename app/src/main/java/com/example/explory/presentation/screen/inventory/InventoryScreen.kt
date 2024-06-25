@@ -127,16 +127,10 @@ fun InventoryScreen(
                                                 InventoryItemCard(
                                                     item = item,
                                                     onEquipClick = {
-                                                        if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
-                                                            viewModel.changeIcon(item.name)
-                                                        }
-                                                        viewModel.equipItem(item.itemId)
+                                                        viewModel.equipItem(item)
                                                     },
                                                     onUnEquipClick = {
-                                                        if (item.cosmeticType == CosmeticType.APPLICATION_IMAGE) {
-                                                            viewModel.changeIcon("")
-                                                        }
-                                                        viewModel.unEquipItem(item.itemId)
+                                                        viewModel.unEquipItem(item)
                                                     },
                                                     onCardClick = { viewModel.openItemDialog(item) },
                                                     modifier = Modifier.weight(1f)
