@@ -138,7 +138,10 @@ fun QuestSheet(
                 item {
                     Spacer(modifier = Modifier.height(32.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        InfoBox(text = "${point.latitude}, ${point.longitude}", isCopyingEnabled = true)
+                        InfoBox(
+                            text = "${point.latitude}, ${point.longitude}",
+                            isCopyingEnabled = true
+                        )
                         if (questStatus != null) {
                             InfoBox(text = questStatus, containerColor = Green)
                         }

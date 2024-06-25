@@ -382,11 +382,13 @@ fun MapScreen(
                     mapState.noteList.forEach { note ->
                         val point =
                             Point.fromLngLat(note.longitude.toDouble(), note.latitude.toDouble())
+                        Log.d("MapScreen", "note is ${note.id}")
                         PointAnnotation(point = point,
                             iconSize = 0.4,
                             iconEmissiveStrength = 0.5,
                             iconImageBitmap = noteBitmap,
                             onClick = {
+                                Log.d("MapScreen", "note clicked")
                                 viewModel.updateNote(
                                     MapNote(
                                         isOpened = true,
@@ -394,6 +396,7 @@ fun MapScreen(
                                     )
                                 )
                                 viewModel.openNoteById(note.id)
+                                Log.d("MapScreen", "note clicked 2 ")
                                 true
                             })
 
@@ -567,7 +570,6 @@ fun MapScreen(
                 )
             })
         }
-        Log.d("MapScreen", "p2p quest state is ${mapState.p2pQuest}")
         when {
             mapState.showFriendsScreen -> {
                 ProfileScreen(

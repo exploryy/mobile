@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,9 +23,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.explory.domain.model.BuffDto
-import com.example.explory.ui.theme.DarkGray
 import com.example.explory.ui.theme.S16_W600
-import com.example.explory.ui.theme.White
 
 @Composable
 fun BuffButton(
@@ -39,7 +38,7 @@ fun BuffButton(
     Column(
         modifier = modifier
             .height(225.dp)
-            .background(DarkGray, shape = RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(8.dp),
@@ -51,7 +50,12 @@ fun BuffButton(
             modifier = Modifier.size(125.dp),
             progress = { progress },
         )
-        Text(text = buff.title, style = S16_W600, color = White, textAlign = TextAlign.Center)
+        Text(
+            text = buff.title,
+            style = S16_W600,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
 //        Spacer(modifier = Modifier.height(16.dp))
 //        Text(text = buff.description, style = S16_W400, color = Gray, textAlign = TextAlign.Center)
     }

@@ -98,6 +98,8 @@ fun NoteSheet(
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 PageIndicator(pagerState = pagerState)
+                            } else {
+                                Spacer(modifier = Modifier.height(16.dp))
                             }
                         }
                     }

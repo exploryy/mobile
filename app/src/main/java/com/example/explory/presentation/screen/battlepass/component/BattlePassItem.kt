@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.battlepass.BattlePassLevelDto
 import com.example.explory.ui.theme.BattlePass
 import com.example.explory.ui.theme.S20_W600
 import kotlin.math.min
+
 
 @Composable
 fun BattlePassItem(
@@ -59,9 +61,10 @@ fun BattlePassItem(
             quest.level - 1 == currentLevel -> {
                 min(
                     (currentExp.toFloat() / (quest.experienceNeeded - prevLevelExp).toFloat()),
-                    1f
+                    100f
                 )
             }
+
 
             else -> 0f
         }
@@ -89,4 +92,19 @@ fun BattlePassItem(
         }
         Spacer(modifier = Modifier.weight(1f))
     }
+}
+
+@Preview
+@Composable
+private fun PreviewItem() {
+    BattlePassItem(
+        quest = BattlePassLevelDto(
+            level = 1,
+            experienceNeeded = 2000,
+            rewards = emptyList()
+        ),
+        currentLevel = 0,
+        currentExp = 1050,
+        prevLevelExp = 0
+    )
 }

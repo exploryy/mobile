@@ -19,14 +19,14 @@ fun CustomBar(progress: Float, backgroundColor: Color) {
             .rotate(if (progress == 0f || progress == 100f) 0f else 180f)
     ) {
         drawRect(
+            color = backgroundColor,
+            size = Size(10.dp.toPx(), 125.dp.toPx()),
+            topLeft = Offset(0.dp.toPx(), 0.dp.toPx())
+        )
+        drawRect(
             color = Green,
             size = Size(10.dp.toPx(), (progress * 125).dp.toPx()),
             topLeft = Offset(0.dp.toPx(), ((1 - progress) * 125).dp.toPx())
-        )
-        drawRect(
-            color = backgroundColor,
-            size = Size(10.dp.toPx(), 125.dp.toPx()),
-            topLeft = Offset(0.dp.toPx(), (progress * 125).dp.toPx())
         )
     }
 }

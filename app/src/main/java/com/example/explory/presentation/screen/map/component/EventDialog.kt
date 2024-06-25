@@ -62,6 +62,7 @@ fun EventDialog(
                 UpdateLevelContent(
                     event,
                     buffs = state.buffs,
+                    onDismiss = onDismissRequest,
                     onBuffChoose = {
                         viewModel.applyBuff(it)
                         onDismissRequest()
