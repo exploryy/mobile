@@ -31,7 +31,7 @@ fun EventDialog(
             if (event.type != EventType.UPDATE_LEVEL) {
                 onDismissRequest()
             }
-        }
+        },
     ) {
         when (event.type) {
             EventType.COMPLETE_QUEST -> {
