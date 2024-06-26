@@ -43,7 +43,6 @@ import com.example.explory.presentation.screen.auth.component.AdviceText
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
-import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Transparent
@@ -100,7 +99,7 @@ fun RegistrationScreen(
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Transparent,
-                navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+                navigationIconContentColor = White
             )
         )
 
@@ -132,7 +131,7 @@ fun RegistrationScreen(
                             text = stringResource(R.string.to_register),
                             style = S24_W600,
                             textAlign = TextAlign.Left,
-                            color = White,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(
                                 top = Value.MoreSpaceBetweenObjects,
                                 bottom = Value.SpaceBetweenObjects
@@ -210,7 +209,6 @@ fun RegistrationScreen(
                             Text(
                                 text = stringResource(R.string.login_button),
                                 style = S16_W600,
-                                color = Black
                             )
                         }
 

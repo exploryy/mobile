@@ -32,7 +32,7 @@ fun PageContent(
     title: String,
     description: String,
     @RawRes animation: Int,
-    iconSize: Dp = 200.dp
+    iconSize: Dp = 200.dp,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animation))
     val progress by animateLottieCompositionAsState(

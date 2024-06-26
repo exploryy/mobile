@@ -5,18 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.S14_W400
 import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
-import com.example.explory.ui.theme.White
 
 @Composable
 fun OutlinedTextFieldWithLabel(
@@ -50,11 +49,11 @@ fun OutlinedTextFieldWithLabel(
                 colors = TextFieldDefaults.colors().copy(
                     focusedContainerColor = Transparent,
                     unfocusedContainerColor = Transparent,
-                    focusedTextColor = White,
-                    unfocusedTextColor = White,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.Gray,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.onBackground,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                     errorTextColor = Red,
                     errorLabelColor = Red,
                     errorPlaceholderColor = Red,

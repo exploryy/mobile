@@ -28,15 +28,17 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = OffWhite,
+    primary = AccentColor.copy(alpha = 0.9f),
     secondary = LightGray,
     background = White,
-    surfaceVariant = Black,
     surface = OffWhite,
-    onPrimary = Black,
+    surfaceVariant = DarkGray,
+    onPrimary = White,
     onSecondary = MediumGray,
     onBackground = DarkGray,
-    onSurface = OffBlack
+    onSurface = OffBlack,
+    surfaceContainer = OffWhite,
+    onError = Red
 )
 
 @Composable

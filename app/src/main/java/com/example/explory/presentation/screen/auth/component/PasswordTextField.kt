@@ -12,12 +12,12 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.explory.ui.theme.Red
@@ -25,7 +25,6 @@ import com.example.explory.ui.theme.S14_W400
 import com.example.explory.ui.theme.Transparent
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MiddlePadding
-import com.example.explory.ui.theme.White
 
 @Composable
 fun PasswordTextField(
@@ -75,15 +74,15 @@ fun PasswordTextField(
                 colors = TextFieldDefaults.colors().copy(
                     focusedContainerColor = Transparent,
                     unfocusedContainerColor = Transparent,
-                    focusedTextColor = White,
-                    unfocusedTextColor = White,
-                    cursorColor = Color.White,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.onBackground,
                     errorTextColor = Red,
                     errorPlaceholderColor = Red,
-                    focusedLabelColor = Color.White,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
                     errorTrailingIconColor = Red,
                     errorLabelColor = Red,
-                    unfocusedLabelColor = Color.Gray,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                     errorContainerColor = Red.copy(alpha = 0.1f)
                 ),
                 textStyle = S14_W400

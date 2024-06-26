@@ -43,7 +43,6 @@ import com.example.explory.presentation.screen.auth.component.AdviceText
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.component.OutlinedTextFieldWithLabel
 import com.example.explory.presentation.screen.auth.component.PasswordTextField
-import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 import com.example.explory.ui.theme.Transparent
@@ -51,6 +50,7 @@ import com.example.explory.ui.theme.Value.BasePadding
 import com.example.explory.ui.theme.Value.BigRound
 import com.example.explory.ui.theme.Value.MoreSpaceBetweenObjects
 import com.example.explory.ui.theme.Value.SpaceBetweenObjects
+import com.example.explory.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +99,7 @@ fun LoginScreen(
             }
         }, colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Transparent,
-            navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+            navigationIconContentColor = White
         )
         )
 
@@ -166,8 +166,8 @@ fun LoginScreen(
                             enabled = !loginState.isLoading && viewModel.isLoginButtonAvailable(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.onBackground,
-                                contentColor = MaterialTheme.colorScheme.surface,
-                                disabledContentColor = MaterialTheme.colorScheme.surface.copy(
+                                contentColor = MaterialTheme.colorScheme.background,
+                                disabledContentColor = MaterialTheme.colorScheme.background.copy(
                                     alpha = 0.5f
                                 ),
                                 disabledContainerColor = MaterialTheme.colorScheme.onBackground.copy(
@@ -178,7 +178,6 @@ fun LoginScreen(
                             Text(
                                 text = stringResource(R.string.login_button),
                                 style = S16_W600,
-                                color = Black
                             )
                         }
 

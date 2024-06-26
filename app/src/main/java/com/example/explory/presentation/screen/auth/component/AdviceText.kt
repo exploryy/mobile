@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +31,7 @@ fun AdviceText(
             .padding(BasePadding),
     ) {
         val highlightedText = buildAnnotatedString {
-            withStyle(style = spanStyleGray) {
+            withStyle(style = spanStyleGray.copy(color = MaterialTheme.colorScheme.onBackground)) {
                 append("$baseText ")
             }
 
@@ -43,7 +44,7 @@ fun AdviceText(
                     }
                 ),
                 block = {
-                    withStyle(style = spanStyleAccent) {
+                    withStyle(style = spanStyleAccent.copy(color = MaterialTheme.colorScheme.primary)) {
                         append(clickableText)
                     }
                 }

@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.explory.ui.theme.BattlePass
+import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.S20_W600
 import kotlinx.coroutines.delay
 import java.time.Duration
@@ -41,7 +41,7 @@ fun CountdownTimer(targetDateTime: String) {
                 "%02d дней %02d:%02d:%02d", days, hours, minutes, seconds
             ),
             style = S20_W600,
-            color = BattlePass
+            color = Green
         )
     }
 }
