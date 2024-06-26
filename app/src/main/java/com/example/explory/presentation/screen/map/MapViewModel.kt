@@ -382,7 +382,7 @@ class MapViewModel(
     fun getCorrectDifficulty(difficulty: DifficultyType): String {
         return when (difficulty) {
             DifficultyType.EASY -> "легкий"
-            DifficultyType.MEDIUM -> "среднняя сложность"
+            DifficultyType.MEDIUM -> "средняя сложность"
             DifficultyType.HARD -> "сложный"
         }
     }
