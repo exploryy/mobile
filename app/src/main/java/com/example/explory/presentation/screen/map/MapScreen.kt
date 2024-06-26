@@ -368,7 +368,7 @@ fun MapScreen(
                             iconSize = 1.0,
                             iconImageBitmap = if (friendAvatar != null) createCircularAvatar(
                                 friendAvatar, 100
-                            ) else createDefaultAvatar(),
+                            ) else createDefaultAvatar(context),
                             onClick = {
                                 viewModel.onFriendMarkerClicked(userId)
                                 true
