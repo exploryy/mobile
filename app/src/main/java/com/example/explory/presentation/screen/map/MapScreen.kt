@@ -352,7 +352,7 @@ fun MapScreen(
                     mapState.friendsLocations.forEach { (userId, location) ->
                         val point = Point.fromLngLat(location.second, location.first)
                         val friendAvatar = mapState.friendAvatars[userId]?.second
-                        val friendName = mapState.friendAvatars[userId]?.first
+                        val friendFrame = mapState.friendAvatars[userId]?.first
 
 //                    val infiniteTransition = rememberInfiniteTransition(label = "")
 //                    val animatedSize = infiniteTransition.animateFloat(
@@ -367,8 +367,8 @@ fun MapScreen(
                             point = point,
                             iconSize = 1.0,
                             iconImageBitmap = if (friendAvatar != null) createCircularAvatar(
-                                friendAvatar, 100
-                            ) else createDefaultAvatar(context),
+                                friendAvatar, friendFrame, 100
+                            ) else createDefaultAvatar(context, friendFrame),
                             onClick = {
                                 viewModel.onFriendMarkerClicked(userId)
                                 true

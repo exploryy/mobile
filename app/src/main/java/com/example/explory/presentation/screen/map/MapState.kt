@@ -35,7 +35,7 @@ data class MapState(
     val p2pQuest: PointToPointQuestDto? = null,
     val distanceQuest: DistanceQuestDto? = null,
     val friendsLocations: Map<String, Pair<Double, Double>> = emptyMap(),
-    val friendAvatars: Map<String, Pair<String, Bitmap?>> = emptyMap(),
+    val friendAvatars: Map<String, Pair<Bitmap?, Bitmap?>> = emptyMap(),
     val userPoint: Point? = null,
     val infoText: String? = null,
     val selectedFriendProfile: FriendProfile? = null,
