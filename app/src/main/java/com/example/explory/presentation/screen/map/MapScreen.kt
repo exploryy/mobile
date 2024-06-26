@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddLocation
 import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,7 @@ import com.example.explory.domain.model.MapNote
 import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
 import com.example.explory.presentation.screen.event.EventDialog
+import com.example.explory.presentation.screen.completedquests.CompletedQuestScreen
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
 import com.example.explory.presentation.screen.leaderboard.LeaderboardScreen
@@ -511,6 +514,10 @@ fun MapScreen(
                             onClick = { viewModel.updateInventoryOpenScreen() },
                             icon = Icons.Filled.Backpack
                         )
+                        MapButton(
+                            onClick = { viewModel.updateCompletedQuestScreen() },
+                            icon = Icons.Filled.AddLocation
+                        )
                         AnimatedButton(
                             onClick = { viewModel.updateBattlePassOpenScreen() },
                             modifier = Modifier
@@ -602,7 +609,8 @@ fun MapScreen(
                     },
                     onDismissRequest = { viewModel.updateP2PQuest(null) },
                     reviews = mapState.p2pQuest!!.fullReviewDto,
-                    questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null
+                    questStatus = if (mapState.activeQuest?.questId == mapState.p2pQuest!!.commonQuestDto.questId) "активный" else null,
+                    isCompleted = mapState.completedQuests.any { it.questId == mapState.p2pQuest!!.commonQuestDto.questId }
                 )
             }
 
@@ -631,7 +639,8 @@ fun MapScreen(
                     },
                     onDismissRequest = { viewModel.updateDistanceQuest(null) },
                     reviews = mapState.distanceQuest!!.fullReviewDto,
-                    questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null
+                    questStatus = if (mapState.activeQuest?.questId == mapState.distanceQuest!!.commonQuestDto.questId) "активный" else null,
+                    isCompleted = mapState.completedQuests.any { it.questId == mapState.distanceQuest!!.commonQuestDto.questId }
                 )
             }
 
@@ -675,6 +684,14 @@ fun MapScreen(
 
             mapState.isLeaderboardOpen -> {
                 LeaderboardScreen(onDismiss = { viewModel.updateLeaderboardOpen() })
+            }
+
+            mapState.isCompletedQuestOpen -> {
+                CompletedQuestScreen(
+                    quests = mapState.completedQuests,
+                    onQuestClick = { questId, questType -> viewModel.getQuestDetails(questId, questType) },
+                    onDismiss = { viewModel.updateCompletedQuestScreen() }
+                )
             }
 
         }

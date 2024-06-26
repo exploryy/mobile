@@ -52,6 +52,7 @@ data class MapState(
     val noteList: List<CommonNoteDto> = emptyList(),
     val note: MapNote? = null,
     val isLeaderboardOpen: Boolean = false,
-    val isPublicPrivacy: Boolean = false
+    val isPublicPrivacy: Boolean = false,
+    val isCompletedQuestOpen: Boolean = false
 )
 

@@ -68,7 +68,8 @@ fun QuestSheet(
     onButtonClicked: (TransportType) -> Unit,
     onDismissRequest: () -> Unit,
     reviews: FullReviewsDto,
-    questStatus: String? = null
+    questStatus: String? = null,
+    isCompleted: Boolean
 ) {
     val isSelectTransportDialogOpen = remember { mutableStateOf(false) }
     val state = rememberBottomSheetScaffoldState()
@@ -147,32 +148,34 @@ fun QuestSheet(
                     }
                 }
 
+                if (!isCompleted){
+                    item {
+                        Spacer(modifier = Modifier.height(40.dp))
+                        Button(
+                            shape = RoundedCornerShape(8.dp),
+                            onClick = {
+                                if (questStatus == null) {
+                                    isSelectTransportDialogOpen.value = true
+                                } else {
+                                    onButtonClicked(TransportType.WALK)
+                                }
+                            },
+                            modifier = Modifier
+                                .height(50.dp)
+                                .fillMaxWidth(),
 
-                item {
-                    Spacer(modifier = Modifier.height(40.dp))
-                    Button(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = {
-                            if (questStatus == null) {
-                                isSelectTransportDialogOpen.value = true
-                            } else {
-                                onButtonClicked(TransportType.WALK)
-                            }
-                        },
-                        modifier = Modifier
-                            .height(50.dp)
-                            .fillMaxWidth(),
-
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = Black, containerColor = White
-                        )
-                    ) {
-                        Text(
-                            if (questStatus == null) "Начать квест" else "Отменить квест",
-                            style = S14_W600
-                        )
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = Black, containerColor = White
+                            )
+                        ) {
+                            Text(
+                                if (questStatus == null) "Начать квест" else "Отменить квест",
+                                style = S14_W600
+                            )
+                        }
                     }
                 }
+
                 item {
                     if (images.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(32.dp))
@@ -249,7 +252,8 @@ private fun PreviewQuestSheet() {
             reviews = FullReviewsDto(
                 avg = 4.5,
                 reviews = emptyList()
-            )
+            ),
+            isCompleted = false
         )
     }
 }
