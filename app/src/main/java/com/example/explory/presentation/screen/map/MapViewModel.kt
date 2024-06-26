@@ -448,7 +448,7 @@ class MapViewModel(
 
             val friendAvatars = friendStats.associate { friendStat ->
                 friendStat.profileDto.userId to Pair(
-                    friendStat.profileDto.username, loadImage(friendStat.profileDto.avatarUrl)
+                    loadImage(friendStat.profileDto.inventoryDto.avatarFrames?.url), loadImage(friendStat.profileDto.avatarUrl)
                 )
             }
             _mapState.update { state ->

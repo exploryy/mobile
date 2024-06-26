@@ -7,7 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import com.example.explory.R
 
-fun createDefaultAvatar(context: Context): Bitmap {
+fun createDefaultAvatar(context: Context, frameBitmap: Bitmap?): Bitmap {
     val defaultAvatarSize = 100
     val defaultAvatarBitmap = Bitmap.createBitmap(
         defaultAvatarSize, defaultAvatarSize, Bitmap.Config.ARGB_8888
@@ -25,7 +25,7 @@ fun createDefaultAvatar(context: Context): Bitmap {
     val defaultPicture = BitmapFactory.decodeResource(context.resources, R.drawable.picture1)
 
     if (defaultPicture != null) {
-        return createCircularAvatar(defaultPicture, defaultAvatarSize)
+        return createCircularAvatar(defaultPicture, frameBitmap, defaultAvatarSize)
 
     } else {
         paint.color = android.graphics.Color.RED
