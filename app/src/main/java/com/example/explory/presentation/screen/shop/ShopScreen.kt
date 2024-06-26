@@ -32,7 +32,7 @@ import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.data.model.shop.RarityType
 import com.example.explory.domain.model.ItemFullInfo
 import com.example.explory.presentation.screen.inventory.component.ItemFullInfoDialog
-import com.example.explory.presentation.screen.map.component.BarItem
+import com.example.explory.presentation.screen.map.component.mapoverlay.BarItem
 import com.example.explory.presentation.screen.shop.component.CategorySelectionRow
 import com.example.explory.presentation.screen.shop.component.CosmeticItemsList
 import com.example.explory.ui.theme.Green

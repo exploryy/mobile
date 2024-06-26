@@ -5,7 +5,9 @@ import com.example.explory.domain.usecase.AddFavoriteFriendUseCase
 import com.example.explory.domain.usecase.AddFriendUseCase
 import com.example.explory.domain.usecase.ApplyBuffUseCase
 import com.example.explory.domain.usecase.BuyItemUseCase
+import com.example.explory.domain.usecase.CancelQuestUseCase
 import com.example.explory.domain.usecase.CheckUserTokenUseCase
+import com.example.explory.domain.usecase.CollectCoinUseCase
 import com.example.explory.domain.usecase.CreateNoteUseCase
 import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.EditProfileUseCase
@@ -15,13 +17,17 @@ import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetBuffListUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
 import com.example.explory.domain.usecase.GetCurrentBattlePassUseCase
+import com.example.explory.domain.usecase.GetDistanceQuestUseCase
+import com.example.explory.domain.usecase.GetFriendPolygonUseCase
 import com.example.explory.domain.usecase.GetFriendProfileUseCase
 import com.example.explory.domain.usecase.GetFriendRequestsUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetFriendsUseCase
 import com.example.explory.domain.usecase.GetInventoryUseCase
 import com.example.explory.domain.usecase.GetNoteUseCase
+import com.example.explory.domain.usecase.GetP2PQuestUseCase
 import com.example.explory.domain.usecase.GetPolygonsUseCase
+import com.example.explory.domain.usecase.GetPrivacyUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
 import com.example.explory.domain.usecase.GetShopUseCase
@@ -37,6 +43,8 @@ import com.example.explory.domain.usecase.RemoveFavoriteFriendUseCase
 import com.example.explory.domain.usecase.RemoveFriendUseCase
 import com.example.explory.domain.usecase.SellItemUseCase
 import com.example.explory.domain.usecase.SendReviewUseCase
+import com.example.explory.domain.usecase.SetPrivacyUseCase
+import com.example.explory.domain.usecase.StartQuestUseCase
 import com.example.explory.domain.usecase.UnEquipItemUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
@@ -82,4 +90,12 @@ fun domainModule() = module {
 //    factoryOf(GetMyBuffsUseCase)
     factoryOf(::ApplyBuffUseCase)
     factoryOf(::GetUserProfileUseCase)
+    factoryOf(::StartQuestUseCase)
+    factoryOf(::CancelQuestUseCase)
+    factoryOf(::GetP2PQuestUseCase)
+    factoryOf(::GetDistanceQuestUseCase)
+    factoryOf(::CollectCoinUseCase)
+    factoryOf(::GetFriendPolygonUseCase)
+    factoryOf(::GetPrivacyUseCase)
+    factoryOf(::SetPrivacyUseCase)
 }

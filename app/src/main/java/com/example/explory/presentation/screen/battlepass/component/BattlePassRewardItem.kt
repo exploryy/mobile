@@ -18,8 +18,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.battlepass.BattlePassRewardDto
 import com.example.explory.data.model.shop.RarityType
-import com.example.explory.presentation.screen.common.RoundedSquareAvatar
-import com.example.explory.presentation.screen.shop.component.getRarityBrush
+import com.example.explory.presentation.common.RoundedSquareAvatar
+import com.example.explory.presentation.common.getRarityBrush
 import com.example.explory.ui.theme.BattlePass
 
 @Composable

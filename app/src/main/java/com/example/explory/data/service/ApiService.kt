@@ -12,11 +12,8 @@ import com.example.explory.data.model.note.NoteDto
 import com.example.explory.data.model.profile.FriendProfileDto
 import com.example.explory.data.model.profile.ProfileDto
 import com.example.explory.data.model.quest.DistanceQuestDto
-import com.example.explory.data.model.quest.PointDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
-import com.example.explory.data.model.quest.QuestDto
 import com.example.explory.data.model.quest.QuestListDto
-import com.example.explory.data.model.quest.RouteDto
 import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.model.requests.FriendRequest
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
@@ -25,7 +22,7 @@ import com.example.explory.data.model.statistic.BalanceDto
 import com.example.explory.data.model.statistic.CoinDto
 import com.example.explory.data.model.statistic.Privacy
 import com.example.explory.data.model.statistic.UserStatisticDto
-import com.example.explory.presentation.screen.map.component.BuffResponse
+import com.example.explory.data.model.event.BuffResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -57,18 +54,6 @@ interface ApiService {
         @Body body: RequestBody
     )
 
-    @POST("/route")
-    suspend fun createRoute(
-        @Query("points") points: List<PointDto>,
-        @Query("start_point_longitude") startPointLongitude: String,
-        @Query("start_point_latitude") startPointLatitude: String
-    )
-
-    @GET("/route/{route_id}")
-    suspend fun getRoute(
-        @Path("route_id") routeId: String
-    ): RouteDto
-
     // Quests
     @POST("/quest/{quest_id}/start")
     suspend fun startQuest(
@@ -76,24 +61,10 @@ interface ApiService {
         @Query("transport_type") transportType: TransportType
     )
 
-    @POST("/quest/{quest_id}/review")
-    suspend fun reviewQuest(
-        @Path("quest_id") questId: String,
-        @Query("rating") rating: Int,
-        @Query("comment") comment: String,
-        @Part images: List<MultipartBody.Part>
-    )
-
     @GET("/quest/point_to_point/{quest_id}")
     suspend fun getPointToPointQuest(
         @Path("quest_id") questId: String
     ): PointToPointQuestDto
-
-    @GET("/quest/my/completed")
-    suspend fun getCompletedQuests(): List<QuestDto>
-
-    @GET("/quest/my/active")
-    suspend fun getActiveQuests(): List<QuestDto?>
 
     @POST("/quest/{quest_id}/review")
     suspend fun sendReview(
@@ -129,10 +100,6 @@ interface ApiService {
         @Query("image_id") imageId: String
     )
 
-    @POST("/quest/{quest_id}/finish")
-    suspend fun finishQuest(
-        @Path("quest_id") questId: String
-    )
 
     @DELETE("/quest/{quest_id}/cancel")
     suspend fun cancelQuest(

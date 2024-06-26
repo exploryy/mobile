@@ -28,10 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.example.explory.data.model.shop.CosmeticType
 import com.example.explory.domain.model.ItemFullInfo
 import com.example.explory.presentation.screen.auth.component.LoadingItem
-import com.example.explory.presentation.screen.common.getTranslateCategoryName
+import com.example.explory.presentation.common.getTranslateCategoryName
 import com.example.explory.presentation.screen.inventory.component.InventoryItemCard
 import com.example.explory.presentation.screen.inventory.component.ItemFullInfoDialog
 import com.example.explory.ui.theme.S16_W600
@@ -166,11 +165,6 @@ fun InventoryScreen(
                     isSellable = inventoryState.selectedItem!!.isSellable
                 )
             )
-//            InventoryItemDialog(
-//                onDismiss = { viewModel.closeItemDialog() },
-//                cosmeticItem = inventoryState.selectedItem!!,
-//                onSellClick = { viewModel.sellItem(it) }
-//            )
         }
     }
 }

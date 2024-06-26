@@ -134,7 +134,7 @@ class FriendViewModel(
             _userListState.value = _userListState.value.copy(isLoading = true)
             try {
                 Log.d("remove", userId)
-                removeFriendUseCase.execute(userId);
+                removeFriendUseCase.execute(userId)
                 fetchFriends()
                 changeRemoveFriendState()
             } catch (e: Exception) {

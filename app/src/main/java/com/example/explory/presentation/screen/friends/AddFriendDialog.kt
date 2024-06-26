@@ -154,7 +154,7 @@ fun AddFriendDialog(
 
 @Preview
 @Composable
-private fun PreviewAddFreindDialog() {
+private fun PreviewAddFriendDialog() {
     AddFriendDialog(
         userListState = UserListState(
             users = emptyList(),

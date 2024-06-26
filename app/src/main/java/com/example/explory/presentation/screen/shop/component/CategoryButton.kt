@@ -9,7 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.explory.presentation.screen.common.getTranslateCategoryName
+import com.example.explory.presentation.common.getTranslateCategoryName
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.Transparent
 
@@ -27,7 +27,7 @@ fun CategoryButton(category: String, isSelected: Boolean, onClick: () -> Unit) {
         Text(
             text = getTranslateCategoryName(category),
             style = S14_W600,
-            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
+            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
         )
     }
 }

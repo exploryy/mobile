@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Activity.changeEnabledComponent(
+private fun Activity.changeEnabledComponent(
     enabled: String,
     disabled: String,
 ) {

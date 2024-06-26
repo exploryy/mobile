@@ -27,7 +27,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.friends.FriendsScreen
-import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.presentation.common.Avatar
+import com.example.explory.presentation.screen.profile.component.EditProfileDialog
+import com.example.explory.presentation.screen.profile.component.ProfileButton
+import com.example.explory.presentation.screen.profile.component.SemiRoundedButtonsRow
 import com.example.explory.presentation.screen.requests.FriendRequestsScreen
 import com.example.explory.presentation.screen.userstatistic.UserStatisticScreen
 import com.example.explory.ui.theme.S18_W600

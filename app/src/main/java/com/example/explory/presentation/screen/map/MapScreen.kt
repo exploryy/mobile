@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -46,30 +47,33 @@ import com.example.explory.data.model.quest.PointDto
 import com.example.explory.domain.model.MapNote
 import com.example.explory.presentation.screen.battlepass.BattlePassScreen
 import com.example.explory.presentation.screen.battlepass.component.AnimatedButton
+import com.example.explory.presentation.screen.event.EventDialog
 import com.example.explory.presentation.screen.friendprofile.FriendProfileScreen
 import com.example.explory.presentation.screen.inventory.InventoryScreen
 import com.example.explory.presentation.screen.leaderboard.LeaderboardScreen
-import com.example.explory.presentation.screen.map.component.BalanceBar
-import com.example.explory.presentation.screen.map.component.ButtonControlRow
 import com.example.explory.presentation.screen.map.component.ErrorScreen
-import com.example.explory.presentation.screen.map.component.EventDialog
 import com.example.explory.presentation.screen.map.component.LoadingScreen
-import com.example.explory.presentation.screen.map.component.MapButton
 import com.example.explory.presentation.screen.map.component.RequestPermissionsScreen
 import com.example.explory.presentation.screen.map.component.ShortQuestCard
-import com.example.explory.presentation.screen.map.component.TopInfoColumn
+import com.example.explory.presentation.screen.map.component.mapoverlay.BalanceBar
+import com.example.explory.presentation.screen.map.component.mapoverlay.ButtonControlRow
+import com.example.explory.presentation.screen.map.component.mapoverlay.MapButton
+import com.example.explory.presentation.screen.map.component.mapoverlay.TopInfoColumn
 import com.example.explory.presentation.screen.map.location.RequestLocationPermission
-import com.example.explory.presentation.screen.map.note.CreateNoteScreen
-import com.example.explory.presentation.screen.map.note.NoteSheet
 import com.example.explory.presentation.screen.map.notifications.RequestNotificationPermission
+import com.example.explory.presentation.screen.map.utils.createCircularAvatar
+import com.example.explory.presentation.screen.map.utils.createDefaultAvatar
+import com.example.explory.presentation.screen.map.utils.drawToImageBitmap
+import com.example.explory.presentation.screen.map.utils.drawableToBitmap
+import com.example.explory.presentation.screen.note.CreateNoteScreen
+import com.example.explory.presentation.screen.note.NoteSheet
 import com.example.explory.presentation.screen.profile.ProfileScreen
-import com.example.explory.presentation.screen.quest.InfoBox
 import com.example.explory.presentation.screen.quest.QuestSheet
+import com.example.explory.presentation.screen.quest.component.InfoBox
 import com.example.explory.presentation.screen.settings.SettingsScreen
 import com.example.explory.presentation.screen.shop.ShopScreen
 import com.example.explory.presentation.utils.UiState
 import com.example.explory.ui.theme.AccentColor
-import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
 import com.example.explory.ui.theme.Transparent
@@ -249,7 +253,7 @@ fun MapScreen(
                             FillLayer(
                                 sourceState = withHolesSourceState,
                                 layerId = OPENED_WORLD_LAYER,
-                                fillColor = FillColor(Black),
+                                fillColor = FillColor(MaterialTheme.colorScheme.surfaceVariant),
                                 fillPattern = if (mapState.currentUserFog == null) FillPattern.default else
                                     FillPattern(
                                         StyleImage(
@@ -270,9 +274,6 @@ fun MapScreen(
                 }, mapViewportState = mapViewportState
                 ) {
                     MapEffect(Unit) { mapView ->
-                        mapView.location.updateSettings {
-                            enabled = false
-                        }
                         mapView.location.updateSettings {
                             locationPuck = createDefault2DPuck(withBearing = true)
                             puckBearingEnabled = true
@@ -690,9 +691,8 @@ fun MapScreen(
 
     if (mapState.event != null) {
         EventDialog(event = mapState.event!!,
-            onDismissRequest = { viewModel.updateEvent(null) },
-            onFriendDecline = { viewModel.declineFriendRequest(it) },
-            onFriendAccept = { viewModel.acceptFriendRequest(it) })
+            onDismissRequest = { viewModel.updateEvent(null) }
+        )
     }
 }
 

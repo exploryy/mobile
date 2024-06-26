@@ -4,6 +4,6 @@ import com.example.explory.data.repository.FriendRepository
 
 class AddFavoriteFriendUseCase(private val friendRepository: FriendRepository) {
     suspend fun execute(userId: String) {
-        return friendRepository.addFavoriteFriend(userId);
+        return friendRepository.addFavoriteFriend(userId)
     }
 }

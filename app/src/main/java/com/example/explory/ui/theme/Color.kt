@@ -7,8 +7,6 @@ val FullBlack = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 val Transparent = Color(0x00000000)
 
-val DisabledBlackButtonColor = Black.copy(alpha = 0.4f)
-val DisabledWhiteContentColor = White.copy(alpha = 0.4f)
 val Gray = Color(0xFF636363)
 val DarkGray = Color(0xFF2D2D2D)
 val LightGray = Color(0xFFD3D3D3)

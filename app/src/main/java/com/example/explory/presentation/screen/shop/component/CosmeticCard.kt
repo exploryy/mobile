@@ -1,11 +1,5 @@
 package com.example.explory.presentation.screen.shop.component
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,17 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.shop.CosmeticItemInShopDto
-import com.example.explory.data.model.shop.RarityType
-import com.example.explory.presentation.screen.common.RoundedSquareAvatar
-import com.example.explory.ui.theme.Blue
-import com.example.explory.ui.theme.Gray
+import com.example.explory.presentation.common.RoundedSquareAvatar
+import com.example.explory.presentation.common.getRarityBrush
 import com.example.explory.ui.theme.Green
-import com.example.explory.ui.theme.Purple
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Yellow
 
@@ -98,44 +87,3 @@ fun CosmeticCard(
     }
 }
 
-@Composable
-fun getRarityBrush(rarityType: RarityType): Brush {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    val colors = when (rarityType) {
-        RarityType.COMMON -> listOf(
-            Gray.copy(alpha = 0.8f),
-            Gray.copy(alpha = 0.8f)
-        )
-
-        RarityType.RARE -> listOf(
-            Blue.copy(alpha = 0.8f),
-            Blue.copy(alpha = 0.4f)
-        )
-
-        RarityType.EPIC -> listOf(
-            Purple.copy(alpha = 0.7f),
-            Purple.copy(alpha = 0.3f)
-        )
-
-        RarityType.LEGENDARY -> listOf(
-            Yellow.copy(alpha = 1f),
-            Yellow.copy(alpha = 0.3f)
-        )
-    }
-
-    val animatedColors = infiniteTransition.animateColor(
-        initialValue = colors[0],
-        targetValue = colors[1],
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = ""
-    )
-
-    return Brush.linearGradient(
-        colors = listOf(animatedColors.value, animatedColors.value.copy(alpha = 0.5f)),
-        start = Offset(0f, 1f),
-        end = Offset(0f, 0f)
-    )
-}

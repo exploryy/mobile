@@ -23,10 +23,6 @@ import com.example.explory.data.model.quest.DistanceQuestDto
 import com.example.explory.data.model.quest.PointToPointQuestDto
 import com.example.explory.data.model.quest.TransportType
 import com.example.explory.data.model.statistic.CoinDto
-import com.example.explory.data.repository.CoinsRepository
-import com.example.explory.data.repository.PolygonRepository
-import com.example.explory.data.repository.QuestRepository
-import com.example.explory.data.repository.StatisticRepository
 import com.example.explory.data.storage.ThemePreferenceManager
 import com.example.explory.data.websocket.EventWebSocketClient
 import com.example.explory.data.websocket.FriendsLocationWebSocketClient
@@ -34,16 +30,22 @@ import com.example.explory.data.websocket.LocationTracker
 import com.example.explory.data.websocket.LocationWebSocketClient
 import com.example.explory.domain.model.FriendProfile
 import com.example.explory.domain.model.MapNote
-import com.example.explory.domain.usecase.AcceptFriendUseCase
+import com.example.explory.domain.usecase.CancelQuestUseCase
+import com.example.explory.domain.usecase.CollectCoinUseCase
 import com.example.explory.domain.usecase.CreateNoteUseCase
-import com.example.explory.domain.usecase.DeclineFriendUseCase
 import com.example.explory.domain.usecase.GetAllNotesUseCase
 import com.example.explory.domain.usecase.GetBalanceUseCase
 import com.example.explory.domain.usecase.GetCoinsUseCase
+import com.example.explory.domain.usecase.GetDistanceQuestUseCase
+import com.example.explory.domain.usecase.GetFriendPolygonUseCase
 import com.example.explory.domain.usecase.GetFriendStatisticUseCase
 import com.example.explory.domain.usecase.GetNoteUseCase
+import com.example.explory.domain.usecase.GetP2PQuestUseCase
+import com.example.explory.domain.usecase.GetPrivacyUseCase
 import com.example.explory.domain.usecase.GetProfileUseCase
 import com.example.explory.domain.usecase.GetQuestsUseCase
+import com.example.explory.domain.usecase.SetPrivacyUseCase
+import com.example.explory.domain.usecase.StartQuestUseCase
 import com.example.explory.presentation.utils.UiState
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.Red
@@ -65,23 +67,25 @@ import kotlin.math.sin
 class MapViewModel(
     private val getQuestsUseCase: GetQuestsUseCase,
     private val getCoinsUseCase: GetCoinsUseCase,
-    private val questRepository: QuestRepository,
-    private val coinsRepository: CoinsRepository,
-    private val polygonRepository: PolygonRepository,
+    private val startQuestUseCase: StartQuestUseCase,
+    private val cancelQuestUseCase: CancelQuestUseCase,
+    private val getP2PQuestUseCase: GetP2PQuestUseCase,
+    private val getDistanceQuestUseCase: GetDistanceQuestUseCase,
+    private val collectCoinUseCase: CollectCoinUseCase,
+    private val getFriendPolygonUseCase: GetFriendPolygonUseCase,
+    private val getPrivacyUseCase: GetPrivacyUseCase,
+    private val setPrivacyUseCase: SetPrivacyUseCase,
     private val webSocketClient: LocationWebSocketClient,
     private val eventWebSocketClient: EventWebSocketClient,
     private val getFriendStatisticUseCase: GetFriendStatisticUseCase,
     private val friendsLocationWebSocketClient: FriendsLocationWebSocketClient,
     private val getBalanceUseCase: GetBalanceUseCase,
-    private val acceptFriendUseCase: AcceptFriendUseCase,
-    private val declineFriendUseCase: DeclineFriendUseCase,
     private val locationTracker: LocationTracker,
     private val getProfileUseCase: GetProfileUseCase,
     private val themePreferenceManager: ThemePreferenceManager,
     private val getAllNotesUseCase: GetAllNotesUseCase,
     private val getNoteUseCase: GetNoteUseCase,
     private val createNoteUseCase: CreateNoteUseCase,
-    private val statisticRepository: StatisticRepository,
     private val context: Context
 ) : ViewModel() {
     private val _mapState = MutableStateFlow(MapState())
@@ -121,6 +125,7 @@ class MapViewModel(
     private suspend fun fetchProfile() {
         try {
             val profile = getProfileUseCase.execute()
+            Log.d("MapViewModel", "Profile: $profile, new trace ${profile.inventoryDto.footprint}")
             _mapState.update {
                 it.copy(
                     currentUserFog = profile.inventoryDto.fog,
@@ -146,7 +151,8 @@ class MapViewModel(
                     _mapState.update { it.copy(infoText = "Вы слишком далеко от монеты") }
                     return@launch
                 }
-                coinsRepository.collectCoin(coin.coinId)
+                collectCoinUseCase.execute(coin.coinId)
+//                coinsRepository.collectCoin(coin.coinId)
                 _mapState.update { it ->
                     it.copy(
                         coins = it.coins.filter { it.coinId != coin.coinId },
@@ -175,7 +181,7 @@ class MapViewModel(
                     _mapState.update { it.copy(infoText = "Вы слишком далеко от квеста") }
                     return@launch
                 }
-                questRepository.startQuest(questId, transportType)
+                startQuestUseCase.execute(questId, transportType)
                 _mapState.update { it ->
                     it.copy(infoText = "Квест начат",
                         activeQuest = quest,
@@ -191,14 +197,14 @@ class MapViewModel(
         viewModelScope.launch {
             when (questType) {
                 "DISTANCE" -> {
-                    val distanceQuest = questRepository.getDistanceQuest(questId)
+                    val distanceQuest = getDistanceQuestUseCase.execute(questId)
                     updateDistanceQuest(distanceQuest)
                     updateP2PQuest(null)
                     Log.d("MapViewModel", "Distance quest: $distanceQuest")
                 }
 
                 "POINT_TO_POINT" -> {
-                    val p2pQuest = questRepository.getP2PQuest(questId)
+                    val p2pQuest = getP2PQuestUseCase.execute(questId)
                     updateP2PQuest(p2pQuest)
                     updateDistanceQuest(null)
                     Log.d("MapViewModel", "Distance quest: $p2pQuest")
@@ -211,7 +217,7 @@ class MapViewModel(
     fun cancelQuest(questId: String) {
         viewModelScope.launch {
             try {
-                questRepository.cancelQuest(questId)
+                cancelQuestUseCase.execute(questId)
                 _mapState.update {
                     it.copy(
                         infoText = "Квест отменен",
@@ -627,7 +633,7 @@ class MapViewModel(
     fun onFriendMarkerClicked(friendId: String) {
         viewModelScope.launch {
             try {
-                val friendPolygons = polygonRepository.getFriendPolygons(friendId)
+                val friendPolygons = getFriendPolygonUseCase.execute(friendId)
                 val friendProfile = FriendProfile(id = friendId,
                     polygons = friendPolygons.features.flatMap { feature ->
                         feature.geometry.coordinates.flatMap { coordinateList ->
@@ -724,37 +730,16 @@ class MapViewModel(
         _mapState.update { it.copy(isLeaderboardOpen = !it.isLeaderboardOpen) }
     }
 
-    fun acceptFriendRequest(friendId: String) {
-        viewModelScope.launch {
-            try {
-                acceptFriendUseCase.execute(friendId)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun declineFriendRequest(friendId: String) {
-        viewModelScope.launch {
-            try {
-                declineFriendUseCase.execute(friendId)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     private suspend fun getPrivacy() {
-        val privacy = statisticRepository.getPrivacy()
+        val privacy = getPrivacyUseCase.execute()
         _mapState.update { it.copy(isPublicPrivacy = privacy.isPublic) }
     }
 
     fun setPrivacy(isPublic: Boolean) {
         viewModelScope.launch {
             try {
-                statisticRepository.setPrivacy(isPublic)
+                setPrivacyUseCase.execute(isPublic)
                 _mapState.update { it.copy(isPublicPrivacy = isPublic) }
-//                getPrivacy()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

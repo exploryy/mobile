@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.profile.ProfileDto
-import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.presentation.common.Avatar
 import com.example.explory.ui.theme.Green
 import com.example.explory.ui.theme.S16_W600
 

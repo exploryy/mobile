@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
+import com.example.explory.presentation.common.DotIndicator
 import com.example.explory.ui.theme.S20_W600
 import com.example.explory.ui.theme.S24_W600
 import kotlinx.coroutines.delay

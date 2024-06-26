@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
-import com.example.explory.presentation.screen.common.RoundedSquareAvatar
-import com.example.explory.presentation.screen.common.getRarityColor
+import com.example.explory.presentation.common.RoundedSquareAvatar
+import com.example.explory.presentation.common.getRarityColor
 import com.example.explory.ui.theme.S14_W600
 import com.example.explory.ui.theme.S16_W600
 

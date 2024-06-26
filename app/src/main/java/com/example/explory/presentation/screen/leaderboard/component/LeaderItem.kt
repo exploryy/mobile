@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,10 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
 import com.example.explory.data.model.location.LocationStatisticDto
-import com.example.explory.presentation.screen.map.component.Avatar
-import com.example.explory.presentation.screen.userstatistic.getDistanceString
-import com.example.explory.ui.theme.S12_W600
-import com.example.explory.ui.theme.S14_W600
+import com.example.explory.presentation.common.Avatar
+import com.example.explory.presentation.common.getDistanceString
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S18_W600
 import com.example.explory.ui.theme.Yellow
@@ -77,17 +74,17 @@ fun LeaderItem(user: LocationStatisticDto, currentScreen: Int, userPosition: Int
             ) {
                 Text(
                     text = user.profileDto.username,
-                    style = S14_W600,
+                    style = S16_W600,
                     color = MaterialTheme.colorScheme.onBackground,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = user.profileDto.email.toString(),
-                    style = S12_W600,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    overflow = TextOverflow.Ellipsis
-                )
+//                Spacer(modifier = Modifier.height(4.dp))
+//                Text(
+//                    text = user.profileDto.email.toString(),
+//                    style = S12_W600,
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    overflow = TextOverflow.Ellipsis
+//                )
             }
         }
         when (currentScreen) {

@@ -29,10 +29,6 @@ class InventoryViewModel(
     private val _inventoryState = MutableStateFlow(InventoryState())
     val inventoryState: StateFlow<InventoryState> = _inventoryState
 
-//    init {
-//        fetchInventory()
-//    }
-
     fun fetchInventory() {
         viewModelScope.launch {
             _inventoryState.update { it.copy(isLoading = true) }
@@ -57,7 +53,11 @@ class InventoryViewModel(
                     changeIcon(item.name)
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Сначала снимите другой предмет этого типа", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Сначала снимите другой предмет этого типа",
+                    Toast.LENGTH_SHORT
+                ).show()
                 _inventoryState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }

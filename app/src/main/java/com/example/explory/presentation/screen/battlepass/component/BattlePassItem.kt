@@ -56,7 +56,6 @@ fun BattlePassItem(
         }
         Spacer(modifier = Modifier.weight(1f))
         val progress = when {
-//            nextLevelExp == -1 -> if (quest.level == currentLevel) 100f else 0f
             quest.experienceNeeded <= currentExp -> 100f
             quest.level - 1 == currentLevel -> {
                 min(

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.explory.data.model.friend.Friend
-import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.presentation.common.Avatar
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.S24_W600
 

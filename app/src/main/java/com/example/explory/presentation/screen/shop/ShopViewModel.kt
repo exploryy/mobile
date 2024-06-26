@@ -24,10 +24,6 @@ class ShopViewModel(
     private val _shopState = MutableStateFlow(ShopState())
     val shopState: StateFlow<ShopState> = _shopState
 
-//    init {
-//        fetchShopItems()
-//        fetchBalance()
-//    }
 
     fun fetchShopItems() {
         viewModelScope.launch {

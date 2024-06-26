@@ -26,9 +26,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.explory.data.model.inventory.CosmeticItemInInventoryDto
 import com.example.explory.domain.model.ItemFullInfo
-import com.example.explory.presentation.screen.common.RoundedSquareAvatar
-import com.example.explory.presentation.screen.common.getRarityColor
-import com.example.explory.presentation.screen.common.getTranslateRareName
+import com.example.explory.presentation.common.RoundedSquareAvatar
+import com.example.explory.presentation.common.getRarityColor
+import com.example.explory.presentation.common.getTranslateRareName
 import com.example.explory.ui.theme.S16_W400
 import com.example.explory.ui.theme.S16_W600
 import com.example.explory.ui.theme.Yellow

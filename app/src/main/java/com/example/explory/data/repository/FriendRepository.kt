@@ -33,15 +33,15 @@ class FriendRepository(private val apiService: ApiService) {
     }
 
     suspend fun addFavoriteFriend(userId: String){
-        return apiService.addFavorite(userId);
+        return apiService.addFavorite(userId)
     }
 
     suspend fun removeFavoriteFriend(userId: String){
-        return apiService.removeFavorite(userId);
+        return apiService.removeFavorite(userId)
     }
 
     suspend fun removeFriend(userId: String){
-        return apiService.removeFriend(userId);
+        return apiService.removeFriend(userId)
     }
 
     suspend fun getFriendStatistic(): List<LocationStatisticDto>{

@@ -27,9 +27,3 @@ fun Context.hasNotificationPermission(): Boolean {
 }
 
 
-fun Context.hasOldNotificationPermission(): Boolean {
-    return ContextCompat.checkSelfPermission(
-        this,
-        Manifest.permission.ACCESS_NOTIFICATION_POLICY
-    ) == PackageManager.PERMISSION_GRANTED
-}

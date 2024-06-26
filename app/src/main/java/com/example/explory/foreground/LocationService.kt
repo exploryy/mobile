@@ -11,19 +11,8 @@ import com.example.explory.R
 
 class LocationService : Service() {
 
-//    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-//    private lateinit var locationClient: LocationClient
-
     override fun onBind(p0: Intent?): IBinder? {
         return null
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-//        locationClient = DefaultLocationClient(
-//            applicationContext,
-//            LocationServices.getFusedLocationProviderClient(applicationContext)
-//        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -51,11 +40,6 @@ class LocationService : Service() {
             )
             .setOngoing(true)
 
-//        locationClient
-//            .getLocationUpdates(10000L)
-//            .catch { e -> e.printStackTrace() }
-//            .launchIn(serviceScope)
-//        Log.d("LocationService", "Location updates started")
         startForeground(1, notification.build())
     }
 
@@ -64,11 +48,6 @@ class LocationService : Service() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        serviceScope.cancel()
-//    }
 
     companion object {
         const val ACTION_START = "ACTION_START"

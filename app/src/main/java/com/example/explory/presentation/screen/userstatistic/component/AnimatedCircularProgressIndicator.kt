@@ -102,11 +102,6 @@ private fun ProgressStatus(
     currentValue: Int,
     maxValue: Int,
 ) {
-//    val text = buildAnnotatedString {
-//        append(AnnotatedString(formatNumber(currentValue)))
-//        append(AnnotatedString(text = "/"))
-//        append(AnnotatedString(text = formatNumber(maxValue)))
-//    }
     val text = "еще ${maxValue - currentValue} опыта"
     Text(
         text = text,

@@ -15,10 +15,6 @@ fun CosmeticItemsList(
     cosmeticItems: List<CosmeticItemInShopDto>,
     onItemClick: (CosmeticItemInShopDto) -> Unit
 ) {
-//    val configuration = LocalConfiguration.current
-//    val screenWidth = configuration.screenWidthDp.dp
-//    val itemWidth = screenWidth / 7 * 3 + 40.dp
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -30,23 +26,7 @@ fun CosmeticItemsList(
                 cosmeticItem = cosmeticItem,
                 onClick = { onItemClick(it) },
                 modifier = Modifier
-//                    .width(itemWidth)
             )
         }
     }
-
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxWidth(),
-//        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
-//    ) {
-//        itemsIndexed(cosmeticItems) { _, cosmeticItem ->
-//            CosmeticCard(
-//                cosmeticItem = cosmeticItem,
-//                onClick = { onItemClick(it) },
-//                modifier = Modifier
-//                    .width(itemWidth)
-//            )
-//        }
-//    }
 }
