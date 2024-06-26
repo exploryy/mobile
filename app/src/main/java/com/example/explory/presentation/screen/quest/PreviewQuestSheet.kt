@@ -22,7 +22,8 @@ private fun PreviewQuestSheet() {
             reviews = FullReviewsDto(
                 avg = 4.5,
                 reviews = emptyList()
-            )
+            ),
+            isCompleted = false
         )
     }
 }

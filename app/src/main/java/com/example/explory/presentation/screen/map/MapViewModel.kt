@@ -309,7 +309,7 @@ class MapViewModel(
                 _mapState.update {
                     it.copy(
                         notCompletedQuests = it.notCompletedQuests + quests.notCompleted,
-                        completedQuests = it.completedQuests + quests.completed,
+                        completedQuests = quests.completed,
                         activeQuest = if (quests.active.isNotEmpty()) quests.active[0] else null,
                     )
                 }
@@ -568,7 +568,7 @@ class MapViewModel(
         }
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
         webSocketClient.close()
         friendsLocationWebSocketClient.close()
@@ -742,6 +742,10 @@ class MapViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun updateCompletedQuestScreen(){
+        _mapState.update { it.copy(isCompletedQuestOpen = !it.isCompletedQuestOpen) }
     }
 
     private suspend fun getPrivacy() {

@@ -1,5 +1,6 @@
 package com.example.explory.presentation.screen.completedquests
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.explory.data.model.quest.CompletedQuestDto
+import com.example.explory.data.model.quest.DifficultyType
 import com.example.explory.presentation.screen.map.component.Avatar
+import com.example.explory.presentation.screen.quest.InfoBox
 import com.example.explory.ui.theme.S14_W600
 
 @Composable
@@ -26,7 +29,8 @@ fun CompletedQuestCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -35,7 +39,7 @@ fun CompletedQuestCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Avatar(
-                image = if (quest.images.isNotEmpty()) quest.images[0] else null,
+                image = if (quest.images.isNotEmpty()) quest.images.first() else null,
                 modifier = Modifier.size(40.dp)
             )
 
@@ -51,6 +55,14 @@ fun CompletedQuestCard(
 
         Spacer(modifier = Modifier.width(8.dp))
 
+        InfoBox(text = getCorrectDifficulty(quest.difficultyType))
+    }
+}
 
+fun getCorrectDifficulty(difficulty: DifficultyType): String {
+    return when (difficulty) {
+        DifficultyType.EASY -> "легкий"
+        DifficultyType.MEDIUM -> "средняя сложность"
+        DifficultyType.HARD -> "сложный"
     }
 }
