@@ -69,12 +69,15 @@ class MainActivity : ComponentActivity() {
 
             ExploryTheme(isDarkTheme) {
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavigation()
                 }
             }
         }
+
     }
 
     override fun onDetachedFromWindow() {

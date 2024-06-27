@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -78,8 +81,9 @@ fun OnBoardingScreen(
                 modifier = Modifier.height(spacerHeight)
             )
 
-            Column(modifier = Modifier
-                .fillMaxSize(),
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Box(
@@ -151,6 +155,11 @@ fun OnBoardingScreen(
                                 text = "Поехали!", style = S16_W600, color = Black
                             )
                         }
+                        Spacer(
+                            Modifier.windowInsetsBottomHeight(
+                                WindowInsets.systemBars
+                            )
+                        )
                     }
                 }
             }

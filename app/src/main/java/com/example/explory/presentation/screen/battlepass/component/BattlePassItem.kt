@@ -56,10 +56,10 @@ fun BattlePassItem(
         }
         Spacer(modifier = Modifier.weight(1f))
         val progress = when {
-            quest.experienceNeeded <= currentExp -> 100f
+            quest.level <= currentLevel -> 100f
             quest.level - 1 == currentLevel -> {
                 min(
-                    (currentExp.toFloat() / (quest.experienceNeeded - prevLevelExp).toFloat()),
+                    (currentExp.toFloat() / (quest.experienceNeeded).toFloat()),
                     100f
                 )
             }
@@ -69,7 +69,7 @@ fun BattlePassItem(
         }
         Log.d(
             "BattlePassItem",
-            "level ${quest.level} progress $progress this level exp ${quest.experienceNeeded} current exp $currentExp next level exp $prevLevelExp"
+            "level ${quest.level} progress $progress this level exp ${quest.experienceNeeded} current exp $currentExp"
         )
         CustomBar(
             progress = progress,

@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -259,12 +258,12 @@ class MapViewModel(
                 place = _mapState.value.currentLocationName
             )
 
-            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    !location.isMock
-                } else {
-                    !location.isFromMockProvider
-                }
-            )
+//            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                    !location.isMock
+//                } else {
+//                    !location.isFromMockProvider
+//                }
+//            )
                 sendLocationToServer(locationRequest)
         }
         locationTracker.startTracking()
