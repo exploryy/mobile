@@ -1,8 +1,9 @@
 package com.example.explory.presentation.screen.note
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,9 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.explory.R
 import com.example.explory.domain.model.MapNote
+import com.example.explory.presentation.common.ImagePage
 import com.example.explory.presentation.screen.auth.component.LoadingItem
 import com.example.explory.presentation.screen.auth.onboarding.component.PageIndicator
-import com.example.explory.presentation.common.ImagePage
 import com.example.explory.presentation.screen.quest.component.InfoBox
 import com.example.explory.ui.theme.Black
 import com.example.explory.ui.theme.S16_W600
@@ -73,10 +74,10 @@ fun NoteSheet(
                         }
 
                         item {
-                            Column(modifier = Modifier.padding(4.dp)) {
-//                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+//                            Column(modifier = Modifier.padding(4.dp)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
 
-//                            InfoBox(text = note.profile.username)
+                                InfoBox(text = mapNote.note.profile.username)
 //                        }
                                 InfoBox(text = formatDateTime(mapNote.note.createdAt))
 //                                Spacer(modifier = Modifier.height(4.dp))

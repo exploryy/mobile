@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -258,14 +259,13 @@ class MapViewModel(
                 place = _mapState.value.currentLocationName
             )
 
-            // todo return on release
-//            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//                    !location.isMock
-//                } else {
-//                    !location.isFromMockProvider
-//                }
-//            )
-            sendLocationToServer(locationRequest)
+            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    !location.isMock
+                } else {
+                    !location.isFromMockProvider
+                }
+            )
+                sendLocationToServer(locationRequest)
         }
         locationTracker.startTracking()
 
@@ -448,7 +448,8 @@ class MapViewModel(
 
             val friendAvatars = friendStats.associate { friendStat ->
                 friendStat.profileDto.userId to Pair(
-                    loadImage(friendStat.profileDto.inventoryDto.avatarFrames?.url), loadImage(friendStat.profileDto.avatarUrl)
+                    loadImage(friendStat.profileDto.inventoryDto.avatarFrames?.url),
+                    loadImage(friendStat.profileDto.avatarUrl)
                 )
             }
             _mapState.update { state ->
@@ -666,7 +667,6 @@ class MapViewModel(
     }
 
     fun updateInventoryOpenScreen() {
-        // todo event on this update
         viewModelScope.launch {
             fetchProfile()
             _mapState.update { it.copy(isInventoryOpen = !it.isInventoryOpen) }
@@ -730,7 +730,7 @@ class MapViewModel(
         _mapState.update { it.copy(isLeaderboardOpen = !it.isLeaderboardOpen) }
     }
 
-    fun updateCompletedQuestScreen(){
+    fun updateCompletedQuestScreen() {
         _mapState.update { it.copy(isCompletedQuestOpen = !it.isCompletedQuestOpen) }
     }
 
